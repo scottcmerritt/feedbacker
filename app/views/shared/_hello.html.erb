@@ -1,0 +1,16 @@
+<% data = nil if local_assigns[:data].nil? %>
+<% path_to_resource = nil if local_assigns[:path_to_resource].nil? %>
+
+<h1>Hello world #3</h1>
+
+<% if data.nil? || data.empty? %>
+<div>No data</div>
+<% else %>
+	<div class="feedbacker">
+	<% data.each do |row| %>
+	<div class="fbrow bg-white border p-2 m-2">
+	<%= link_to row, path_to_resource(target,{test:123}) %>
+	</div>
+	<% end %>
+	</div>
+<% end %>
