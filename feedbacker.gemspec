@@ -3,8 +3,8 @@ require_relative "lib/feedbacker/version"
 Gem::Specification.new do |spec|
   spec.name        = "feedbacker"
   spec.version     = Feedbacker::VERSION
-  spec.authors     = ["Scott Merritt"]
-  spec.email       = ["scott.merritt@gmail.com"]
+  spec.authors     = ["Developer"]
+  spec.email       = ["dev@meritocracyconsulting.com"]
   #spec.homepage    = "TODO"
   spec.summary     = "Facilitates feedback"
   #spec.description = "TODO: Description of Feedbacker."
