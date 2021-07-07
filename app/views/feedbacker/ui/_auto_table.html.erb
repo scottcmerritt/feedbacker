@@ -1,0 +1,105 @@
+<% show_index = false if local_assigns[:show_index].nil? %>
+<% title = rows.is_a?(Array) ? "Array" : rows.klass.to_s.pluralize if (local_assigns[:title].nil?) %>
+
+<% expanded = true if local_assigns[:expanded].nil? %>
+<% ignore_columns = [] if (local_assigns[:ignore_columns].nil?) %>
+<% labels = {} if local_assigns[:labels].nil? %>
+<% prepend_methods = [] if (local_assigns[:prepend_methods].nil?) %>
+<% attach_methods = [] if (local_assigns[:attach_methods].nil?) %>
+<% prepend_paths = [] if (local_assigns[:prepend_paths].nil?) %>
+<% attach_paths = [] if (local_assigns[:attach_paths].nil?) %>
+<% time_ago_columns = [] if local_assigns[:time_ago_columns].nil? %>
+<% header = {:columns=>(rows.nil? || rows[0].nil? ? [] : rows[0].attributes)} if local_assigns[:header].nil? %>
+<% debug = false if (local_assigns[:debug].nil?) %>
+<% table_id = SecureRandom.uuid if local_assigns[:table_id].nil? %>
+<% font_class = "fsz6" if local_assigns[:font_class].nil? %>
+
+<% with_borders = true if local_assigns[:with_borders].nil? %>
+
+<%= togglelink_for(title,"#", {expanded: expanded, no_wrap: false, div_class:"topicH bg-dark text-light mt-2 py-1 px-2",link_color: "topicH text-light", target: "#tbl#{table_id}",count: nil }) %>
+
+<div class="collapse <%= "show" if expanded %>" id="<%= "tbl#{table_id}" %>" style="overflow-x:scroll;">
+<%= tag.div paginate(rows), class:"my-1" rescue nil %>
+<table class="table table-hover <%= "table-bordered" if with_borders %> table-sm table-responsive-sm <%= font_class %>">
+  <thead>
+    <tr>
+      <%= tag.th "#", scope: "col" if show_index %>
+      <% prepend_methods.each do |method_symbol| %>
+        <th scope="col"><%= method_symbol.to_s %></th>
+      <% end %>
+      <% prepend_paths.each do |path_info| %>
+        <th scope="col"><%= path_info[:title] %></th>
+      <% end %>
+
+
+      <% header[:columns].each do |k,v| %>
+        <% unless ignore_columns.include?(k) %>
+          <th scope="col"><%= labels.has_key?(k) || labels.has_key?(k.to_sym) ? labels[k] || labels[k.to_sym] : k %></th>
+        <% end %>
+      <% end %>
+
+      
+      <% attach_methods.each do |method_symbol| %>
+        <th scope="col">
+        <% if method_symbol.kind_of?(Array) %>
+          <%= method_symbol[0] %>
+        <% else %>
+        <%= method_symbol.to_s %>
+        <% end %>
+        </th>        
+      <% end %>
+      <% attach_paths.each do |path_info| %>
+        <th scope="col"><%= path_info[:title] %></th>
+      <% end %>
+
+    </tr>
+  </thead>
+  <tbody>
+<% rows.each_with_index do |row,index| %>
+
+    <tr>
+      <%= tag.th (index + 1), scope: "row" if show_index %>
+       <% prepend_methods.each do |method_symbol| %>
+        <td><%= row.public_send(method_symbol) %></td>
+      <% end %>
+
+      <% prepend_paths.each do |path_info| %>
+       <% data_prepped = path_info[:data].except(:path).map{|k,v| v.is_a?(String) ? {k=>v} : {k=>row.public_send(v)}}.reduce({}, :merge) %>
+        <td>
+          <%= link_to (path_info[:title_sym] ? row.send(path_info[:title_sym]) : path_info[:title]) ,Rails.application.routes.url_helpers.public_send(path_info[:data][:path],data_prepped), method: (path_info[:method] ? path_info[:method] : :get) %> 
+        </td>
+      <% end %>
+
+
+      <% row.attributes.each do |k,v| %>
+        <% if time_ago_columns.include?(k) %>
+        <%= tag.td "#{time_ago_in_words(v)} ago" unless ignore_columns.include?(k) %>
+        <% else %>
+        <%= tag.td v unless ignore_columns.include?(k) %>
+        <% end %>
+      <% end %>
+
+      <% attach_methods.each do |method_symbol| %>
+        <td>
+        <% if method_symbol.kind_of?(Array) %>
+        <%= row.send_chain method_symbol[1] %>
+        <% else %>
+        <%= row.public_send(method_symbol) %>
+        <% end %>
+        </td>
+      <% end %>
+
+      <% attach_paths.each do |path_info| %>
+       <% data_prepped = path_info[:data].except(:path).map{|k,v| v.is_a?(String) ? {k=>v} : {k=>row.public_send(v)}}.reduce({}, :merge) %>
+        <td>
+          <%= link_to path_info[:title],Rails.application.routes.url_helpers.public_send(path_info[:data][:path],data_prepped), method: (path_info[:method] ? path_info[:method] : :get) %> 
+        </td>
+      <% end %>
+     </tr>
+<% end %>
+</tbody>
+</table>
+</div>
+<% if debug %>
+<%= rows.to_json %>
+<% end %>

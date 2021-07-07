@@ -1,9 +1,7 @@
-Commented out
-<%= local_assigns.as_json %>
-[[<%= path_to_resource %>]]
-<% if true %>
-<% data = nil if local_assigns[:data].nil? %>
+<% unless local_assigns.nil? %>
 <% path_to_resource = nil if local_assigns[:path_to_resource].nil? %>
+
+<% data = nil if local_assigns[:data].nil? %>
 
 <h1>Hello world #3</h1>
 
@@ -13,7 +11,7 @@ Commented out
 	<div class="feedbacker">
 	<% data.each do |row| %>
 	<div class="fbrow bg-white border p-2 m-2">
-	<%= link_to row, path_to_resource.to_sym(target,{test:123}) %>
+	<%= link_to row, send(path_to_resource.to_s, {id:target.id,test:123}) %>
 	</div>
 	<% end %>
 	</div>

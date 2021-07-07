@@ -1,0 +1,9 @@
+<div class="comments-header">
+  <h6>
+    <%= commentable.comment_threads.count == 0 ? "no" : commentable.comment_threads.count %> comments
+  </h6>
+</div>
+<%= render partial: "comments/form", locals: {new_comment: new_comment} %>
+<div class="comments-container">
+  <%= render partial: "comments/reply", locals: {comments: commentable.root_comments.reverse,new_comment: new_comment} %>
+</div>

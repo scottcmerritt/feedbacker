@@ -1,0 +1,21 @@
+<h2><%= local_assigns[:title] || "List" %></h2>
+
+<%= paginate rows %>
+<% rows.each do |row| %>
+<div class="bg-white border p-1 my-1">
+	<%= tag.h6 row.title rescue nil %>
+	<%= tag.p row.content rescue nil %>
+	<% row.attributes.each do |k,v| %>
+        <% if time_ago_columns.include?(k) %>
+        <%= tag.div "#{time_ago_in_words(v)} ago" unless ignore_columns.include?(k) %>
+        <% else %>
+        <%= tag.div v unless ignore_columns.include?(k) %>
+        <% end %>
+      <% end %>
+
+	<div class="fs-7 d-flex align-items-center justify-content-between">
+
+	</div>
+	<%= row.as_json %>
+</div>
+<% end %>

@@ -1,0 +1,32 @@
+<% paging = false if local_assigns[:paging].nil? %>
+<% comments = Kaminari.paginate_array(comments).page(params[:page]).per(2) if paging %>
+<%= paginate comments if paging %>
+<% comments.each do |comment| %>
+  <div class="comments-show">
+    <div class="comment">
+      <div class="body">
+      <p class="d-flex align-items-top"><%= comment.body %><span class="ms-auto"><%= tag.span "#{time_ago_in_words(comment.created_at)} ago", class:"fs-7" %></span>
+
+        <br>
+      </p>
+      <div>by <%= comment.user_id %></div>
+    </div>
+
+      <div class="comment-nav"><a href="#" class="comment-reply">reply</a></div>
+      <div class="reply-form">
+        <%= form_for new_comment do |f| %>
+          <%= f.hidden_field :commentable_id, value: new_comment.commentable_id %>
+          <%= f.hidden_field :commentable_type, value: new_comment.commentable_type %>
+          <%= f.hidden_field :comment_id, value: comment.id %>
+          <div class="field form-group">
+            <%= f.text_area :body, class: 'form-control' %>
+          </div>
+          <div class="field form-group">
+            <%= submit_tag "Post Reply", class: 'btn btn-sm btn-primary mt-1 mb-3' %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <%= render partial: "comments/reply", locals: {comments: comment.children, new_comment: new_comment} %>
+  </div>
+<% end %>

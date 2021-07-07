@@ -1,0 +1,21 @@
+<% wrap_style = "nav-pills nav-justified bg-light" if local_assigns[:wrap_style].nil? %>
+<ul class="nav my-1 <%= wrap_style %> <%= css %>">
+<% tabs.each do |tab_row| %>
+<% tab_key = tab_row.is_a?(Feedbacker::UiTab) ? tab_row.tab_key : tab_row.to_s %>
+<% tab_name = tab_row.is_a?(Feedbacker::UiTab) ? raw(tab_row.name) : tab_row %>
+	<li class="nav-item">
+	  	<%= link_to tab_name.to_s.capitalize,tab_row.url, class: "nav-link #{"active" if tab_row.active?(link_controller:controller,link_action:action)}" %>
+	</li>
+<% end %>
+</ul>
+
+<% if false %>
+<% active_href = nil if local_assigns[:active_href].nil? %>
+<ul class="nav nav-pills nav-justified bg-light my-1">
+	<% links.each do |link| %>
+	<li class="nav-item">
+  		<%= nav_link link[:label],link[:href],link[:count],link[:href] == active_href,"rounded-0" %>
+  	</li>
+	<% end %>
+ </ul>
+ <% end %>

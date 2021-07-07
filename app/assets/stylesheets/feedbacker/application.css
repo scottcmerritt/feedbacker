@@ -17,3 +17,13 @@
     color: red;
     background-color: orange !important;
 }
+
+.bg-dark.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: red;
+}
+
+.nav.bg-dark > .nav-link.active, .nav.bg-dark .nav-link.active {
+    color: white;
+    background-color: red;
+}

@@ -21,4 +21,8 @@ Gem::Specification.new do |spec|
   spec.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
   spec.add_dependency "rails", "~> 6.1.4"
+
+  spec.add_dependency 'devise' #, '>= 3.0'
+  spec.add_dependency 'acts_as_commentable_with_threading'
+  spec.add_dependency 'kaminari'
 end

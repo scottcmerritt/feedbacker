@@ -1,0 +1,27 @@
+<% tab_div_css = "bg-white p-1" if local_assigns[:tab_css].nil? %>
+<% css_group = "" if local_assigns[:css_group].nil? %>
+<% link_wrap_css = "" if local_assigns[:link_wrap_css].nil? %>
+<% link_css = "" if local_assigns[:link_css].nil? %>
+
+<% bs_version = 5 if local_assigns[:bs_version].nil? %>
+
+<% unless tabs.nil? %>
+<% id = "myTab" if (local_assigns[:id].nil?) %>
+<% active = tabs.first if (local_assigns[:active].nil?) %>
+<% show_content_toggle = false if local_assigns[:show_content_toggle].nil? %>
+<ul class="nav nav-tabs pos_r" id="<%= id %>" role="tablist">
+<% if show_content_toggle %>
+<li class="nav-item <%= link_wrap_css %>">
+<%= togglelink_for("Results","#", {expanded: true, no_wrap: false, div_class:tab_div_css,target: "#yourResultsWrap",count: nil, css_group: css_group }) %>
+</li>
+<% end %>
+<% tabs.each do |tab_row| %>
+<% tab_key = tab_row.is_a?(Feedbacker::UiTab) ? tab_row.tab_key : tab_row.to_s %>
+<% tab_name = tab_row.is_a?(Feedbacker::UiTab) ? raw(tab_row.name) : tab_row %>
+ <li class="nav-item <%= link_wrap_css %>"">
+    <a class="nav-link <%= link_css %> <% if tab_row == active %> active<% end %>" id="<%= tab_key %>-tab" <% if bs_version == 4 %>data-toggle="tab"<% else %>data-bs-toggle="tab" data-bs-target="#<%= tab_key %>"<% end %> href="#<%= tab_key %>" role="tab" aria-controls="model" aria-selected="<%= tab_row == active ? "true" : "false" %>"><%= tab_name.to_s.capitalize %><%= tag.span(tab_row.count, class: "ml-1 badge badge-info") if tab_row.respond_to?(:count)%>
+    </a>
+  </li>
+<% end %>
+</ul>
+<% end %>
