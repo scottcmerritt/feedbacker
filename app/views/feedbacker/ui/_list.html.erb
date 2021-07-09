@@ -2,20 +2,48 @@
 
 <%= paginate rows %>
 <% rows.each do |row| %>
-<div class="bg-white border p-1 my-1">
-	<%= tag.h6 row.title rescue nil %>
-	<%= tag.p row.content rescue nil %>
+
+<div class="bg-light border my-1">
+	<%= link_to row.title, row, class: "fs-4 text-primary fw-bold font-weight-bold p-1 px-2" rescue nil %>
+	<%= tag.p row.content, class: "text-secondary px-2" rescue nil %>
 	<% row.attributes.each do |k,v| %>
-        <% if time_ago_columns.include?(k) %>
-        <%= tag.div "#{time_ago_in_words(v)} ago" unless ignore_columns.include?(k) %>
-        <% else %>
-        <%= tag.div v unless ignore_columns.include?(k) %>
+	<% unless ignore_columns.include?(k) || time_ago_columns.include?(k) %>
+        <div>
+        <%= tag.span k, class: "fw-bold font-weight-bold me-1" %> <%= tag.span v %>
+    	</div>
         <% end %>
       <% end %>
 
-	<div class="fs-7 d-flex align-items-center justify-content-between">
+      <div class="d-flex flex-wrap border-top border-bottom p-2 my-2 fs-7">
+      <% attach_methods.each do |method_symbol| %>
+        <div>
+        <% if method_symbol.kind_of?(Array) %>
+        <%= tag.span method_symbol[0], class:"me-2" %>
+        <%= tag.span row.send_chain(method_symbol[1]), class: "fw-bold font-weight-bold fs-6" %>
+        <% else %>
+        <%= tag.span method_symbo.to_s, class:"me-2" %>
+        <%= tag.span row.public_send(method_symbol), class: "fw-bold font-weight-bold fs-6" %>
+        <% end %>
+        </div>
+      <% end %>
+  	</div>
 
+
+	<div class="fs-7 d-flex align-items-center justify-content-between my-2">
+		
+		<%= row.user_id ? tag.span(raw("by #{link_to(row.user.email, row.user, class: 'text-dark')}"), class: "px-2") : tag.span('') %>
+		
+		<% row.attributes.each do |k,v| %>
+			<% if time_ago_columns.include?(k) && !ignore_columns.include?(k) %>
+			<div class="px-2">
+			<%= tag.span(labels.has_key?(k) || labels.has_key?(k.to_sym) ? labels[k] || labels[k.to_sym] : k, class: "text-secondary") %>
+
+	        <%= tag.span "#{time_ago_in_words(v)} ago", class: "mx-1"  %>
+	    	</div>
+
+	        <% end %>
+		<% end %>
 	</div>
-	<%= row.as_json %>
+	<%= row.as_json if false %>
 </div>
 <% end %>

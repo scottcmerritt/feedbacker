@@ -1,0 +1,35 @@
+<h4><%= dbt('admin').capitalize %></h4>
+
+<div class="row">
+	<div class="col-3">
+		<%= render partial: "admin/manage/menu", locals: {vertical:true,icon_size:"fs-3"} %>
+</div>
+<div class="col-6">
+
+	<% begin %>
+	<% if respond_to?(:line_chart) %>
+	<%= line_chart Impression.where(impressionable_type:"Site").group_by_day(:created_at).count, title: "Views/day" %>
+	<%= line_chart Impression.where(impressionable_type:"Book").group_by_day(:created_at).count, title: "Book views/day" %>
+	<%= column_chart Impression.where(impressionable_type:"Site").group_by_day(:created_at).count("DISTINCT(user_id)"), title: "Users/day" %>
+	<%= column_chart Impression.where(impressionable_type:"Book").group_by_day(:created_at).count("DISTINCT(impressionable_id)"), title: "Books viewed/day" %>
+
+	<%= column_chart Book.group_by_day(:created_at).count, title: "Books added/day" %>
+	<%= bar_chart User.group_by_day(:created_at, reverse: true).count, title: "Users added/day" %>
+
+	<%= line_chart Order.group_by_day(:created_at, reverse: true).sum(:price), title: "$ raised/day" %>
+	<% end %>
+	<% rescue %>
+		Error loading charts and analytics
+	<% end %>
+
+</div>
+<div class="col-3">
+	<div class="m-3">
+		<% if false %>
+	<%= link_to "Generate fake data", fake_data_path(books:true), class: "btn btn-success mb-1" %>
+	<%= link_to "Clear fake data", clear_fake_data_path(books:true), class: "btn btn-danger mb-1" %>
+	<% end %>
+	</div>
+</div>
+</div>
+

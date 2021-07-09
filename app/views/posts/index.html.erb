@@ -1,0 +1,29 @@
+<%= page_menu %>
+
+<% is_filtered = @ui && !@ui.filter[:within][:mins].nil? %>
+
+<div class="d-flex">
+<% if is_filtered %>
+Active within <%= @ui.filter[:within][:mins].to_i %> minutes
+<% end %>
+
+<div class="ms-auto ml-auto">
+<%= link_to "Table", "?view=table" %> <%= link_to "List", "?view=list", class:"mx-2" %>
+</div>
+</div>
+
+<% if params[:view] == "list" %>
+  <%= feedbacker_list({rows: @posts, title: @page_title,page:params[:page]}) %>
+<% else %>
+  <%= feedbacker_table({title: (@page_title || "Posts"), rows: @posts, page:params[:page], page_size:20, with_borders: false, filtered: {:comments=>is_filtered}}) %>
+<% end %>
+<%= feedbacker_marketing_link %>
+<br>
+
+<%= link_to 'New Post', new_post_path %>
+
+
+
+
+
+

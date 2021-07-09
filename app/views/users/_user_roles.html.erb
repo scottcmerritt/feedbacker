@@ -1,0 +1,16 @@
+<% unless user.nil? %>
+<div class="my-2 p-2 bg-white border alert-dismissible alert">
+	<h4 class="d-flex">
+		<%= tag.span user.email %>
+		<a href="#" data-dismiss="alert" data-bs-dismiss="alert" class="ms-auto btn btn-close"><span class="sr-only">Close</span></a>
+	</h4>
+
+	<div class="">
+	<%= tag.span "Roles" %>
+	<% @site_roles.each do |role_name| %>
+		<%= tag.span role_name, class: "badge bg-success m-1" if user.has_role?(role_name.to_sym) %>
+	<% end %>
+	</div>
+
+</div>
+<% end %>

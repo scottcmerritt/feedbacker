@@ -1,0 +1,4 @@
+<%= icon icon: "check", icon_css: "text-success" if target.approved %>
+<%= icon icon: "globe", icon_css: "text-success mx-1" if target.is_global %>
+<%= icon icon: "globe", icon_css: "text-primary mx-1" if target.is_public %>
+<%= icon icon: "globe", icon_css: "text-danger mx-1" unless target.is_public %>

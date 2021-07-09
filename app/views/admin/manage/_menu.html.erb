@@ -1,0 +1,14 @@
+<% vertical = false if local_assigns[:vertical].nil? %>
+<% icon_size = "fs-5" if local_assigns[:icon_size].nil? %>
+
+<% link_css = "nav-link border rounded mb-1 d-flex align-items-center #{!vertical ? 'mx-1' : ''}" %>
+<% icon_css = "text-dark #{icon_size} me-2" %>
+<nav class="nav <%= "flex-column" if vertical %>">
+<%= link_to icon_text("Admin Home","home",false,icon_css), admin_path, class: link_css %>
+<%= link_to icon_text(dbt('users').capitalize,"users",false,icon_css), admin_users_path, class:link_css %>
+<%= link_to icon_text(dbt('announcements').capitalize,"bullhorn",false,icon_css), posts_path, class:link_css %>
+<%= link_to icon_text(dbt('database').capitalize,"server",false,icon_css), admin_db_path, class:link_css %>
+<%= link_to icon_text(dbt('translations').capitalize,"language",false,icon_css), feedbacker.translate_keys_path, class:link_css if feedbacker?(feature:"translate") rescue "Multi lingual tools not active" %>
+
+<%= link_to icon_text(dbt('sites').capitalize,"language",false,icon_css), sites_path, class:link_css rescue "Multi-site features not active" %>
+</nav>

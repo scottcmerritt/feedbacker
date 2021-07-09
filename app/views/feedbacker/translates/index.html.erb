@@ -1,0 +1,29 @@
+<div class="row mt-3">
+	<div class="col-5">
+		<h6 class="d-flex align-items-center bg-secondary text-light p-2 border rounded-top">Template keywords <%= link_to icon_text('',"edit"), feedbacker.translate_keys_path, class: "ms-auto text-light" %></h6>
+
+		<% @translate_domains_grouped.each do |row| %>
+		<div><%= row.tdomain.nil? ? "Nil" : link_to(row.tdomain, feedbacker.translate_keys_path{tdomain:row.tdomain}) %></div>
+		<% end %>
+
+		<%= render partial: "#{engine_prefix}translate_keys/parts/needed", locals: {title: "Translations needed"} %>
+	</div>
+	<div class="col-5">
+		<h2>Translations <%= link_to "Add", feedbacker.new_translate_key_path, class: "btn btn-sm btn-primary text-light" %></h2>
+		<% @translations.each do |row| %>
+		<div class="bg-white border p-2 my-2 d-flex align-items-center">
+			<%= tag.span row.lang, class:"badge bg-success fs-7 me-1" %>
+			<%= row.tdomain %>.<%= row.tkey %> = <%= tag.span row.phrase, class: "fw-bold" %>
+
+			<div class="ms-auto">
+				<%= link_to icon_text("","edit"),feedbacker.edit_translate_path(id:row.id) %>
+				<%= link_to icon_text("","trash"),feedbacker.translate_path(id:row.id), method: :delete %>
+			</div>
+		</div>
+		<%= tag.div row.object_hashkey if params[:debug] %>
+		<% end %>
+	</div>
+	<div class="col-2">
+		<h6>Top contributors</h6>
+	</div>
+</div>

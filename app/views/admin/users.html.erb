@@ -1,0 +1,66 @@
+<%= render partial: "admin/manage/menu" %>
+
+<div class="row">
+	<div class="col-2">
+		<h7>Users by role</h7>
+
+		<%= link_to badge_with_count("Show all",User.count), admin_users_path, class: "nav-link border my-1 btn btn-light #{@role == nil ? "acftive bg-dark text-white" : ""}" %>
+<% @site_roles.each do |role_name| %>
+<%= link_to badge_with_count(role_name.pluralize.capitalize, User.with_role(role_name.to_sym).count), admin_users_path(role:role_name), class: "nav-link border my-1 btn btn-light #{@role == role_name ? "acftive bg-dark text-white" : ""}" %>
+<% end %>
+
+	</div>
+	<div class="col-10">
+		<%= render partial: "users/user_roles", locals: {user:@user} %>
+		
+
+<%= paginate @users %>
+<table class="table">
+<tr><td class="col-2">Roles</td>
+	
+
+	<td class="col-1">Logins</td>
+	<td class="col-9">User</td>
+	<td></td>
+</tr>
+<% @users.each do |user| %>
+<tr class="bg-white border">
+	<td class="">
+		<button class="btn btn-sm bg-success text-white btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"><%= icon_text("","user-plus") %></button>
+  <ul class="dropdown-menu dropdown-menu-end border-2">
+  	<% @site_roles.each do |role_name| %>
+    <li><%= link_to role_name, modify_role_path(user_id: user.id,act:"add",role:role_name), class: "dropdown-item", method: :post %></li>
+    <% end %>
+    <li><hr class="dropdown-divider"></li>
+    <li><a class="dropdown-item" href="#">Block user</a></li>
+  </ul>
+
+  <button class="btn btn-sm bg-danger text-white btn-outline-secondary dropdown-toggle ms-1" type="button" data-bs-toggle="dropdown" aria-expanded="false"><%= icon_text("","user-minus") %></button>
+  <ul class="dropdown-menu dropdown-menu-end">
+  	<% @site_roles.each do |role_name| %>
+    <li><%= link_to role_name, modify_role_path(user_id: user.id,act:"del",role:role_name), class: "dropdown-item", method: :post %></li>
+    <% end %>
+    <li><hr class="dropdown-divider"></li>
+    <li><a class="dropdown-item" href="#">Block user</a></li>
+  </ul>
+
+	</td>
+	<td><%= tag.span user.sign_in_count rescue alert_devise_not_configured %></td>
+	<td class=""><%= link_to user.email, user %>
+		
+		<div class="fs-8">Prev sign in <%= time_ago_in_words user.last_sign_in_at rescue alert_devise_not_configured %></div>
+		<div class="fs-8">Current sign in <%= time_ago_in_words user.current_sign_in_at rescue alert_devise_not_configured %></div>
+
+	</td>
+	<td>[<%= user.confirmed_at rescue alert_devise_not_configured %>]
+<%= tag.span icon_text("Confirmed","check",true) unless user.confirmed_at.nil? rescue alert_devise_not_configured %>
+<%= link_to "Confirm", user_confirm_path(id:user.id), method: :post if user.confirmed_at.nil? rescue alert_devise_not_configured %>
+</td>
+</tr>
+<% end %>
+</table>
+
+
+</div>
+</div>
+

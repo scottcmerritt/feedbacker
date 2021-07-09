@@ -2,6 +2,18 @@ module Feedbacker
   module ApplicationHelper
     include Rails.application.routes.url_helpers
 
+    def feedbacker? feature:nil
+      if feature.nil?
+        return true
+      else
+        return true if feature == "translate"
+      end
+    end
+
+    def feedbacker_marketing_link
+      tag.div "Automatically created by Feedbacker", class: "p-2 fs-7 text-center"
+    end
+
     def feedbacker_draw target:nil, data: nil 
       "Hello world new version"
 
@@ -38,6 +50,7 @@ module Feedbacker
 
     def feedbacker_list data #title:nil,rows:, paging: true, page: 1, page_size:2, labels:{}, with_borders: true, prepend_paths: nil, attach_paths: nil, attach_methods: nil, prepend_methods: nil, ignore_columns: nil, filtered: nil
       data = data.merge({:view=>"list"})
+      data = data.merge({:ignore_columns=> ( data[:ignore_columns].nil? ? ["user_id","content"] : data[:ignore_columns]+=["user_id","content"] ) })
       feedbacker_rows(**data) #view: "list", rows: rows
     end
 

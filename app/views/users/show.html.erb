@@ -1,0 +1,9 @@
+<%= render partial: "show", locals: {user: @user, show_link: false} %>
+
+<div class="d-flex">
+<div class="col-sm-6 mx-auto">
+<% @user.comments.each do |comment| %>
+	<%= render partial: "comments/show", locals: {comment:comment} %>
+<% end %>
+</div>
+</div>

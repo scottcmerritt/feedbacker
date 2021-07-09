@@ -1,0 +1,10 @@
+<% hide = [] if local_assigns[:hide].nil? %>
+<% unless hide.include?(:title) %>
+<h1>People</h1>
+<% end %>
+<%= paginate @users %>
+<% @users.each do |user| %>
+<%= render partial: "show", locals: {user: user} %>
+<% end %>
+
+<%= feedbacker_marketing_link %>

@@ -1,0 +1,20 @@
+<h4 class="mt-3"><%= local_assigns[:title].nil? ? "Translations need" : title %></h4>
+    
+<% needed = Feedbacker::Translate.get_cache_misses(grouped:true) %>
+<% if needed.empty? %>
+<%= tag.div "No translations needed", class: "alert alert-notice" %>
+<% else %>
+    <% needed.each do |lang,rows| %>
+    <div data-lang="<%= lang %>" class="bg-white border m-1 p-1">
+      <h6>Language: <%= lang %></h6>
+      <% rows.each do |full_row| %>
+      <% row = full_row.has_key?(:obj) ? full_row[:obj] : full_row %>
+      <div>
+        <%= link_to icon(icon:'trash'), feedbacker.translates_path({remove_misskey:full_row[:key]}), class:"me-2" if full_row.has_key?(:key) %>
+        <%= link_to "#{row.tdomain}.#{row.tkey}", feedbacker.new_translate_path(lang:lang,tdomain:row.tdomain,tkey:row.tkey) %>
+        <%= tag.div full_row[:key], class: "fs-7" if params[:debug] %>
+      </div>
+      <% end %>
+    </div>
+    <% end %>
+<% end %>

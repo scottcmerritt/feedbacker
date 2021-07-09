@@ -1,0 +1,79 @@
+<h1 class="d-flex align-items-center">
+<%= link_to icon(icon:"arrow-left"), translate_keys_path, class: "me-2" unless !params[:tdomain] %>
+  Translate Keys  <%= tag.span raw("Cache used <span class='text-success fs-2 mx-1'>#{num_format(Feedbacker::Translate.cache_success,1)}%</span> of the time"), class:"d-flex align-items-center ms-auto badge bg-light border text-dark fs-6" %></h1>
+<div class="">
+<%= Feedbacker::Translate.cache_hits %> hits and <%= Feedbacker::Translate.cache_misses %> misses</div>
+
+<div class="row">
+  <div class="col-3">
+    <%= render partial: "#{engine_prefix}translate_keys/parts/needed", locals: {title: "Translations needed"} %>
+
+</div>
+
+<div class="col-9">
+  <table class="table">
+    <thead>
+      <tr>
+        <th class="text-center">
+          Translations
+        </th>
+        <th class="text-start">Languages</th>
+
+        <th>Domain</th>
+        <th>Key</th>
+        <th>Creator</th>
+        <th>Visibility</th>
+
+        <% if false %>
+        <th>Approved</th>
+        <th>Approved at</th>
+        <th>Approved by</th>
+        <th>Removed</th>
+        <th>Removed by</th>
+        <th>Removed at</th>
+        <% end %>
+        <th colspan="3"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @translate_keys.each do |translate_key| %>
+        <tr>
+          <td class="text-center">
+            <%= translate_key.translates.count %>
+          </td>
+          <td class="text-start">
+            <%= translate_key.languages.count %>
+            <% translate_key.languages.pluck(:lang).each do |lang| %>
+            <%= tag.span lang, class: "badge bg-#{@lang_colors[lang]} ms-1 fs-8" %>
+            <% end %>
+          </td>
+          <td><%= link_to translate_key.tdomain, feedbacker.translate_keys_path({tdomain:translate_key.tdomain}) unless translate_key.nil? || translate_key.tdomain.nil? %></td>
+          <td><%= translate_key.tkey %></td>
+          <td><%= translate_key.createdby %></td>
+          <td>
+  <%= render partial: "shared/permissions/show", locals: {target:translate_key} %>
+          </td>
+
+          
+          <% if false %>
+          <td><%= translate_key.approved %></td>
+          <td><%= translate_key.approved_at %></td>
+          <td><%= translate_key.approved_by %></td>
+          <td><%= translate_key.removed %></td>
+          <td><%= translate_key.removed_by %></td>
+          <td><%= translate_key.removed_at %></td>
+          <% end %>
+          <td><%= link_to 'Show', feedbacker.translate_key_path(translate_key) %></td>
+          <td><%= link_to icon(icon:"edit"), feedbacker.edit_translate_key_path(translate_key) %></td>
+          <td><%= link_to icon(icon:'trash'), feedbacker.translate_key_path(translate_key), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+</div>
+
+<br>
+
+<%= link_to 'New Translate Key', feedbacker.new_translate_key_path %>

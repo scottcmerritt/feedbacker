@@ -1,0 +1,16 @@
+<div class="d-flex justify-content-between align-items-center">
+<span class="fs-3">Manage Feedbacker</span>
+<%= link_to "Home", main_app.root_path if false %>
+</div>
+<div class="m-2 p-2 border bg-white row">
+
+<% 4.times.each do |section_num| %>
+<div class="col-6 p-2">
+	<div class="border rounded bg-light">
+		<h4 class="p-2">Section <%= section_num %></h4>
+		<div class="p-2 mt-1 mb-3">Content here</div>
+	</div>
+</div>
+<% end %>
+
+</div>

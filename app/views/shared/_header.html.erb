@@ -1,0 +1,18 @@
+<% themes = ["navbar-dark bg-dark","navbar-light bg-light border-bottom","navbar-dark bg-primary"] %>
+<% theme_css = !@app_site.nil? ? themes[@app_site.theme_id] : "navbar-dark bg-dark" %>
+<header>
+<!-- Fixed navbar -->
+<nav class="navbar navbar-expand-md fixed-top d-flex <%= theme_css %>">
+<a class="navbar-brand ms-3" href="<%= main_app.root_path %>"><%= icon_text("","book") %> <%= @app_site.nil? || @app_site.name.nil? ? dbt('site_title') : @app_site.name %></a>
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+  <span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="navbarCollapse">
+  <%= render partial: "shared/menu" %>
+</div>
+
+  <% unless controller.controller_name == "welcome" && controller.action_name == "index" %>
+  <%= render partial: "shared/search" %>
+  <% end %>
+</nav>
+</header>

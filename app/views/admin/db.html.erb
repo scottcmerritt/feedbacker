@@ -1,0 +1,29 @@
+<%= render partial: "admin/manage/menu" %>
+<% tag.div @db_error, class: "alert alert-danger" if @db_error %>
+
+
+
+
+
+<% unless @rows_per_table.nil? %>
+	<div class="col-sm-6 mx-auto text-center d-flex align-items-center">
+	<%= tag.span @rows_used, class:"fs-2 fw-bold" %> <span class="mx-1">total database rows used</span>
+
+	<%= tag.span (num_format(@rows_used/10000.to_f * 100,0).to_s + "% of capacity"), class: "badge bg-success fs-7" if @rows_used < 10000 %>
+	</div>
+	<div class="col-sm-6 mx-auto p-2">
+	<span class="fw-bold">The free limit is 10k rows.</span> 10 million rows costs ~$10/month
+	</div>
+	<div class="alert alert-danger col-sm-6 mx-auto p-1 text-center"><%= @hidden_tables.length %> hidden system tables</div>
+	<div class="alert alert-info col-sm-6 mx-auto">
+		<h4 class="fw-bold d-flex">Tables <span class="ms-auto">Rows</span></h4>
+		<% @rows_per_table.each do |row| %>
+		<%= tag.div raw("#{row["table"]}: #{tag.span(row["count"],class:"ms-auto fw-bold")}"), class:"border d-flex px-2 " unless @hidden_tables.include?(row["table"]) %>
+		<% end %>
+	</div>
+<% else %>
+<h4>Postgres needed</h4>
+
+<% end %>
+
+<h6> Database type: <%= ActiveRecord::Base.connection.instance_values["config"][:adapter] %></h6>

@@ -1,0 +1,18 @@
+<% flash.each do |key, value| %>
+  <div class="alert alert-<%= key %> p-1 m-1 d-flex align-items-center">
+      <ul class="flex-fill d-flex align-items-center m-0 p-2">
+        <li>
+          <%= value %>
+        </li>
+      </ul>
+      <a href="#" data-dismiss="alert" class="ms-auto btn-close"><span class="sr-only">Close</span></a>
+  </div>
+<% end %>
+<% if false %>
+<% flash.each do |type, message| %>
+  <div class="alert <%= bootstrap_flash_class(type) %> fade in">
+    <%= message %>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  </div>
+<% end %>
+<% end %>

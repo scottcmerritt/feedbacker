@@ -1,0 +1,12 @@
+<footer class="footer">
+  <div class="container d-flex align-items-center">
+    <% unless @languages.nil? %>
+    <span class="text-muted"><%= t('change_language') %></span>
+    <% @languages.each do |lang| %>
+    <a class="mx-1" href="?locale=<%= lang %>"><%= lang %></a>
+    <% end %>
+    <% end %>
+    <%= render partial: "shared/switch_user",locals:{wrap_css:"ms-auto"} unless Rails.env.production? rescue nil %>
+    <%= render partial: "shared/switch_site",locals:{wrap_css:"ms-auto"} if is_admin? rescue nil %>
+  </div>
+</footer>
