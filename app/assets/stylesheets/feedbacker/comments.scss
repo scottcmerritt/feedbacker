@@ -1,0 +1,43 @@
+
+.comments-header {
+  border-bottom: 1px dotted gray;
+  margin-bottom: 10px;
+}
+
+
+
+.comments-container {
+    padding: 0.25em;
+    background: white;border: solid 1px gray;
+  p {
+    margin-bottom: 0px;
+  }
+  .comment-nav {
+    margin-left: 5px;
+    margin-bottom: 10px;
+
+    a {
+      font-size: 10px;
+      font-weight: bold;
+      color: #888;
+    }
+  }
+}
+
+.reply-form {
+  display: none;
+}
+
+.comments-show {
+  margin-left: 25px;
+  .comment {
+    p {
+
+    }
+    .body {
+        background: #c5c5c5;
+        border-radius: 0.4em;
+        padding: 0.4em  0.8em;
+    }
+  }
+}

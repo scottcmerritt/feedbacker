@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= t('site_title') || "People Rater" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    
+  </head>
+  <body>
+    <%= render partial: "shared/header" %>
+    <!-- Begin page content -->
+    <main role="main" class="container my-3" style="margin-bottom:6rem!important;">
+    <%= render 'shared/flash' %>
+    <%= feedbacker_menu tabs: @site_links, controller: controller_name, action: action_name, style:nil,horiz:true,color:"dark" %>
+
+      <%= render partial: "users/profile_mini",locals: {user:current_user} rescue nil%>
+
+      <%= yield %>
+    </main>
+   
+   <%= render partial: "shared/footer" rescue "Footer missing" %>
+  </body>
+  <%= render partial: "layouts/bootstrap_scripts" %>
+</html>
