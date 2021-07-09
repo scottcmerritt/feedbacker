@@ -1,4 +1,4 @@
-class ActsAsCommentableWithThreadingMigration < ActiveRecord::Migration[6.1]
+class ActsAsCommentableWithThreading < ActiveRecord::Migration[6.1]
   def change
     create_table :comments, :force => true do |t|
       t.integer :commentable_id
