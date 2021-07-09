@@ -2,6 +2,12 @@ class UsersController < ApplicationController
   before_action :authenticate_user!
   include Feedbacker::FeedbackerUsersController
   
+  def welcome
+
+    @user = current_user
+    render show, notice: "Welcome #{@user.email}"
+  end
+
   def profile
     @user = current_user
     render "show"
