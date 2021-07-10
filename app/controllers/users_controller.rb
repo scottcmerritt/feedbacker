@@ -3,9 +3,8 @@ class UsersController < ApplicationController
   include Feedbacker::FeedbackerUsersController
   
   def welcome
-
     @user = current_user
-    render show, notice: "Welcome #{@user.email}"
+    #render show, notice: "Welcome #{@user.email}"
   end
 
   def profile
