@@ -19,10 +19,10 @@ module Feedbacker
 
   def load_site
 #   <%= request.host %>: <%= request.domain %>
-#   @app_site = Site.where(domain:request.host).first
-#   impressionist @app_site unless @app_site.nil?
-    load_langs
-    set_locale
+   @app_site = Site.where(domain:request.host).first if defined?(Site)
+   impressionist @app_site unless @app_site.nil? && defined?(Impression)
+   load_langs
+   set_locale
   end
 
   # main NAV links
