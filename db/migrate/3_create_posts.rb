@@ -1,11 +1,24 @@
 class CreatePosts < ActiveRecord::Migration[6.1]
   def change
     create_table :posts do |t|
-      t.integer :user_id
-      t.string :title
-      t.text :content
+	    t.string :title
+	    t.text :details
 
-      t.timestamps
-    end
+	    # the listed creator
+	    t.integer :user_id
+	    # the actual creator
+	    t.integer :createdby
+	    t.boolean :is_public
+	    t.boolean :is_global
+	    t.boolean :approved
+	    t.datetime :approved_at
+	    t.integer :approved_by
+	    t.boolean :removed
+	    t.integer :removed_by
+	    t.datetime :removed_at
+
+	    t.timestamps
+	end
+
   end
 end

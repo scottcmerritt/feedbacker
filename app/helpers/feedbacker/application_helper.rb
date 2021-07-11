@@ -50,7 +50,7 @@ module Feedbacker
 
     def feedbacker_list data #title:nil,rows:, paging: true, page: 1, page_size:2, labels:{}, with_borders: true, prepend_paths: nil, attach_paths: nil, attach_methods: nil, prepend_methods: nil, ignore_columns: nil, filtered: nil
       data = data.merge({:view=>"list"})
-      data = data.merge({:ignore_columns=> ( data[:ignore_columns].nil? ? ["user_id","content"] : data[:ignore_columns]+=["user_id","content"] ) })
+      data = data.merge({:ignore_columns=> ( data[:ignore_columns].nil? ? ["user_id","details"] : data[:ignore_columns]+=["user_id","details"] ) })
       feedbacker_rows(**data) #view: "list", rows: rows
     end
 

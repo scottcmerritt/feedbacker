@@ -8,15 +8,17 @@
 
 	<% begin %>
 	<% if respond_to?(:line_chart) %>
-	<%= line_chart Impression.where(impressionable_type:"Site").group_by_day(:created_at).count, title: "Views/day" %>
-	<%= line_chart Impression.where(impressionable_type:"Book").group_by_day(:created_at).count, title: "Book views/day" %>
-	<%= column_chart Impression.where(impressionable_type:"Site").group_by_day(:created_at).count("DISTINCT(user_id)"), title: "Users/day" %>
-	<%= column_chart Impression.where(impressionable_type:"Book").group_by_day(:created_at).count("DISTINCT(impressionable_id)"), title: "Books viewed/day" %>
 
-	<%= column_chart Book.group_by_day(:created_at).count, title: "Books added/day" %>
+
+	<%= line_chart Impression.where(impressionable_type:"Site").group_by_day(:created_at).count, title: "Views/day" %>
+	<%= line_chart Impression.where(impressionable_type:"Book").group_by_day(:created_at).count, title: "Book views/day" rescue tag.div "No books to report on" %>
+	<%= column_chart Impression.where(impressionable_type:"Site").group_by_day(:created_at).count("DISTINCT(user_id)"), title: "Users/day" %>
+	<%= column_chart Impression.where(impressionable_type:"Book").group_by_day(:created_at).count("DISTINCT(impressionable_id)"), title: "Books viewed/day" rescue tag.div "No books to report on" %>
+
+	<%= column_chart Book.group_by_day(:created_at).count, title: "Books added/day" rescue tag.div "No books to report on" %>
 	<%= bar_chart User.group_by_day(:created_at, reverse: true).count, title: "Users added/day" %>
 
-	<%= line_chart Order.group_by_day(:created_at, reverse: true).sum(:price), title: "$ raised/day" %>
+	<%= line_chart Order.group_by_day(:created_at, reverse: true).sum(:price), title: "$ raised/day" rescue tag.div "No projects to report on" %>
 	<% else %>
 		<div class="alert alert-warning">Unable to load charts and analytics</div>
 	<% end %>

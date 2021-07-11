@@ -96,7 +96,7 @@ module Feedbacker
 
       # Only allow a list of trusted parameters through.
       def post_params
-        params.require(:post).permit(:user_id, :title, :content)
+        params.require(:post).permit(:user_id, :title, :details)
       end
 
       def load_posts_links

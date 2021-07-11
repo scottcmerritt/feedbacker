@@ -5,7 +5,7 @@
 
 <div class="bg-light border my-1">
 	<%= link_to row.title, row, class: "fs-4 text-primary fw-bold font-weight-bold p-1 px-2" rescue nil %>
-	<%= tag.p row.content, class: "text-secondary px-2" rescue nil %>
+	<%= tag.p row.details, class: "text-secondary px-2" rescue nil %>
 	<% row.attributes.each do |k,v| %>
 	<% unless ignore_columns.include?(k) || time_ago_columns.include?(k) %>
         <div>
