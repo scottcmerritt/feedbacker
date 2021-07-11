@@ -6,10 +6,8 @@
 </div>
 <div class="col-6">
 
-	<% begin %>
+<% begin %>
 	<% if respond_to?(:line_chart) %>
-
-
 	<%= line_chart Impression.where(impressionable_type:"Site").group_by_day(:created_at).count, title: "Views/day" %>
 	<%= line_chart Impression.where(impressionable_type:"Book").group_by_day(:created_at).count, title: "Book views/day" rescue tag.div "No books to report on" %>
 	<%= column_chart Impression.where(impressionable_type:"Site").group_by_day(:created_at).count("DISTINCT(user_id)"), title: "Users/day" %>
@@ -22,9 +20,9 @@
 	<% else %>
 		<div class="alert alert-warning">Unable to load charts and analytics</div>
 	<% end %>
-	<% rescue %>
-		<div class="alert alert-warning">Error loading charts and analytics</div>
-	<% end %>
+<% rescue %>
+	<div class="alert alert-warning">Error loading charts and analytics</div>
+<% end %>
 
 </div>
 <div class="col-3">
