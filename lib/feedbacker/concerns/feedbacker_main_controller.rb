@@ -20,7 +20,7 @@ module Feedbacker
   def load_site
 #   <%= request.host %>: <%= request.domain %>
    @app_site = Site.where(domain:request.host).first if defined?(Site)
-   impressionist @app_site unless @app_site.nil? && defined?(Impression)
+   impressionist @app_site unless @app_site.nil? || !defined?(Impression)
    load_langs
    set_locale
   end
