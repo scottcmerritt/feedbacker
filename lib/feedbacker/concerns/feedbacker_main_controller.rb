@@ -28,9 +28,9 @@ module Feedbacker
   # main NAV links
   def load_site_menu
     @site_menu = []
-    @site_menu.push ["People",main_app.users_path,controller_name == 'users']
-    @site_menu.push ["Admin",main_app.admin_path,controller_name == 'admin' && !respond_to?(:feedbacker?)]
-    @site_menu.push ["Feedback",feedbacker.admin_path,controller_name == "admin" && (respond_to?(:feedbacker?) && feedbacker?)]
+    @site_menu.push [dbt('users',default:"People"),main_app.users_path,controller_name == 'users']
+    @site_menu.push [dbt('admin',default:"Admin"),main_app.admin_path,controller_name == 'admin' && !respond_to?(:feedbacker?)]
+    @site_menu.push [dbt('feedback',default:"Feedback"),feedbacker.admin_path,controller_name == "admin" && (respond_to?(:feedbacker?) && feedbacker?)]
 =begin
     @site_menu = [
       [dbt('menu.books',d:'Books').capitalize || 'Books',books_path,controller_name == 'books'],
