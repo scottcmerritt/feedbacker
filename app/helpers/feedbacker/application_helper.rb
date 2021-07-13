@@ -57,6 +57,9 @@ module Feedbacker
 
     def feedbacker_table data #title:nil,rows:, paging: true, page: 1, page_size:2, labels:{}, with_borders: true, prepend_paths: nil, attach_paths: nil, attach_methods: nil, prepend_methods: nil, ignore_columns: nil, filtered: nil
       data = data.merge({:view=>"table"})
+      ignore_cols = ["user_id","details","createdby","is_public","is_global","approved","approved_at","approved_by","removed","removed_by","removed_at"]
+      data = data.merge({:ignore_columns=> ( data[:ignore_columns].nil? ? ignore_cols : data[:ignore_columns]+=ignore_cols ) })
+      
       feedbacker_rows(**data)
     end
 
