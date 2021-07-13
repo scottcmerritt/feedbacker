@@ -70,6 +70,13 @@ module Feedbacker
       @@theme
     end
 
+    def languages
+      @@languages
+    end
+    def default_language
+      @@default_language
+    end
+    
     def languages=(lang_arr)
       @@languages = lang_arr
     end
