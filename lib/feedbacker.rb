@@ -3,9 +3,20 @@ require "feedbacker/engine"
 
 require 'kaminari'
 
+require 'feedbacker/configure'
+
 module Feedbacker
   # Your code goes here...
   #require "app/models/feedbacker/concerns"
+  extend Configure
+
+  def feedbacker(options = {})
+    #include Role
+    #extend Dynamic if Rolify.dynamic_shortcuts
+
+
+  end
+
 
   # NOT sure if this WORKS
   #class Feedbacker < Rails::Engine

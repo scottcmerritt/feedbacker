@@ -1,9 +1,9 @@
 module Feedbacker
   module UiHelper
 
+    # not used much, just for testing
     def feedback_h content
       tag.h3 content, class: "bg-primary text-light px-2 py-1 my-1"
-
     end
 
     def feedbacker_tabs tabs:
