@@ -109,11 +109,11 @@ module Feedbacker
   end
   
   def all_locales
-    ["en","sw"] # en-us
+    Feedbacker.languages #["en","sw"] # en-us
   end
 
   def get_all_langs
-    ["en","sw"] #en-us
+    Feedbacker.languages #["en","sw"] #en-us
   end
   def load_langs
     @languages = get_all_langs
@@ -128,7 +128,7 @@ module Feedbacker
 
 
   def set_locale
-    default_locale = @app_site.nil? ? "en" : @app_site.default_locale
+    default_locale = @app_site.nil? ? Feedbacker.default_language : @app_site.default_locale
     begin
       if params[:locale] != nil
         all_locales.include?(params[:locale]) ? params[:locale] : all_locales[0]

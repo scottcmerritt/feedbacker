@@ -9,6 +9,8 @@ module Feedbacker
     @@default_list_ui = "list" # or table
     @@theme = 0
     
+    @@languages = ["en","es"]
+    @@default_language = "en"
 
     def configure(*settings)
       return if !sanity_check(settings)
@@ -47,6 +49,8 @@ module Feedbacker
         config.orm = "active_record"
         config.default_list_ui = "list"
         config.theme = 0
+        config.languages = ["en","es"]
+        config.default_language = "en"
       end
     end
 
@@ -66,13 +70,18 @@ module Feedbacker
       @@theme
     end
 
+    def languages=(lang_arr)
+      @@languages = lang_arr
+    end
+    def default_language=(lang)
+      @@default_language = lang
+    end
+
     private
 
     def sanity_check settings
       true
     end
-
-   
 
   end
 end
