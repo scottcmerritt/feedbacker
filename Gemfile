@@ -11,6 +11,10 @@ gem 'simple_form'
 group :development do
   gem 'sqlite3'
 end
+#group :production do
+#  gem 'pg'
+#end
+
 
 # To use a debugger
 # gem 'byebug', group: [:development, :test]

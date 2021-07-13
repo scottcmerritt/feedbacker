@@ -4,7 +4,7 @@
     <% if I18n.locale.to_s == lang.to_s %>
     <%= tag.span lang, class: "mx-1" %>
     <% else %>
-    <a class="mx-1" href="?locale=<%= lang %>"><%= lang %></a>
+    <a class="mx-1" href="/?locale=<%= lang %>&r=<%= request.fullpath %>"><%= lang %></a>
     <% end %>
     <% end %>
 <% end %>
