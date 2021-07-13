@@ -1,6 +1,10 @@
 <% unless @languages.nil? %>
     <span class="text-muted"><%= t('change_language') %></span>
     <% @languages.each do |lang| %>
-    <a class="mx-1 <%= I18n.locale.to_s == lang.to_s ? 'border bg-dark text-light' : '' %>" href="?locale=<%= lang %>"><%= lang %></a>
+    <% if I18n.locale.to_s == lang.to_s %>
+    <%= tag.span lang, class: "mx-1" %>
+    <% else %>
+    <a class="mx-1" href="?locale=<%= lang %>"><%= lang %></a>
+    <% end %>
     <% end %>
 <% end %>
