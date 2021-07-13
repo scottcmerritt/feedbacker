@@ -146,7 +146,7 @@ module Feedbacker
       if params[:locale] != nil
           new_locale = all_locales.include?(params[:locale]) ? params[:locale] : all_locales[0]
           cookies.permanent[:locale] = new_locale #params[:locale].to_sym
-          current_user.settings(:site).update!(:language => new_locale) if !(current_user.nil? || current_user.id.nil?) && current_user.try(:settings)
+          current_user.settings(:site).update!(:language => new_locale) if !(current_user.nil? || current_user.id.nil?) && current_user.respond_to?(:settings)
           I18n.locale = new_locale.to_sym
       else
         I18n.locale = (user_signed_in? && current_user.try(:locale)) || cookies[:locale] || read_lang_header || default_locale 
