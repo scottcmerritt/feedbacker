@@ -4,7 +4,7 @@
     <% if I18n.locale.to_s == lang.to_s %>
     <%= tag.span lang, class: "mx-1" %>
     <% else %>
-    <%= link_to lang, main_app.root_path(request.parameters.except(:controller,:action).merge({locale:lang}).merge({r:request.fullpath}), class: "mx-1" %>
+    <%= link_to lang, main_app.root_path(request.parameters.except(:controller,:action).merge({locale:lang}).merge({r:request.fullpath})), class: "mx-1" %>
     <% end %>
     <% end %>
 <% end %>
