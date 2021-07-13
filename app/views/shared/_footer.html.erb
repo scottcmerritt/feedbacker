@@ -1,6 +1,6 @@
 <footer class="footer">
   <div class="container d-flex align-items-center">
-    <%= render partial: "shared/switch_lang" unless @languages.nil? || @languages.length == 1 %>
+    <%= render partial: "shared/switch_lang" unless @languages.nil? || (@languages.length == 1) rescue "Error w/ language" %>
     <%= render partial: "shared/switch_user",locals:{wrap_css:"ms-auto"} unless Rails.env.production? rescue nil %>
     <%= render partial: "shared/switch_site",locals:{wrap_css:"ms-auto"} if is_admin? rescue nil %>
   </div>
