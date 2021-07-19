@@ -60,6 +60,9 @@ module Feedbacker
       @site_links.push(Feedbacker::UiTab.new(
         {id:3, key: tab_key,name:"Users",url: main_app.users_path,controller:"users",is_parent:true}
         ))
+      @site_links.push(Feedbacker::UiTab.new(
+        {id:4, key: tab_key,name:"Orgs",url: main_app.orgs_path,controller:"orgs",is_parent:true}
+        )) if defined?(Community::Org)
 
   end
 

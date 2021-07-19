@@ -5,10 +5,12 @@
   by <strong>User <%= @post.user_id %></strong>
 </p>
 
+<% if @post.respond_to?(:details) %>
 <div class="bg-white border p-2 my-2">
   <strong>Content:</strong>
   <%= @post.details %>
 </div>
+<% end %>
 
 <%= feedbacker_comments target: @post, new_comment: @new_comment %>
 

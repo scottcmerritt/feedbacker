@@ -9,7 +9,7 @@
 	<% row.attributes.each do |k,v| %>
 	<% unless ignore_columns.include?(k) || time_ago_columns.include?(k) %>
         <div>
-        <%= tag.span k, class: "fw-bold font-weight-bold me-1" %> <%= tag.span v %>
+        <%= tag.span k, class: "fw-bold font-weight-bold me-1 ps-2" %> <%= tag.span v %>
     	</div>
         <% end %>
       <% end %>

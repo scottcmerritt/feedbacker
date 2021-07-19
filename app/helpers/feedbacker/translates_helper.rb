@@ -35,6 +35,10 @@ module Feedbacker
 			t(text, default: d || default || text)
 		end
 
+		def translated_site_name default: "My site"
+			@app_site.nil? ? dbt('site_title', default: default) : dbt("site:#{@app_site.id}-site_title", default:@app_site.blank? ? default : @app_site.name)
+		end
+
 	end
 end
 

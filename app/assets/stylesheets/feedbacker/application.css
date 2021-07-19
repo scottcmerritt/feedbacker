@@ -27,3 +27,11 @@
     color: white;
     background-color: red;
 }
+
+.listH, .topicH {
+  display: flex;align-items: center;
+}
+.listH {
+  padding: 0.5rem 1rem;margin:0;margin-top: 0.5rem;
+}
+.nodec {text-decoration: none;}
