@@ -9,12 +9,12 @@
 
         <br>
       </p>
-      <div>by <%= comment.user_id %></div>
+      <div>by <%= comment.user.respond_to?(:display_name_public) ? link_to(comment.user.display_name_public, main_app.user_path(comment.user_id)) : comment.user_id %></div>
     </div>
 
       <div class="comment-nav"><a href="#" class="comment-reply">reply</a></div>
       <div class="reply-form">
-        <%= form_for new_comment do |f| %>
+        <%= form_for new_comment, url: main_app.comments_path(new_comment) do |f| %>
           <%= f.hidden_field :commentable_id, value: new_comment.commentable_id %>
           <%= f.hidden_field :commentable_type, value: new_comment.commentable_type %>
           <%= f.hidden_field :comment_id, value: comment.id %>

@@ -37,6 +37,7 @@ module Feedbacker
       # GET /posts/1 or /posts/1.json
       def show
         @new_comment    = Comment.build_from(@post, current_user.id, "")
+        
 
       end
 
