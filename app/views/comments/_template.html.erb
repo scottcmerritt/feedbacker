@@ -1,9 +1,13 @@
 <div class="comments-header">
-  <h6>
-    <%= commentable.comment_threads.count == 0 ? "no" : commentable.comment_threads.count %> comments
+  <h6 class="mt-1">
+    <%= commentable.comment_threads.count == 0 ? "no" : commentable.comment_threads.count %> <%= "comment".pluralize(commentable.comment_threads.count) %>
   </h6>
 </div>
 <%= render partial: "comments/form", locals: {new_comment: new_comment} %>
-<div class="comments-container">
+<div class="comments-container rounded">
+  <% if commentable.root_comments.length == 0 %>
+  <div class="alert alert-info">Be the first to comment</div>
+  <% else %>
   <%= render partial: "comments/reply", locals: {comments: commentable.root_comments.reverse,new_comment: new_comment} %>
+  <% end %>
 </div>

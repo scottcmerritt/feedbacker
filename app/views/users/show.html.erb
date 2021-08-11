@@ -1,9 +1,24 @@
 <%= render partial: "show", locals: {user: @user, show_link: false} %>
 
+<div class="my-1">
+<%= link_to "News profile", newsify.user_path(@user), class: "p-1 border my-1 me-1" if respond_to?(:newsify) %>
+
+</div>
+
+<% if respond_to?(:newsify) %>
+<div class="row">
+	<div class="col-4"><h5>Posts</h5>
+		<%= render partial: "posts/widgets/index", locals: {data:@user.posts.order("created_at DESC").limit(10)} %>
+	</div>
+	<div class="col-4"><h5>Articles</h5>
+		<%= render partial: "newsify/sources/widgets/index", locals: {data:@user.sources.order("created_at DESC").limit(10),show: {votes:false,moderation:false,interesting:false,added_by:false}} %>
+	</div>
+	<div class="col-4"><%= render partial: "users/feedbacker/comments", locals: {user: @user,title:"Comments",comments:@user.comments.order("created_at DESC")} %></div>
+</div>
+<% else %>
 <div class="d-flex">
 <div class="col-sm-6 mx-auto">
-<% @user.comments.each do |comment| %>
-	<%= render partial: "comments/show", locals: {comment:comment} %>
+	<%= render partial: "users/feedbacker/comments", locals: {user: @user} %>
+</div>
+</div>
 <% end %>
-</div>
-</div>

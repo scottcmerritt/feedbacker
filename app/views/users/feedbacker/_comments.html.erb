@@ -1,0 +1,6 @@
+<% title = local_assigns[:title] %>
+<% comments = user.comments if local_assigns[:comments].nil? %>
+<%= tag.h5 title, class: "my-1" unless title.nil? %>
+<% comments.each do |comment| %>
+	<%= render partial: "comments/show", locals: {comment:comment} %>
+<% end %>

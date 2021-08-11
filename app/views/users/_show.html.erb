@@ -1,8 +1,12 @@
 <% show_link = true if local_assigns[:show_link].nil? %>
 <div class="bg-white border p-2">
 <h4><%= show_link ? link_to(user.email, user) : user.email %></h4>
+<%= link_to "Interests", newsify.profile_interests_path if respond_to?(:newsify) %>
+
 <div>
 <%= user.comments.count %> comments
 </div>
+
+
 
 </div>

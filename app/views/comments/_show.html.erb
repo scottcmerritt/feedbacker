@@ -5,6 +5,6 @@
       </p>
       </div>
       <div class="text-end fs-6 text-secondary">
-            Commented on <%= link_to comment.commentable.title, comment.commentable %>
+            Commented on <%= comment.commentable.is_a?(Newsify::Source) ? link_to(comment.commentable.title, newsify.source_path(comment.commentable)) : (comment.commentable.is_a?(Newsify::Item) ? link_to(comment.commentable.title, newsify.item_path(comment.commentable)) : link_to(comment.commentable.title, comment.commentable)) %>
       </div>
 </div>

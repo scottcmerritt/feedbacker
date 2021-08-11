@@ -41,7 +41,7 @@ module Feedbacker
       end
 
       def make_link
-        label_content = safe_join([content_tag(:span,@label,class: "ml-1"),make_badge])
+        label_content = safe_join([content_tag(:span,@label,class: "ms-1 ml-1"),make_badge])
         content = safe_join([make_collapsed_icon,make_expanded_icon,label_content])
         extra_class = "#{@css_group} d-flex align-items-center #{@link_color}"
         options = {

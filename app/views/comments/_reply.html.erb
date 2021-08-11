@@ -5,11 +5,14 @@
   <div class="comments-show">
     <div class="comment">
       <div class="body">
-      <p class="d-flex align-items-top"><%= comment.body %><span class="ms-auto"><%= tag.span "#{time_ago_in_words(comment.created_at)} ago", class:"fs-7" %></span>
+        <div class="d-flex"><%= comment.user.respond_to?(:display_name_public) ? link_to(comment.user.display_name_public, main_app.user_path(comment.user_id)) : comment.user_id %>
+          <span class="ms-auto"><%= tag.span "#{time_ago_in_words(comment.created_at)} ago", class:"fs-7" %></span>
+        </div>
 
+      <p class="d-flex align-items-top"><%= comment.body %>
         <br>
       </p>
-      <div>by <%= comment.user.respond_to?(:display_name_public) ? link_to(comment.user.display_name_public, main_app.user_path(comment.user_id)) : comment.user_id %></div>
+
     </div>
 
       <div class="comment-nav"><a href="#" class="comment-reply">reply</a></div>
