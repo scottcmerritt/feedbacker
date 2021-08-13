@@ -4,7 +4,7 @@
 <div class="border p-1 px-2 mx-1 mb-1">
 	<h5 class="text-dark"><%= post.title %></h5>
 	<div class="text-end fs-8"><%= time_ago_in_words post.created_at %> ago</div>
-	<p class="text-muted"><%= post.content %></p>
+	<p class="text-muted"><%= post.respond_to?(:content) ? post.content : post.details %></p>
 </div>
 </a>
 <% end %>
