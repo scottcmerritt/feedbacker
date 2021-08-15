@@ -48,8 +48,12 @@ module Feedbacker
           class: "text-toggle nodec #{extra_class}",
           aria: {expanded: @expanded},
           data: {  
+            # bootstrap 4
             target: @options[:target],
-            toggle: "collapse"
+            toggle: "collapse",
+            # bootstrap 5
+            "bs-target": @options[:target],
+            "bs-toggle": "collapse"
           }
         }
 
