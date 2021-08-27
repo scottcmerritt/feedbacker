@@ -3,16 +3,23 @@
 <header>
 <!-- Fixed navbar -->
 <nav class="navbar navbar-expand-md fixed-top d-flex <%= theme_css %>">
-<a class="navbar-brand ms-3" href="<%= main_app.root_path %>"><%= icon_text("","book") %> <%= translated_site_name default: "My site" %></a>
-<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-  <span class="navbar-toggler-icon"></span>
-</button>
-<div class="collapse navbar-collapse" id="navbarCollapse">
-  <%= render partial: "shared/menu" %>
-</div>
+  <div class="container-fluid">
 
-  <% unless controller.controller_name == "welcome" && controller.action_name == "index" %>
-  <%= render partial: "shared/search" %>
-  <% end %>
+    <a class="navbar-brand ms-3" href="<%= main_app.root_path %>"><%= icon_text("","book") %> <%= translated_site_name default: "My site" %></a>
+
+    <%= render partial: "shared/search" unless controller.controller_name == "welcome" && controller.action_name == "index" %>
+
+
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+      <%= render partial: "shared/menu" %>
+    </div>
+
+
+
+</div>
 </nav>
 </header>
