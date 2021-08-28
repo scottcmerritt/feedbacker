@@ -35,3 +35,7 @@
   padding: 0.5rem 1rem;margin:0;margin-top: 0.5rem;
 }
 .nodec {text-decoration: none;}
+
+.comment .body {position:relative;}
+.comment .body .date_ago {position:absolute;top:0;right:0;padding:2px;font-size:10px;}
+.text-light .nav-link {color: white;}

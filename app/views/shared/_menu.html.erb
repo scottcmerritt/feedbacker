@@ -1,11 +1,11 @@
-<ul class="navbar-nav me-auto mr-auto mb-2 mb-md-0">
+<ul class="navbar-nav me-auto mr-auto mb-2 mb-md-0 ms-3 ml-3">
   <% if false %>
   <li class="nav-item active">
     <%= link_to t('home').capitalize, root_path, class: "nav-link" %>
   </li>
   <% end %>
   
-  <%= tag.li link_to(feedbacker_profile, main_app.profile_path, class: "nav-link"), class: "nav-item text-white" %>
+  <%= tag.li link_to(feedbacker_profile, main_app.profile_path, class: "nav-link bg-light rounded text-dark border p-1"), class: "nav-item text-white me-3 mr-3" %>
   <% unless @site_menu.nil? %>
   <% @site_menu.each do |mi| %>
     <% lbl = mi[0] %>
@@ -15,9 +15,20 @@
   </li>
   <% end %>
   <% end %>
-
-
+ 
+</ul>
+<ul class="navbar-nav ms-auto ml-auto mb-2 mb-md-0">
+  <% unless @site_menu_admin.nil? %>
+  <% @site_menu_admin.each do |mi| %>
+    <% lbl = mi[0] %>
+    <% lbl_badge = mi[3].nil? ? nil : tag.span(mi[3],class:"ms-1 badge bg-info") %>
   <li class="nav-item">
+    <%= link_to safe_join([lbl,lbl_badge]),mi[1], class: "nav-link p-1 mx-2 #{mi[2] ? "active active-u" : ""}" %>
+  </li>
+  <% end %>
+  <% end %>
+
+  <li class="nav-item ms-auto ml-auto">
     <%= link_to "Login", main_app.new_user_session_path, class: "nav-link p-1 mx-2" unless user_signed_in? %>
     <%= link_to "Logout", main_app.destroy_user_session_path, method: :delete, class:"nav-link p-1 mx-2" if user_signed_in? %>
   </li>

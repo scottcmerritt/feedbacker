@@ -1,0 +1,42 @@
+<% upgrade = upgrades[0] if local_assigns[:upgrade].nil? %>
+<div class="col-sm-6 mx-auto text-center d-flex align-items-center">
+	<%= tag.span num_comma(rows[:used]), class:"fs-2 fw-bold" %> <span class="mx-1">total database rows used</span>
+
+	
+
+	<%= tag.span (num_format(rows[:used]/plan[:rows].to_f * 100,0).to_s + "% of capacity"), class: "badge bg-success fs-7" if rows[:used] < plan[:rows] %>
+
+	<a href="#tables" class="ml-auto ms-auto text-dark fs-7 mx-1" data-bs-target="#tables" data-bs-toggle="collapse">More info</a>
+</div>
+
+<div class="col-sm-6 mx-auto p-2">
+	<span class="fw-bold">The <%= plan[:name] %> limit is <%= (plan[:rows]/1000).to_i %>k rows.</span> 
+</div>
+<div class="col-sm-8 mx-auto p-2">
+	<div class="d-flex justify-content-between">
+
+		<% upgrades.each_with_index do |tier,index| %>
+		<% top_rec = tier == upgrade %>
+
+		<% font_lg = 5 %>
+		<% font_md = 6 %>
+
+		<div class="mx-1 text-center border rounded p-1 <%= top_rec ? "border-3 border-success" : "my-2" %>" style="min-width:<%=100.0/upgrades.length %>%;">
+			<%= tag.div tier[:name], class: "text-primary fw-bold text-center fs-#{ top_rec ? font_md - 1 : font_md }" unless tier[:name].nil? %> 
+			<div class="text-dark fs-<%= top_rec ? font_lg - 1 : font_lg %>">
+				<%= tier[:info] %> 
+			</div>
+
+				<a href="#" class="btn <%= !top_rec ? "btn-sm btn-secondary" : "btn-success" %> m-1 upgradeBtn" tier-name="<%= tier[:name] %>" tier-id="<%= index %>">Upgrade</a>
+				<div class="text-muted text-center fs-7">
+					<%= tier[:price] %>
+				</div>
+		</div>
+		<% end %>
+	</div>
+
+</div>
+
+
+
+<%= render partial: "admin/parts/db_tables", locals: local_assigns %>

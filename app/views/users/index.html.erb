@@ -1,5 +1,5 @@
 <h1 class="d-flex align-items-center"><%= icon(icon:"users") %> <%= tag.span "People", class: "mx-2" %> <%= tag.span User.count, class:"badge bg-dark text-light fs-6 fsz6" %></h1>
-<% if defined?HasFriendship %><div class="px-2 pb-3 text-secondary fw-bold font-weight-bold"><%= HasFriendship::Friendship.count %> connections</div><% end %>
+<% if defined?(HasFriendship) %><div class="px-2 pb-3 text-secondary fw-bold font-weight-bold"><%= HasFriendship::Friendship.count %> connections</div><% end %>
 <% if false %>
 <!-- Custom code here -->
 
@@ -13,10 +13,11 @@
 
 	<%= paginate @users %>
 	<% @users.each do |user| %>
-
-		<div class="border m-1 p-1">
-		<h2><%= link_to user.display_name_public, user %></h2>
-		<%= render partial: "users/connect",locals:{user:user,connections:connections,requested:connections_requested,pending:connections_pending} unless current_user.nil? || current_user == user %>
+		<div class="border m-1 p-1 d-flex">
+		<%= render partial: "users/profiles/header", locals: {user: user} %>
+		<div class="ms-auto ml-auto">
+			<%= render partial: "users/connect",locals: {user:user,connections:connections,requested:connections_requested,pending:connections_pending} unless current_user.nil? || current_user == user %>
+		</div>
 
 		</div>
 	<% end %>

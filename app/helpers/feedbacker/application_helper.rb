@@ -24,7 +24,7 @@ module Feedbacker
 
 
     def feedbacker_profile
-      current_user.nil? ? "No user found" : "Current user is #{current_user.id}"
+      current_user.nil? ? tag.span("Guest") : icon(icon:"user",lbl:"User #{current_user.id}",with_span:true,icon_css:"fs-5") #, [main_app,current_user])
     end
 
      def feedbacker_comments target:, new_comment: nil

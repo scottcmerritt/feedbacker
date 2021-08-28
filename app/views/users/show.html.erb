@@ -1,17 +1,14 @@
-<%= render partial: "show", locals: {user: @user, show_link: false} %>
-
-<div class="my-1">
-<%= link_to "News profile", newsify.user_path(@user), class: "p-1 border my-1 me-1" if respond_to?(:newsify) %>
-
-</div>
+<%= render partial: "users/profiles/header", locals: {user: @user, show_link: false, profile: :main} %>
 
 <% if respond_to?(:newsify) %>
 <div class="row">
-	<div class="col-4"><h5>Posts</h5>
+	<div class="col-4">
+		<%= render partial: 'community/orgs/groups', locals: {groups: @user.my_groups, paginate: true, count: nil,title: "My groups"} if !@user.nil? && respond_to?(:newsify) %>
 		<%= render partial: "posts/widgets/index", locals: {data:@user.posts.order("created_at DESC").limit(10)} %>
 	</div>
-	<div class="col-4"><h5>Articles</h5>
-		<%= render partial: "newsify/sources/widgets/index", locals: {data:@user.sources.order("created_at DESC").limit(10),show: {votes:false,moderation:false,interesting:false,added_by:false}} %>
+	<div class="col-4">
+		
+		
 	</div>
 	<div class="col-4"><%= render partial: "users/feedbacker/comments", locals: {user: @user,title:"Comments",comments:@user.comments.order("created_at DESC")} %></div>
 </div>

@@ -1,0 +1,15 @@
+<% show_link = true if local_assigns[:show_link].nil? %>
+<% user = local_assigns[:user].nil? ? current_user : local_assigns[:user] %>
+<% show_link = true if local_assigns[:show_link].nil? %>
+<% user_link = user if local_assigns[:user_link].nil? %>
+
+<% profile = nil if local_assigns[:profile].nil? %>
+
+<div class="bg-white">
+<h4 class="d-flex align-items-center my-0 p-2">
+	<%= tag.span icon(icon:"user"), class: "fs-1 me-2" %>
+	<%= show_link ? link_to(user.display_name_public, user_link) : user.display_name_public %></h4>
+
+<%= render partial: "users/profiles/menu", locals: {user:@user,selected: profile} unless profile.nil? %>
+
+</div>

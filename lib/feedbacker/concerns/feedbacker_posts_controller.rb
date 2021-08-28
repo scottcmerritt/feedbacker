@@ -140,7 +140,7 @@ module Feedbacker
           {id: 3, key: tab_key, 
           name: "Moderate", 
           count: nil,
-          content: "Test3" #nil #render_to_string(partial: "community/votes/moderation", locals: {object: @preview, user: current_user, only_if_set: false, vote: nil, labels:Community::Voting::VOTESCOPE_LABELS,wrap_css:"bg-light",row_wrap_css:"mx-2 text-left"}, layout: false)
+          content: "Moderation" #nil #render_to_string(partial: "community/votes/moderation", locals: {object: @preview, user: current_user, only_if_set: false, vote: nil, labels:Community::Voting::VOTESCOPE_LABELS,wrap_css:"bg-light",row_wrap_css:"mx-2 text-left"}, layout: false)
           }
           ))
 

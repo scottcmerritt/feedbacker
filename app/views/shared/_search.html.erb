@@ -1,6 +1,9 @@
-<form class="ml-auto ms-auto form-inline mt-2 mt-md-0 d-flex me-1 align-items-center" method="get" action="<%= global_search_path %>">
-    <input class="form-control form-control-sm me-sm-2 mr-sm-2 me-1 mr-1" type="text" placeholder="<%= dbt('search',default:'Search') %>" aria-label="<%= dbt('search', default:"Search") %>" name="q" value="<%= @q %>">
-    <button class="btn btn-sm btn-light btn-outline-success ml-1 ms-1 my-2 my-sm-0 d-flex align-items-center" type="submit">
+<form class="ml-auto ms-auto form-inline d-flex me-1 align-items-center" method="get" action="<%= global_search_path %>">
+    
+    <div class="input-group">
+    <input class="form-control form-control-sm border-success fw-bold" type="text" placeholder="<%= dbt('search',default:'Search') %>" aria-label="<%= dbt('search', default:"Search") %>" name="q" value="<%= @q %>">
+    <button class="btn btn-sm btn-light btn-outline-success d-flex align-items-center" type="submit">
         <%= icon(icon:"search",icon_css:"py-1") %>
         <%= icon_text(dbt('search',default:'Search'),'search',true,'mx-1') if false %></button>
+    </div>
 </form>

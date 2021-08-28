@@ -2,9 +2,7 @@
 <% css_group = "" if local_assigns[:css_group].nil? %>
 <% link_wrap_css = "" if local_assigns[:link_wrap_css].nil? %>
 <% link_css = "" if local_assigns[:link_css].nil? %>
-
 <% bs_version = 5 if local_assigns[:bs_version].nil? %>
-
 <% unless tabs.nil? %>
 <% id = "myTab" if (local_assigns[:id].nil?) %>
 <% active = tabs.first if (local_assigns[:active].nil?) %>

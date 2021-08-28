@@ -1,0 +1,17 @@
+<div id="tables" class="collapse">
+
+
+<div class="alert alert-danger col-sm-6 mx-auto p-1 text-center"><%= tables[:hidden].length %> hidden system tables</div>
+<div class="alert alert-info col-sm-6 mx-auto">
+		<h4 class="fw-bold d-flex align-items-center">Tables <a href="#tables" class="text-dark fs-7 mx-1" data-bs-target="#tables" data-bs-toggle="collapse">Close</a> <span class="ms-auto">Rows</span>
+
+		</h4>
+		<% rows[:per_table].each do |row| %>
+		<%= tag.div raw("#{row["table"]}: #{tag.span(row["count"],class:"ms-auto fw-bold")}"), class:"border d-flex px-2 " unless tables[:hidden].include?(row["table"]) %>
+		<% end %>
+</div>
+
+
+
+<h6> Database type: <%= info[:adapter] %></h6>
+</div>

@@ -1,10 +1,10 @@
-<div class="comment border my-1 fs-6 p-1">
-      <%= tag.span comment.title, class: "fw-bold font-weight-bold fs-6" %>
-      <div class="body">            
-      <p class="d-flex align-items-top"><%= comment.body %><span class="ms-auto"><%= tag.span "#{time_ago_in_words(comment.created_at)} ago", class:"fs-7" %></span>
-      </p>
+<div class="comment border my-1 fs-6">
+      <%= tag.span comment.title, class: "fw-bold font-weight-bold fs-6 px-1" unless comment.title.blank? %>
+      <div class="body">
+            <div class="date_ago"><%= tag.span "#{date_fmt(comment.created_at, fmt:"ago")} ago", class:"fs-8" %></div>
+      <p class="d-flex align-items-top px-2"><%= comment.body %></p>
       </div>
-      <div class="text-end fs-6 text-secondary">
+      <div class="border-top border-1 px-2 fs-7 text-secondary">
             Commented on <%= comment.commentable.is_a?(Newsify::Source) ? link_to(comment.commentable.title, newsify.source_path(comment.commentable)) : (comment.commentable.is_a?(Newsify::Item) ? link_to(comment.commentable.title, newsify.item_path(comment.commentable)) : link_to(comment.commentable.title, comment.commentable)) %>
       </div>
 </div>

@@ -1,29 +1,24 @@
+<script type="text/javascript">
+jQuery(document).ready(function($) {
+	$(".upgradeBtn").on("click",function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+
+			let upgradeID = $(this).attr('tier-id')
+			let upgradeName = $(this).attr('tier-name')
+			let msg = `Upgrade to ${upgradeName} must be done by contacting the provider...we are still in beta and have not automated billing and upgrading yet!`
+		alert(msg)
+	})
+})
+
+</script>
 <%= render partial: "admin/manage/menu" %>
-<% tag.div @db_error, class: "alert alert-danger" if @db_error %>
+<% tag.div @db_info[:error], class: "alert alert-danger" if @db_info[:error] %>
 
-
-
-
-
-<% unless @rows_per_table.nil? %>
-	<div class="col-sm-6 mx-auto text-center d-flex align-items-center">
-	<%= tag.span @rows_used, class:"fs-2 fw-bold" %> <span class="mx-1">total database rows used</span>
-
-	<%= tag.span (num_format(@rows_used/10000.to_f * 100,0).to_s + "% of capacity"), class: "badge bg-success fs-7" if @rows_used < 10000 %>
-	</div>
-	<div class="col-sm-6 mx-auto p-2">
-	<span class="fw-bold">The free limit is 10k rows.</span> 10 million rows costs ~$10/month
-	</div>
-	<div class="alert alert-danger col-sm-6 mx-auto p-1 text-center"><%= @hidden_tables.length %> hidden system tables</div>
-	<div class="alert alert-info col-sm-6 mx-auto">
-		<h4 class="fw-bold d-flex">Tables <span class="ms-auto">Rows</span></h4>
-		<% @rows_per_table.each do |row| %>
-		<%= tag.div raw("#{row["table"]}: #{tag.span(row["count"],class:"ms-auto fw-bold")}"), class:"border d-flex px-2 " unless @hidden_tables.include?(row["table"]) %>
-		<% end %>
-	</div>
+<% unless @db_info[:rows][:per_table].nil? %>
+	<%= render partial: "admin/parts/db_usage", locals: {info:@db_info,plan:@db_info[:prices][:intro],upgrades:@db_info[:prices][:upgrades],upgrade:@db_info[:prices][:upgrades][1],tables:@db_info[:tables],rows:@db_info[:rows]} %>
 <% else %>
 <h4>Postgres needed</h4>
 
 <% end %>
 
-<h6> Database type: <%= ActiveRecord::Base.connection.instance_values["config"][:adapter] %></h6>

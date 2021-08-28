@@ -1,10 +1,25 @@
 <% data = Post.order("created_at DESC").limit(10) if local_assigns[:data].nil? %> 
+<% title = "Posts" if local_assigns[:title].nil? %>
+<% empty_message = "No #{title.downcase} yet" if local_assigns[:empty_message].nil? %>
+
+<% show_title = true if local_assigns[:show_title].nil? %>
+
+<% if show_title %>
+<h5 class="mainH listH bg-primary primary-b text-light">
+		<%= icon_text dbt(title),"bullhorn", true %></h5>
+<% end %>
+<% if data.nil? || data.length == 0 %>
+<div class="alert alert-info"><%= empty_message %></div>
+<% else %>
+<div class="my-1">
 <% data.each do |post| %>
-<a href="<%= post_path(post) %>" class="nodec">
-<div class="border p-1 px-2 mx-1 mb-1">
-	<h5 class="text-dark"><%= post.title %></h5>
-	<div class="text-end fs-8"><%= time_ago_in_words post.created_at %> ago</div>
-	<p class="text-muted"><%= post.respond_to?(:content) ? post.content : post.details %></p>
+	<a href="<%= post_path(post) %>" class="nodec">
+	<div class="border p-1 px-2 mx-1 mb-1">
+		<h5 class="text-dark"><%= post.title %></h5>
+		<div class="text-end fs-8"><%= time_ago_in_words post.created_at %> ago</div>
+		<p class="text-muted"><%= post.respond_to?(:content) ? post.content : post.details %></p>
+	</div>
+	</a>
+<% end %>
 </div>
-</a>
 <% end %>

@@ -28,32 +28,9 @@ module Feedbacker
         if params[:cleandb]
           amt = params[:amt] ? params[:amt].to_i : 2000
           Impression.where(impressionable_type:"Site").order("created_at ASC").limit(amt).destroy_all
-        end
-        
-        begin
-          db_adapt = ActiveRecord::Base.connection.instance_values["config"][:adapter] # ActiveRecord::Base.configurations[Rails.env]['adapter']
-            @rows_used = 0 #@rows_per_table.each.sum{|k,v| v["count"]}
-                if db_adapt == "sqlite3"
-                  @rows_per_table = ActiveRecord::Base.connection.tables.map { |t| {"table"=>t, "count"=>ActiveRecord::Base.connection.execute("select count(*) as 'count' from #{t}")[0]["count"]} } #.sort_by{|row| -row["count"]}
-              
-            @rows_per_table.each do |row|
-              @rows_used+=row["count"].to_i unless row.nil?
-            end
-                else
-            @rows_per_table = ActiveRecord::Base.connection.tables.map { |t| {"table"=>t, "count"=>ActiveRecord::Base.connection.execute("select count(*) from #{t}")[0]["count"]} }.sort_by{|row| -row["count"]}
-            
-            @rows_per_table.each do |row|
-              @rows_used+=row["count"] unless row.nil?
-            end
-          end
-          
-          
+        end        
+        @db_info = Feedbacker::Stats.database_info
 
-          @hidden_tables = ["schema_migrations","ar_internal_metadata"]
-        rescue => err
-          @db_error = err
-        end
-        
       end
 
       def user_confirm

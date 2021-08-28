@@ -1,6 +1,15 @@
 <% title = local_assigns[:title] %>
+<% empty_message = "No #{title.downcase} yet" if local_assigns[:empty_message].nil? %>
+
 <% comments = user.comments if local_assigns[:comments].nil? %>
-<%= tag.h5 title, class: "my-1" unless title.nil? %>
+<%= tag.h5 icon_text(title,"comments",true), class: "mainH listH bg-primary primary-b text-light" unless title.nil? %>
+
+<% if comments.nil? || comments.length == 0 %>
+<div class="alert alert-info"><%= empty_message %></div>
+<% else %>
+<div class="my-1">
 <% comments.each do |comment| %>
 	<%= render partial: "comments/show", locals: {comment:comment} %>
+<% end %>
+</div>
 <% end %>

@@ -28,9 +28,10 @@ module Feedbacker
   # main NAV links
   def load_site_menu
     @site_menu = []
+    @site_menu_admin = []
     @site_menu.push [dbt('users',default:"People"),main_app.users_path,controller_name == 'users']
-    @site_menu.push [dbt('admin',default:"Admin"),main_app.admin_path,controller_name == 'admin' && !respond_to?(:feedbacker?)]
-    @site_menu.push [dbt('feedback',default:"Feedback"),feedbacker.admin_path,controller_name == "admin" && (respond_to?(:feedbacker?) && feedbacker?)]
+
+
 =begin
     @site_menu = [
       [dbt('menu.books',d:'Books').capitalize || 'Books',books_path,controller_name == 'books'],
@@ -43,8 +44,10 @@ module Feedbacker
       @site_menu.push([dbt('menu.admin',d:'Admin'),admin_path,controller_name=='admin' && action_name!='updates'])
     end
 =end
-
+    @site_menu_admin.push [dbt('feedback',default:"Feedback"),feedbacker.admin_path,controller_name == "admin" && (respond_to?(:feedbacker?) && feedbacker?)]
+    @site_menu_admin.push [dbt('admin',default:"Admin"),main_app.admin_path,controller_name == 'admin' && !respond_to?(:feedbacker?)]
   end
+
 
   # links BELOW the main nav
   def load_site_sub_menu
