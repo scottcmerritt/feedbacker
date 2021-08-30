@@ -1,4 +1,6 @@
+<div>
 <% unless @languages.nil? %>
+
     <span class="text-muted"><%= t('change_language') %></span>
     <% @languages.each do |lang| %>
     <% if I18n.locale.to_s == lang.to_s %>
@@ -8,3 +10,4 @@
     <% end %>
     <% end %>
 <% end %>
+</div>
