@@ -1,7 +1,7 @@
 <% id = "myTabContent" if (local_assigns[:id].nil?) %>
 <% content = tabs if (local_assigns[:content].nil?) %>
 <% wrap_css = "p-2" if local_assigns[:wrap_css].nil? %>
-<div class="tab-content border <%= wrap_css %>" id="<%= id %>">
+<div class="tab-content border border-top-0 <%= wrap_css %>" id="<%= id %>">
 <% tabs.each do |tab_row| %>
 	<% key = tab_row.is_a?(Feedbacker::UiTab) ? tab_row.tab_key : tab_row %>
 

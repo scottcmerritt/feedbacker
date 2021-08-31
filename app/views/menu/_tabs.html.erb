@@ -7,7 +7,7 @@
 <% id = "myTab" if (local_assigns[:id].nil?) %>
 <% active = tabs.first if (local_assigns[:active].nil?) %>
 <% show_content_toggle = false if local_assigns[:show_content_toggle].nil? %>
-<ul class="nav nav-tabs pos_r" id="<%= id %>" role="tablist">
+<ul class="nav nav-tabs pos_r border-bottom-2" id="<%= id %>" role="tablist">
 <% if show_content_toggle %>
 <li class="nav-item <%= link_wrap_css %>">
 <%= togglelink_for("Results","#", {expanded: true, no_wrap: false, div_class:tab_div_css,target: "#yourResultsWrap",count: nil, css_group: css_group }) %>
