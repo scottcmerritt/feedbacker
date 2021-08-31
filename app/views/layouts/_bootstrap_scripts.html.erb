@@ -1,4 +1,6 @@
 <script>
+  <% if false %>
+ <%# only jquery works, not plain vanilaa js, not sure why %>
    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
 var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
   return new bootstrap.Tooltip(tooltipTriggerEl)
@@ -7,5 +9,13 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
 var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
   return new bootstrap.Popover(popoverTriggerEl)
+})
+<% end %>
+
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+    $('[data-toggle="popover"]').popover()
+    $('[data-bs-toggle="tooltip"]').tooltip()
+    $('[data-bs-toggle="popover"]').popover()
 })
 </script>
