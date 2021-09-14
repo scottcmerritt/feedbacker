@@ -19,8 +19,14 @@ module Feedbacker
 
   def load_site
 #   <%= request.host %>: <%= request.domain %>
+   
    @app_site = Site.where(domain:request.host).first if defined?(Site)
-   impressionist @app_site unless @app_site.nil? || !defined?(Impression)
+   # ActiveRecord::StatementInvalid (PG::InsufficientPrivilege: (occurs if heroku blocks the permission)
+   begin
+     impressionist @app_site unless @app_site.nil? || !defined?(Impression)
+   rescue ActiveRecord::StatementInvalid => e
+
+   end
    load_langs
    set_locale
   end
