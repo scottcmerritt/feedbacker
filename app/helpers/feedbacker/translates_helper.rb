@@ -38,11 +38,20 @@ module TranslatesHelper
 
 		content = dbt(text,d:d)
 		if admin
-			admin_edit = tag.div link_to(icon(icon:"edit"), feedbacker.translates_cms_path(tdomain:tdomain,tkey:tkey),class:"cmsAdminEdit")
+			admin_edit = tag.div link_to(icon(icon:"edit"), flexi_cms_router(tdomain,tkey),class:"cmsAdminEdit")
 			tag.div(safe_join([admin_edit,raw(content)]), class: "cmsAdmin")
 		else
 			content
 		end
+	end
+
+	def flexi_cms_router tdomain, tkey
+		begin
+			main_app.translates_cms_path(tdomain:tdomain,tkey:tkey)
+		rescue
+			feedbacker.translates_cms_path(tdomain:tdomain,tkey:tkey)
+		end
+		#respond_to?(:translates_cms_path) ? "/" : feedbacker.translates_cms_path(tdomain:tdomain,tkey:tkey)
 	end
 
 	def dbt_debug text
