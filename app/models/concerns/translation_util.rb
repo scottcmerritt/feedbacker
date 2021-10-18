@@ -56,9 +56,10 @@ module TranslationUtil
   module ClassMethods
 
     # TODO: add pages to a LIST/SET
-    def log_page! phrase, page:, cache_duration: 60*60*24*5, logger:nil
+    def log_page! phrase, page:, cache_duration: 60*60*24*5, logger:nil, overwrite:false
       cache_key = "PAGE::" + self.phrase_miss_prefix+"::"+phrase
-      Feedbacker::Cache.set_obj(cache_key,page,logger,cache_duration)
+      add_page = overwrite || !Feedbacker::CacheBase.exists?(cache_key)
+      Feedbacker::Cache.set_obj(cache_key,page,logger,cache_duration) if add_page
     end
 
     def log_default! phrase, default:, cache_duration: 60*60*24*5, logger:nil

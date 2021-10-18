@@ -1,22 +1,36 @@
 <div class="d-flex">
-<div class="d-inline-flex bg-white">
-  <div class="text-center fs-6 border ms-1">
-    <div class="bg-dark text-light m-0 px-2">Domain</div>
-    <div class="px-2"><%= translate_key.tdomain %></div>
+  <div class="d-inline-flex bg-white">
+    <div class="text-center fs-6 border ms-1">
+      <div class="bg-dark text-light m-0 px-2">Domain</div>
+      <div class="px-2"><%= translate_key.tdomain %></div>
+
+    </div>
+
+    <div class="text-center fs-6 border me-1">
+      <div class="bg-primary text-light m-0">Key</div>
+      <div class="px-2"><%= translate_key.tkey %></div>
+    </div>
+  </div>
+
+  <div class="mx-3">
+  This will show up in the code as <span class="fw-bold">dbt('<%= translate_key.tdomain %>.<%= translate_key.tkey %>')</span>
 
   </div>
 
-  <div class="text-center fs-6 border me-1">
-    <div class="bg-primary text-light m-0">Key</div>
-    <div class="px-2"><%= translate_key.tkey %></div>
-  </div>
 </div>
 
-<div class="mx-3">
-This will show up in the code as <span class="fw-bold">dbt('<%= translate_key.tdomain %>.<%= translate_key.tkey %>')</span>
+<div>
+<% samples = Feedbacker::Translate.get_logged_samples "#{translate_key.tdomain}.#{translate_key.tkey}" %>
+<% hits_and_misses = Feedbacker::Translate.hits_and_misses translate_key %>
 
+<% unless hits_and_misses[:hits] == 0 && hits_and_misses[:misses] == 0 %>
+<div class="p-0 px-1 fs-8">
+<%= tag.span "#{hits_and_misses[:hits]} hits", class:"me-2" %>
+<%= tag.span "#{hits_and_misses[:misses]} misses" %>
 </div>
+<% end %>
 
-
-
+<%= tag.div raw("Page: " + link_to(samples[:page],samples[:page], class: "fw-bold fs-8")) unless samples[:page].nil? %>
+<%= tag.div "Default: " + samples[:default], class: "fw-bold fs-8" unless samples[:default].nil? %>
+<%= tag.div "Result: " + samples[:result], class: "fw-bold fs-8" unless samples[:result].nil? %>
 </div>
