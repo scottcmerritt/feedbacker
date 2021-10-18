@@ -1,0 +1,17 @@
+<button class="btn btn-tiny bg-success text-white btn-outline-secondary dropdown-toggle me-1 mb-1" type="button" data-bs-toggle="dropdown" aria-expanded="false"><%= icon_text("","user-plus") %></button>
+<ul class="dropdown-menu dropdown-menu-end border-2">
+	<% @site_roles.each do |role_name| %>
+  <li><%= link_to role_name, modify_role_path(user_id: user.id,act:"add",role:role_name), class: "dropdown-item", method: :post %></li>
+  <% end %>
+  <li><hr class="dropdown-divider"></li>
+  <li><a class="dropdown-item" href="#">Block user</a></li>
+</ul>
+
+<button class="btn btn-tiny bg-danger text-white btn-outline-secondary dropdown-toggle me-1 mb-1" type="button" data-bs-toggle="dropdown" aria-expanded="false"><%= icon_text("","user-minus") %></button>
+<ul class="dropdown-menu dropdown-menu-end dropend">
+  	<% @site_roles.each do |role_name| %>
+    <li><%= link_to role_name, modify_role_path(user_id: user.id,act:"del",role:role_name), class: "dropdown-item", method: :post %></li>
+    <% end %>
+    <li><hr class="dropdown-divider"></li>
+    <li><a class="dropdown-item" href="#">Block user</a></li>
+</ul>

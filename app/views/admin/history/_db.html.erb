@@ -1,0 +1,84 @@
+<div class="bg-white border my-1 d-flex align-items-center">
+    <div class="px-2 d-flex align-items-center"><%= @history.count %> snapshots <%= link_to icon(icon:"plus"), {snapshot:1}, class: "btn btn-sm btn-primary mx-1" %></div>
+    <%= link_to "Condense authors", {cache_authors:1}, class: "btn btn-sm btn-success mx-1" %>
+
+<div class="ms-auto">
+<form method="get" action="?" class="d-flex align-items-center border bg-light p-1 m-1">
+<input type="submit" value="Delete" class="btn btn-sm btn-primary mx-1">
+    <input type="hidden" name="cleandb" value="1">
+    <div class="mx-1 d-flex align-items-center">
+<input id="clean_amt" type="text" name="clean_amt" value="<%= @clean_amt %>" class="form-control form-control-sm">
+</div>
+<div for="clean_amt" class="d-inline">impression rows</div>
+</form>
+</div>
+
+</div>
+
+
+<div class="bg-white p-1">
+    <div class="row g-0">
+        <div class="col-2">
+            <form method="get" action="?" class="border bg-light p-1 m-1">
+                <div class="d-flex align-items-center">
+                <input type="submit" value="Days ago" class="btn btn-sm btn-primary mx-1">
+                    <input type="hidden" name="history" value="1">
+                    <div class="mx-1 d-flex align-items-center">
+                        
+                    <input id="days_ago" type="text" name="start" value="<%= @start %>" class="form-control form-control-sm">
+
+                    </div>
+
+                </div>
+                <div style="height:300px;overflow-y:scroll;">
+                <div class="list-group mt-1">
+                    <% @tbls_all.each do |table_name| %>
+                          <label class="list-group-item fs-8">
+                            <input class="form-check-input me-1" type="checkbox" <% if @tbls_selected.include?(table_name) %>checked="true"<% end %> name="tbls[]" value="<%= table_name %>">
+                            <%= table_name %>
+                          </label>
+                    <% end %>
+                </div>
+                </div>
+
+            </form>
+      
+        </div>
+        <div class="col-10">
+            <%= line_chart @db_growth_data %>
+        </div>
+    </div>
+</div>
+
+<% if false %>
+
+    <% DataLog.db_rows.each do |row| %>
+    <div class="bg-white border my-1 p-1">
+    <h6><b><%= row[:created_at] %></b></h6>
+    <%= row[:data] %>
+    </div>
+    <% end %>
+
+    <br>
+    <br>
+    <h4>Formatted</h4>
+    <%= Feedbacker::DataLog.db_rows_fmt %>
+
+
+
+
+    <br>
+    <br>
+    <br>
+
+    <% data = [{"name":"Workout","data":{"2021-02-10":3,"2021-02-17":3,"2021-02-24":3,"2021-03-03":1,"2021-03-10":4,"2021-03-17":3,"2021-03-24":2,"2021-03-31":3}},{"name":"Go to concert","data":{"2021-02-10":0,"2021-02-17":0,"2021-02-24":0,"2021-03-03":0,"2021-03-10":2,"2021-03-17":1,"2021-03-24":0,"2021-03-31":0}},{"name":"Wash face","data":{"2021-02-10":0,"2021-02-17":1,"2021-02-24":0,"2021-03-03":0,"2021-03-10":0,"2021-03-17":1,"2021-03-24":0,"2021-03-31":1}},{"name":"Call parents","data":{"2021-02-10":5,"2021-02-17":3,"2021-02-24":2,"2021-03-03":0,"2021-03-10":0,"2021-03-17":1,"2021-03-24":1,"2021-03-31":0}},{"name":"Eat breakfast","data":{"2021-02-10":3,"2021-02-17":2,"2021-02-24":1,"2021-03-03":0,"2021-03-10":2,"2021-03-17":2,"2021-03-24":3,"2021-03-31":0}}] %>
+    <div class="bg-white p-1">
+    <%= line_chart data %>
+    </div>
+    <% if false %>
+    <%= line_chart @goals.map { |goal|
+        {name: goal.name, data: goal.feats.group_by_week(:created_at).count}
+    } %>
+    <% end %>
+
+<% end %>

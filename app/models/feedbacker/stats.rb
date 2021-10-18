@@ -6,6 +6,7 @@ module Feedbacker
 			defined?(Newsify) && Newsify.respond_to?(:service_upgrades) ? Newsify.service_upgrades : []
 		end
 
+		
 		def self.database_info
 			info = {
 				prices: {
@@ -14,7 +15,7 @@ module Feedbacker
 				},
 				adapter: ActiveRecord::Base.connection.instance_values["config"][:adapter], # what type of database, etc...
 				rows: {used:nil,per_table:nil},
-				tables: {hidden: ["schema_migrations","ar_internal_metadata"]},
+				tables: {hidden: ["schema_migrations","ar_internal_metadata"],names: []},
 				error: nil
 			}
 			
@@ -41,6 +42,7 @@ module Feedbacker
 	          #@db_error = err
 	          info[:error] = err
 	        end
+	        info[:tables][:names] = info[:rows][:per_table].collect{|row| row["table"]}
 	        info
 		end
 	end

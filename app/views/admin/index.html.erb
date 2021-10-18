@@ -1,5 +1,8 @@
-<h4><%= dbt('admin').capitalize %></h4>
+<%= render partial: "admin/manage/header" %>
 
+<div class="bg-light border border-top-0 p-2">
+
+<%# to hide on small screens: "d-none d-sm-block" %>
 <div class="row">
 	<div class="col-3">
 		<%= render partial: "admin/manage/menu", locals: {vertical:true,icon_size:"fs-3"} %>

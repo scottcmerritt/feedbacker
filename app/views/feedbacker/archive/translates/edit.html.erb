@@ -1,0 +1,7 @@
+<h4 class="d-flex align-items-center"><%= link_to icon_text("","arrow-left"), feedbacker.translate_key_path(id:@translate.translate_key.id), class: "btn btn-sm btn-outline-secondary" %> Edit translation
+
+<%= link_to icon_text("Delete","trash"), @translate, method: :delete, class: "ms-auto btn btn-danger text-light" %>
+</h4>
+<%= render partial: "#{engine_prefix}translates/form" %>
+
+<%= render partial: "#{engine_prefix}translate_keys/parts/needed", locals: {title: "Translations needed"} %>

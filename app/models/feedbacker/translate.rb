@@ -2,6 +2,7 @@ module Feedbacker
 	class Translate < ActiveRecord::Base
 		#acts_as_taggable_on :tags	
 		self.table_name = "translates"
+		include TranslationUtil
 
 		belongs_to :user, optional: true
 		belongs_to :translate_key
@@ -11,16 +12,20 @@ module Feedbacker
 		scope :active, -> { where(active:true) }
 		scope :inactive, -> { where(active:false) }
 
+		def use_cms?
+			!self.tdomain.nil? && self.tdomain.include?('::content')
+		end
+=begin
 		def self.lookup text, locale:, use_cache: true
 			tdomain = text.split(".",2).first if text.split(".",2).length > 1
 			tkey = text.split(".",2).last
 			if use_cache
 				res = Translate.from_cache tdomain,tkey,locale
 				if res.nil?
-					Translate.cache_miss!
+					Translate.cache_miss!(phrase: text)
 					Feedbacker::Cache.add_list_object Translate.cache_miss_log_key, Translate.object_to_cache(tdomain:tdomain,tkey:tkey,lang:locale)
 				else
-					Translate.cache_hit!
+					Translate.cache_hit!(phrase: text)
 				end
 				res
 			else
@@ -28,6 +33,7 @@ module Feedbacker
 				row.nil? || !row.has_attribute?(:phrase) ? nil : row.phrase
 			end
 		end
+
 
 		def self.object_to_cache tdomain:, tkey:, lang:
 			#{"tdomain"=>tdomain,"tkey"=>tkey,"lang"=>lang}
@@ -47,7 +53,6 @@ module Feedbacker
 		def self.reset_miss_log!
 			Feedbacker::CacheBase.destroy_list! Translate.cache_miss_log_key
 		end
-
 		def self.remove_cache_miss_key! misskey
 		# params[:remove_misskey] if params[:remove_misskey]
 			Feedbacker::CacheBase.destroy_list_object! Translate.cache_miss_log_key, misskey
@@ -84,6 +89,10 @@ module Feedbacker
 		def self.from_cache tdomain,tkey,locale
 			Feedbacker::Cache.get_obj Translate.build_cache_key tdomain,tkey,locale
 		end
+=end		
+
+
+		
 
 		def build_translate_key! tdomain:, tkey:, createdby: nil
 			params = {tdomain:tdomain,tkey:tkey}
@@ -103,7 +112,7 @@ module Feedbacker
 		def has_translate_key?
 			!translate_key.nil?
 		end
-
+=begin
 		def cache! cache_duration: nil, logger: nil
 			feedback = []
 			if has_translate_key?
@@ -130,13 +139,47 @@ module Feedbacker
 		def cache_key
 			Translate.build_cache_key tdomain,tkey,lang 
 		end
+=end		
 
-		def self.cache_hit!
-			Feedbacker::Cache.increment! Translate.hits_key
+	def self.cache_hit! phrase: nil, page: nil
+		Feedbacker::Cache.increment! Translate.hits_key
+		Translate.phrase_hit! phrase unless phrase.nil?
+		Feedbacker::Translate.log_page! phrase, page: page unless page.nil?
+	end
+
+	def self.cache_miss! phrase: nil, page: nil
+		Feedbacker::Cache.increment! Translate.misses_key
+		Translate.phrase_miss! phrase unless phrase.nil?
+		Feedbacker::Translate.log_page! phrase, page: page unless page.nil?
+	end
+	
+	
+
+=begin
+		def self.cache_hit! phrase: nil
+			Translate.phrase_hit!(phrase) unless phrase.nil?
+			Feedbacker::Cache.increment! Translate.hits_key			
 		end
 
-		def self.cache_miss!
+		def self.cache_miss! phrase: nil
+			Translate.phrase_miss!(phrase) unless phrase.nil?
 			Feedbacker::Cache.increment! Translate.misses_key
+		end
+=end
+
+		# experimentally logging phrase misses (and hits)
+		def self.phrase_miss! phrase
+			Feedbacker::Cache.increment! self.phrase_miss_prefix+"::"+phrase
+		end
+
+		def self.phrase_hit! phrase
+			Feedbacker::Cache.increment! self.phrase_hit_prefix+"::"+phrase
+		end
+		def self.phrase_misses phrase
+			Feedbacker::Cache.integer_value(self.phrase_miss_prefix+"::"+phrase)
+		end
+		def self.phrase_hits phrase
+			Feedbacker::Cache.integer_value(self.phrase_hit_prefix+"::"+phrase)
 		end
 
 		def self.cache_success
@@ -145,18 +188,6 @@ module Feedbacker
 			hits.to_f / (hits + misses) * 100
 		end
 
-		def self.cache_hits
-			Feedbacker::Cache.integer_value(Translate.hits_key)
-		end
-		def self.cache_misses
-			Feedbacker::Cache.integer_value(Translate.misses_key)
-		end
 
-		def self.hits_key
-			"cachehit::translate"
-		end
-		def self.misses_key
-			"cachemiss::translate"
-		end
 	end
 end

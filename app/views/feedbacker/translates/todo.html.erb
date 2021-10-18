@@ -1,0 +1,38 @@
+<%= render partial: "admin/manage/header" %>
+<%= render partial: "admin/manage/menu" if false %>
+<%= render partial: "feedbacker/translate_keys/parts/menu", locals: {selected:2} %>
+
+<div class="row my-2">
+	<div class="col-6">
+		<h4 class="bg-dark text-light p-1 px-2">Most missed keys</h4>
+		<% @results.sort_by{|row| -row[:misses]}.each do |row| %>
+		<% translate_key = row[:obj] %>
+		<div class="my-1 p-1 border bg-white">
+			<h6><%= row[:obj].full_key %></h6>
+			Misses: <%= row[:misses] %>, Hits: <%= row[:hits] %>
+			<% if translate_key.translates.count == 0 %>
+            <%= link_to 'Add translation', [feedbacker,translate_key], class: "btn btn-sm btn-success" %>
+            <% else %>
+            <%= link_to "Show #{translate_key.translates.count} #{"translation".pluralize(translate_key.translates.count)}", [feedbacker,translate_key], class: "btn btn-sm btn-secondary" %>
+            <% end %>
+		</div>
+		<% end %>
+	</div>
+	<div class="col-6">
+		<h4 class="bg-dark text-light p-1 px-2">Most hit keys</h4>
+		<% @results.sort_by{|row| -row[:hits]}.each do |row| %>
+		<% translate_key = row[:obj] %>
+		<div class="my-1 p-1 border bg-white">
+			<h6><%= row[:obj].full_key %></h6>
+			Misses: <%= row[:misses] %>, Hits: <%= row[:hits] %>
+
+			<% if translate_key.translates.count == 0 %>
+            <%= link_to 'Add translation', [feedbacker,translate_key], class: "btn btn-sm btn-success" %>
+            <% else %>
+            <%= link_to "Show #{translate_key.translates.count} #{"translation".pluralize(translate_key.translates.count)}", [feedbacker,translate_key], class: "btn btn-sm btn-secondary" %>
+            <% end %>
+		</div>
+		<% end %>
+	</div>
+</div>
+<%= render partial: "#{engine_prefix}translate_keys/parts/needed", locals: {title: "Translations needed"} %>

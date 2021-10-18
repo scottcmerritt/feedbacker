@@ -1,0 +1,53 @@
+<%= render partial: "admin/manage/header" %>
+<%= render partial: "admin/manage/menu" %>
+
+
+<div class="d-flex mt-1 bg-light p-1 pb-0 border-bottom border-3 border-dark" style="overflow:scroll-x;">
+<% @top_viewers.each do |viewer| %>
+<%= link_to(viewer.email, "?user_id=#{viewer.id}", class: "px-1 me-1 mb-0 rounded-top nodec #{params[:user_id]==viewer.id.to_s ? "bg-dark border border-dark " : "bg-secondary"} text-light") unless viewer.nil? %>
+<% end %>
+</div>
+<div class="bg-light border border-top-0 border-dark p-1">
+
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="bg-white">
+
+
+				<% if !params[:user_id].blank? %><h4 class="d-flex p-1 bg-primary text-light">Filtered by user
+					<%= link_to "View all","?user_id=", class:"ms-auto btn btn-sm btn-light border" %>
+				</h4><% end %>
+
+				<%= pie_chart @controller_usage.count, title: "Features" %>
+
+				<% @charts.each do |chart| %>
+				<% if chart[2] == "column_chart" %>
+				<%= column_chart chart[0].count, title: chart[1] %>
+				<% elsif chart[2] == "pie_chart" %>
+				<%= pie_chart chart[0].count, title: chart[1] %>
+				<% else %>
+				<%= line_chart chart[0].count, title: chart[1] %>
+				<% end %>
+				<% end %>
+
+			<% if !params[:user_id].blank? %><h4>Aggregate charts</h4><% end %>
+			<%= column_chart Impression.where(impressionable_type:"Site").group_by_week(:created_at).count("DISTINCT(user_id)"), title: "Users/week" %>
+			<%= column_chart Impression.where(impressionable_type:"Book").group_by_day(:created_at).count("DISTINCT(impressionable_id)"), title: "Books viewed/day" %>
+			<%= column_chart Impression.where(impressionable_type:"Book").group_by_week(:created_at).count("DISTINCT(impressionable_id)"), title: "Books viewed/week" %>
+			</div>
+
+		</div>
+		<div class="col-sm-6">
+		<%= paginate @views,window:1 %>
+		<% @views.each_with_index do |view,index| %>
+			
+			<% begin %>
+			<%= render partial: "admin/analytics/view_row", locals: {view:view} %>
+			<% rescue Exception => ex %>
+				<%= tag.div ex, class: "alert alert-danger m-1" %>
+			<% end %>
+		<% end %>
+		</div>
+
+	</div>
+</div>

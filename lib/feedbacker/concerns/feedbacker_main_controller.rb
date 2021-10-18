@@ -18,6 +18,10 @@ module Feedbacker
   private
 
   def load_site
+    require "browser/aliases"
+    Browser::Base.include(Browser::Aliases)
+    browser = Browser.new(request.headers['User-Agent'])
+
 #   <%= request.host %>: <%= request.domain %>
    
    @app_site = Site.where(domain:request.host).first if defined?(Site)

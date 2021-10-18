@@ -1,0 +1,63 @@
+<% target = @translate_key if local_assigns[:target].nil? %>
+
+<h4 class="d-flex align-items-center">
+<%= link_to icon(icon:"arrow-left"), feedbacker.translate_keys_path, class: "me-2" unless !params[:id] %>
+
+  Site translation 
+  <span class="fs-6 ms-auto">
+<%= link_to 'Edit', feedbacker.edit_translate_key_path(target) %> |
+<%= link_to 'Back', feedbacker.translate_keys_path %>
+</span>
+
+</h4>
+
+ <div class="p-2 bg-light border my-2">
+
+
+      <%= render partial: "#{engine_prefix}translate_keys/parts/key", locals: {translate_key: @translate_key} %>
+
+      <div class="d-flex align-items-center">
+
+          <div class="p-2 fs-5">Used by <span class="fw-bold"><%= @translate_key.languages.count %> <%= "language".pluralize(@translate_key.languages.count) %></span></div>
+
+      <div class="py-2">
+      <% @translate_key.languages.pluck(:lang).each do |lang| %>
+        <%= tag.span lang, class: "badge bg-dark ms-1 fs-8" %>
+      <% end %>
+      </div>
+
+          <span class="ms-auto">
+           <%= render partial: "shared/permissions/show", locals: {target:@translate_key} %>
+         </span>
+
+      </div>
+
+
+
+
+
+    <div class="text-end">
+    <%= tag.span link_to(@translate_key.creator.email,@translate_key.creator) unless @translate_key.createdby.nil? %>
+    </div>
+
+    
+
+
+    <div class="d-flex align-items-center m-2 bg-white border-top border-bottom p-2">
+      <b>Create translation</b>
+      <% get_all_langs.each do |lang| %>
+      <%= tag.div link_to(lang, feedbacker.new_translate_path(lang:lang,key_id:@translate_key.id), class: "badge bg-success text-light mx-1") %>
+
+      <% end %>
+    </div>
+
+    <div class="my-5 mx-2">
+      <h6 class="bg-primary p-2 text-light ">Current translations</h6>
+    <% @translate_key.translates.each do |row| %>
+      <div class="bg-white border my-1 p-2">
+      <%= row.lang %>: <%= link_to row.phrase, feedbacker.edit_translate_path(row) %>
+      </div>
+    <% end %>
+    </div>
+
+  </div>

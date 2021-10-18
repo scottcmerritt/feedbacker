@@ -11,9 +11,13 @@ module Feedbacker
 			User.find_by(id:self.createdby)
 		end
 
-		def self.lookup
-			TranslateKey.where()
-
+#		def self.lookup
+#			TranslateKey.where()
+#		end
+		def full_key
+			(self.tdomain.nil? ? "" : self.tdomain) +"." + (self.tkey.nil? ? "" : +self.tkey)
 		end
+		
+		
 	end
 end

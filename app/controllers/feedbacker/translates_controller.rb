@@ -33,6 +33,34 @@ module Feedbacker
 
 		end
 
+		# GET ALL of the keys, and then show those with the most misses
+		# AND show the most hits (without OTHER languages)
+		def todo
+			@results = []
+			Feedbacker::TranslateKey.select("*").limit(500).each do |translate_key|
+				@results.push({id:translate_key.id,obj:translate_key,fullkey:translate_key.full_key,hits:Feedbacker::Translate.phrase_hits(translate_key.full_key),misses:Feedbacker::Translate.phrase_misses(translate_key.full_key)})
+			end
+		end
+
+		# translates_cms_path
+		# admin/cms?tdomain=page::content&tkey=about_p1
+		def cms
+			@tdomain = params[:tdomain]
+			@tkey = params[:tkey]
+
+			@translations = Feedbacker::Translate.select("translates.*").joins("LEFT JOIN translate_keys ON translate_keys.id = translates.translate_key_id").order('translates.created_at DESC')
+			@translations = @translations.where("translate_keys.tdomain = ? AND translate_keys.tkey = ?",@tdomain,@tkey)
+			@translations = @translations.page(params[:page])
+
+			@tkeys = @tkey.split("_")
+
+			@similar = []
+			@tkeys.each do |tkey|
+				@similar = @similar + Feedbacker::TranslateKey.where("tkey LIKE ?","%#{tkey}%").to_a
+			end
+
+		end
+
 		def destroy
 			@translate.destroy
 			redirect_to action: "index"

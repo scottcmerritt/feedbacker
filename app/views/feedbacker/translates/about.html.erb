@@ -1,0 +1,33 @@
+<%= render partial: "admin/manage/header" %>
+<%= render partial: "admin/manage/menu" if false %>
+
+
+<%= render partial: "translate_keys/parts/menu", locals: {selected:-1} %>
+
+<h4 class="pageH border my-1 mt-3 p-1 px-2">The "translations" tool explained:</h4>
+<div class="bg-white border my-2 p-2">
+<p>
+Available languages are set by the site developer. 
+
+<div class="p-2 text-dark">This site has <%= @languages.length %> <%= "language".pluralize(@languages.length) %>:
+
+<% @languages.each do |lang| %>
+    <a class="mx-1" href="?locale=<%= lang %>"><%= lang %></a>
+    <% end %>
+</div>
+</p>
+<p>
+The page templates have codes that associate KEYWORDS with text that is displayed. These codes are added by the site developer.
+
+	<div class="border my-2 p-2 bg-light col-9 mx-auto text-dark">For example, the keyword <b>"menu.team"</b> <br>could be associated with<br> <b>"Our family"</b> for English and <b>"Nuestra familia"</b> for Spanish
+
+
+	<div class="my-2">Upon doing so, the menu (assuming it had the label "team" in it) would now be customized based on the language selected by your community member</div>
+	</div>
+</p>
+
+<p>
+<%= link_to "Try it out", translates_path, class: "btn btn-success m-1" %>
+
+</p>
+</div>

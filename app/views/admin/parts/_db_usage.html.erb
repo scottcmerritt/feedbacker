@@ -4,6 +4,7 @@
 
 	
 
+ 
 	<%= tag.span (num_format(rows[:used]/plan[:rows].to_f * 100,0).to_s + "% of capacity"), class: "badge bg-success fs-7" if rows[:used] < plan[:rows] %>
 
 	<a href="#tables" class="ml-auto ms-auto text-dark fs-7 mx-1" data-bs-target="#tables" data-bs-toggle="collapse">More info</a>
@@ -36,7 +37,5 @@
 	</div>
 
 </div>
-
-
 
 <%= render partial: "admin/parts/db_tables", locals: local_assigns %>

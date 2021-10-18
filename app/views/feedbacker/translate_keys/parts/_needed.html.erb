@@ -1,20 +1,46 @@
-<h4 class="mt-3"><%= local_assigns[:title].nil? ? "Translations need" : title %></h4>
+<h5 class="bg-primary text-light rounded-top p-1 px-2 mb-0"><%= local_assigns[:title].nil? ? "Translations need" : title %></h5>
     
 <% needed = Feedbacker::Translate.get_cache_misses(grouped:true) %>
 <% if needed.empty? %>
 <%= tag.div "No translations needed", class: "alert alert-notice" %>
 <% else %>
+    <ul class="nav nav-pills mb-1 p-1 bg-light border border-top-0" id="pills-tab" role="tablist">
     <% needed.each do |lang,rows| %>
-    <div data-lang="<%= lang %>" class="bg-white border m-1 p-1">
+    <% is_active = needed.keys[0] == lang %>
+    <li class="nav-item" role="presentation">
+    <button class="p-0 px-2 me-1 border nav-link fs-5 d-flex align-items-center <%= is_active ? "text-dark active" : "" %>" id="langs-<%= lang %>-tab" data-bs-toggle="pill" data-bs-target="#langs-<%= lang %>" type="button" role="tab" aria-controls="langs-<%= lang %>" aria-selected="<%= is_active ? "true" : "false" %>"><%= lang %> <%= tag.span rows.length, class: "p-1 ms-3 fs-8 badge bg-white border text-muted" %></button>
+    </li>
+    <% end %>
+    </ul>
+  <div class="tab-content" id="langs-tabContent">
+    <% needed.each do |lang,rows| %>
+    <% is_active = needed.keys[0] == lang %>
+
+    <div id="langs-<%= lang %>" data-lang="<%= lang %>" class="bg-white border mb-1 p-1 tab-pane fade <%= "show active" if is_active %>" role="tabpanel" aria-labelledby="langs-<%= lang %>-tab">
       <h6>Language: <%= lang %></h6>
       <% rows.each do |full_row| %>
-      <% row = full_row.has_key?(:obj) ? full_row[:obj] : full_row %>
-      <div>
-        <%= link_to icon(icon:'trash'), feedbacker.translates_path({remove_misskey:full_row[:key]}), class:"me-2" if full_row.has_key?(:key) %>
-        <%= link_to "#{row.tdomain}.#{row.tkey}", feedbacker.new_translate_path(lang:lang,tdomain:row.tdomain,tkey:row.tkey) %>
+      <% row = full_row.kind_of?(Feedbacker::Translation) ? full_row : (full_row.has_key?(:obj) ? full_row[:obj] : full_row) %>
+      <% samples = Feedbacker::Translate.get_logged_samples "#{row.tdomain}.#{row.tkey}" %>
+      <% hits_and_misses = Feedbacker::Translate.hits_and_misses row %>
+      
+      <div class="border-bottom">
+        <%= link_to icon(icon:'trash'), feedbacker.translates_path({remove_misskey:full_row[:key]}), class:"me-2 nodec" if full_row.has_key?(:key) %>
+        <%= link_to "#{row.tdomain}.#{row.tkey}", feedbacker.new_translate_path(lang:lang,tdomain:row.tdomain,tkey:row.tkey), class: "nodec" %>
+        <% unless hits_and_misses[:hits] == 0 && hits_and_misses[:misses] == 0 %>
+        <div class="p-0 px-1 fs-8">
+        <%= tag.span "#{hits_and_misses[:hits]} hits", class:"me-2" %>
+        <%= tag.span "#{hits_and_misses[:misses]} misses" %>
+        </div>
+        <% end %>
+
+        <%= tag.div link_to(samples[:page],samples[:page], class: "fw-bold fs-8") unless samples[:page].nil? %>
+        <%= tag.div samples[:default], class: "fw-bold fs-8" unless samples[:default].nil? %>
+        <%= tag.div samples[:result], class: "fw-bold fs-8" unless samples[:result].nil? %>
+
         <%= tag.div full_row[:key], class: "fs-7" if params[:debug] %>
       </div>
       <% end %>
     </div>
     <% end %>
+  </div>
 <% end %>

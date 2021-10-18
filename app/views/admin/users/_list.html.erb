@@ -1,0 +1,44 @@
+<%= paginate @users %>
+
+<% if browser.mobile? %>
+
+	<% @users.each do |user| %>
+	<div class="bg-white border mb-1">
+		<div class="d-flex p-1">
+			<%= link_to user.email, user %>
+			<div class="ms-auto d-flex">
+			<%= tag.span icon(icon:"check"), class:"text-success ms-1" unless user.confirmed_at.nil? %>
+			<%= tag.span user.sign_in_count, class:"ms-1 fs-7" %>
+			</div>
+		</div>
+		<div class="text-end">
+			<%= render partial: "admin/users/change_role_btns", locals: {user:user} %>
+		</div>
+	</div>
+	<% end %>
+<% else %>
+	<table class="table">
+	<tr class="fs-7 fw-bold">
+		<td class="col-2">Roles</td>
+		<td class="col-1">Logins</td>
+		<td class="col-9">User</td>
+	</tr>
+	<% @users.each do |user| %>
+
+	<tr class="bg-white border">
+		<td class="">
+			<%= render partial: "admin/users/change_role_btns", locals: {user:user} %>
+		</td>
+
+		<td><%= tag.span user.sign_in_count %><%= tag.span icon(icon:"check"), class:"text-success ms-1" unless user.confirmed_at.nil? %></td>
+		<td class=""><%= link_to user.email, user %>
+			
+			<div class="fs-8">Prev sign in <%= time_ago_in_words user.last_sign_in_at unless user.last_sign_in_at.nil? %></div>
+			<div class="fs-8">Current sign in <%= time_ago_in_words user.current_sign_in_at unless user.current_sign_in_at.nil? %></div>
+			<%= link_to "Confirm", user_confirm_path(id:user.id), method: :post if user.confirmed_at.nil? %>
+			<%= tag.div user.confirmed_at.strftime("%b %e, %l:%M %p"), class: "fs-7" unless user.confirmed_at.blank? %>
+		</td>
+	</tr>
+	<% end %>
+	</table>
+<% end %>

@@ -1,0 +1,53 @@
+<div class="row">
+  <div class="col-3">
+
+
+
+
+
+  </div>
+  <div class="col-9">
+    <%= render partial: "#{engine_prefix}translate_keys/parts/show", target: @translate_key %>
+   
+
+</div>
+</div>
+
+
+
+
+
+
+<% if false %>
+<p>
+  <strong>Approved:</strong>
+  <%= @translate_key.approved %>
+</p>
+
+<p>
+  <strong>Approved at:</strong>
+  <%= @translate_key.approved_at %>
+</p>
+
+<p>
+  <strong>Approved by:</strong>
+  <%= @translate_key.approved_by %>
+</p>
+
+<p>
+  <strong>Removed:</strong>
+  <%= @translate_key.removed %>
+</p>
+
+<p>
+  <strong>Removed by:</strong>
+  <%= @translate_key.removed_by %>
+</p>
+
+<p>
+  <strong>Removed at:</strong>
+  <%= @translate_key.removed_at %>
+</p>
+<% end %>
+
+

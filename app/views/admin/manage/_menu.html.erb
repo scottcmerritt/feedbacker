@@ -1,15 +1,44 @@
 <% vertical = false if local_assigns[:vertical].nil? %>
-<% icon_size = "fs-5" if local_assigns[:icon_size].nil? %>
+<% icon_size = "fs-6" if local_assigns[:icon_size].nil? %>
+<% link_css = "nav-link bg-white border rounded mb-1 d-flex align-items-center #{vertical ? '' : 'me-1 p-1'}" %>
+<% icon_css = "text-dark #{icon_size} me-2 p-0 px-1" %>
 
-<% link_css = "nav-link border rounded mb-1 d-flex align-items-center #{!vertical ? 'mx-1' : ''}" %>
-<% icon_css = "text-dark #{icon_size} me-2" %>
-<nav class="nav <%= "flex-column" if vertical %>">
-<%= link_to icon_text("Admin Home","home",false,icon_css), main_app.admin_path, class: link_css %>
-<%= link_to icon_text(dbt('users').capitalize,"users",false,icon_css), main_app.admin_users_path, class:link_css %>
-<%= link_to icon_text(dbt('announcements').capitalize,"bullhorn",false,icon_css), main_app.posts_path, class:link_css %>
-<%= link_to icon_text(dbt('news').capitalize,"newspaper",false,icon_css), newsify.newsify_admin_path, class:link_css if respond_to?(:newsify) %>
-<%= link_to icon_text(dbt('database').capitalize,"server",false,icon_css), main_app.admin_db_path, class:link_css %>
-<%= link_to icon_text(dbt('translations').capitalize,"language",false,icon_css), feedbacker.translate_keys_path, class:link_css if feedbacker?(feature:"translate") rescue "Multi lingual tools not active" %>
+<% if browser.mobile? %>
 
-<%= link_to icon_text(dbt('sites').capitalize,"language",false,icon_css), main_app.sites_path, class:link_css rescue "Multi-site features not active" %>
-</nav>
+	<% if false %>
+		<nav class="nav <%= "flex-column" if false && vertical %>">
+		<%= link_to icon_text("Admin Home","home",false,icon_css), admin_path, class: link_css %>
+		<%= link_to icon_text(dbt('users').capitalize,"users",false,icon_css), admin_users_path, class:link_css %>
+		<%= link_to icon_text(dbt('tags').capitalize,"tags",false,icon_css), admin_tags_path, class:link_css %>
+	<% end %>
+
+	<% link_css+=" fs-8 p-1 m-0 mb-1 me-1" %>
+
+	<div class="d-flex">
+		<div class="ms-auto d-flex">
+			<%= link_to icon_text(dbt('database').capitalize,"server",false,icon_css), admin_db_path, class:link_css %>
+			<%= link_to icon_text(dbt('translations').capitalize,"language",false,icon_css), feedbacker.translate_keys_path, class:link_css %>
+			<%= link_to icon_text(dbt('sites').capitalize,"sitemap",false,icon_css), sites_path, class:link_css %>
+			<%= link_to icon_text(dbt('cleanup').capitalize,"shower",false,icon_css), sites_path, class:link_css %>
+		</div>
+	</div>
+
+<% else %>
+	<nav class="nav <%= "flex-column" if vertical %>">
+	<% if false %>	
+	<%= link_to icon_text("Admin Home","home",false,icon_css), admin_path, class: link_css %>
+	<%= link_to icon_text(dbt('users').capitalize,"users",false,icon_css), admin_users_path, class:link_css %>
+	<%= link_to icon_text(dbt('tags').capitalize,"tags",false,icon_css), admin_tags_path, class:link_css  if respond_to?(:admin_tags_path) %>
+	<%= link_to icon_text(dbt('announcements').capitalize,"bullhorn",false,icon_css), posts_path, class:link_css %>
+	<% end %>
+	
+	<%= link_to icon_text(dbt('database').capitalize,"server",false,icon_css), admin_db_path, class:link_css %>
+	<%= link_to icon_text(dbt('translations').capitalize,"language",false,icon_css), feedbacker.translate_keys_path, class:link_css %>
+
+	<%= link_to icon_text(dbt('sites').capitalize,"sitemap",false,icon_css), sites_path, class:link_css %>
+		<%= link_to icon_text(dbt('cleanup').capitalize,"shower",false,icon_css), admin_cleanup_path, class:link_css %>
+
+
+	</nav>
+
+<% end %>

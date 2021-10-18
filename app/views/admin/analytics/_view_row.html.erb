@@ -1,0 +1,15 @@
+<% viewer = User.find_by(id:view.user_id) %>
+<div class="bg-white border my-1">
+<div class="d-flex justify-content-between p-1">
+	<div>
+		<%= view.impressionable_type %>
+		by <%= viewer.nil? ? "Anon" : link_to(viewer.email,"?user_id=#{viewer.id}") %>
+
+	</div>
+	<div class="text-dark"><%= view.controller_name %>: <%= view.action_name %></div>
+</div>
+<div class="d-flex">
+	<div class="p-1 fs-8"><%= view.params %></div>
+	<div class="fs-8 ms-auto text-muted"><%= time_ago_in_words view.created_at %> ago</div>
+</div>
+</div>

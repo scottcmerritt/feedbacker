@@ -39,3 +39,5 @@
 .comment .body {position:relative;}
 .comment .body .date_ago {position:absolute;top:0;right:0;padding:2px;font-size:10px;}
 .text-light .nav-link {color: white;}
+
+.adminH {background-color: #ffb23f;border:solid 1px #b3832c;margin-bottom:2px;}

@@ -1,0 +1,24 @@
+<% selected = 0 if local_assigns[:selected].nil? %>
+
+<% links = [["Translations",translates_path],["Keywords",translate_keys_path],["Tasks",translates_todo_path]] %>
+
+<h5 class="d-flex align-items-center bg-secondary text-light p-1 px-2 mb-0 mt-3">
+<%= link_to icon(icon:"arrow-left"), translate_keys_path, class: "me-2" unless !params[:tdomain] %>
+  <div class="fs-4"><%= icon(icon:"language") %><span class="mx-1 me-5">
+  Translate tools </span>
+
+  <% links.each_with_index do |link,index| %>
+
+    <%= link_to link[0], link[1], class:"nodec p-1 fs-6 text-light #{"active bg-white text-dark" if index == selected}" %>  
+
+  <% end %>
+  
+  </div>
+
+
+
+  <%= tag.span raw("Fast load <span class='text-success fs-5 mx-1'>#{num_format(Translate.cache_success,1)}%</span> of the time"), data: {"bs-toggle": "tooltip"}, title: "#{num_comma(Translate.cache_hits)} hits and #{num_comma(Translate.cache_misses)} misses", class:"d-flex align-items-center ms-auto badge bg-light border text-dark fs-7" %>
+    
+
+  </h5>
+<div class="p-1 px-2 fs-7 text-center text-dark bg-light border border-top-0">A translate key such as "menu.welcome" can have translated "phrases" in multiple languages (i.e. "Welcome" in English and "Bienvenidos" in Spanish)</div>

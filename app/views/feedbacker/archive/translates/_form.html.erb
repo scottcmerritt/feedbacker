@@ -1,0 +1,37 @@
+<%= simple_form_for(@translate, url: @translate.id.nil? ? feedbacker.translates_path : feedbacker.translate_path(id:@translate.id), :html=> { class: 'bg-white border p-2 rounded' }) do |form| %>
+  <% if @translate.errors.any? %>
+    <div id="error_explanation":html=> { class: 'foobarbaz' } >
+      <h2><%= pluralize(book.errors.count, "error") %> prohibited this entry from being saved:</h2>
+
+      <ul>
+        <% @translate.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= render partial: "#{engine_prefix}translate_keys/parts/key", locals: {translate_key: @translate.translate_key} unless @translate.translate_key.nil?  %>
+  <%= form.input :translate_key_id, :as => :hidden, :input_html => { :value => @translate.translate_key_id } %>
+  
+<% if false %>
+  <%= form.input :tdomain %>
+  <%= form.input :tkey %>
+<% end %>
+
+  <div class="row">
+    <div class="col-8">
+      <%= form.input :phrase %>
+    </div>
+    <div class="col-4">
+      <%= form.input :lang, collection: get_all_langs, label: "Language", input_html: {class:'form-select'} %>
+    </div>
+  </div>
+
+
+<div class="text-center my-2">
+    <%= form.button :submit,"Save", class: "btn-sm btn-primary" %>
+    <%= link_to "Cancel", feedbacker.translates_path, class: "btn btn-sm btn-outline-secondary" %>
+</div>
+
+<% end %>
