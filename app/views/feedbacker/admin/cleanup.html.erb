@@ -35,12 +35,12 @@ jQuery(document).ready(function($) {
 <div class="row">
 	<div class="col-7">
 <% unless @books.nil? %>
-<%= paginate @books %>
+<%= paginate @books rescue "ERROR: paginate broken" %>
 <h4 class="pageH bg-dark text-light p-1 px-2 my-1"><%= @books.total_count %> books of <%= Book.count %> total books</h4>
 <% @books.each do |book| %>
 <%= render partial: "books/parts/list_row",locals: {book: book, row_type: "dense",save_remote_btn:true,process_pdf_btn:true} %>
 <% end %>
-<%= paginate @books %>
+<%= paginate @books rescue "ERROR: paginate broken" %>
 <% end %>
 </div>
 <div class="col-5">
