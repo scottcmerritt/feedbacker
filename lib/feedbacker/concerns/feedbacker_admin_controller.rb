@@ -163,6 +163,71 @@ module Feedbacker
         
     end
 
+    def cache
+      #@cache_misses = CacheBase.get_list_objects(Translate.cache_miss_log_key, load_objects: false, with_keys: true
+      #@cache_miss_count = $redis.smembers(Translate.cache_miss_log_key).length
+      @cache_miss_count = $redis.scard Feedbacker::Translate.cache_miss_log_key
+
+      @row_limit = params[:limit] ? params[:limit].to_i : 50
+
+      list_key = Feedbacker::Translate.cache_miss_log_key
+      @exploring = Feedbacker::CacheBase.get_list_items(list_key).sample(@row_limit)
+
+      @removed_list_items = []
+      if params[:clearmisses]
+
+        @exploring.each do |key|
+          if !Feedbacker::CacheBase.exists?(key)
+            Feedbacker::CacheBase.destroy_list_object!(list_key, key)
+            @removed_list_items.push key
+          else
+
+            begin
+              obj = Feedbacker::Cache.get_obj(key)
+              if obj.kind_of?(Feedbacker::Translation)
+                Feedbacker::CacheBase.destroy_list_object!(list_key, key)
+                @removed_list_items.push key
+              end
+            rescue
+              #obj = Cache.get_obj(key,nil,true)
+            end
+
+          end
+        end
+      end
+
+
+      
+
+      @some_rows = Feedbacker::CacheAnalyze.some_keys(max_rows:@row_limit)
+
+      @cache_key = params[:cachekey]
+      Cache.remove_key(@cache_key) if params[:removecachekey]
+
+      if @cache_key
+        begin
+          @cache_obj = Feedbacker::Cache.get_obj(@cache_key)
+        rescue
+          @cache_obj =Feedbacker::Cache.get_obj(@cache_key,nil,true)
+        end
+      end
+
+      if params[:clearcache]
+        Feedbacker::CacheAnalyze.some_keys(max_rows:500).each do |k,v|
+          if k.include?("translate") || k.include?("cache")
+
+          else
+
+            if v == -1
+              obj = Feedbacker::Cache.get_obj(k)
+              Feedbacker::Cache.remove_key(k) if obj.kind_of?(Translation)
+            end
+          end
+        end
+      end
+    end
+
+
     def flag_spammer
       set_user
     @user.update(is_spam:true,spam_flagged_at:Time.now,spam_flagged_by:current_user.id)

@@ -1,0 +1,94 @@
+<div class="border pg-white">
+
+	<div class="row">
+		<div class="col-4 fs-6">
+			<h4>Cache (redis) stats</h4>
+			<div class="bg-white border p-2 my-1">
+				<b>Hit ratio:</b> <span style="color:green;">
+				<%= Stats.redis_hit_ratio %>%
+				</span>
+
+				<% Stats.redis_stats.each do |k,v| %>
+					<div class="bg-white border-bottom p-1 my-1">
+						<span class="fw-bold"><%= k %></span>:
+						<span>
+							<%= v.kind_of?(Integer) ? num_comma(v) : v %>
+						</span>
+					</div>
+				<% end %>
+
+			</div>
+
+
+		</div>
+		<div class="col-8">
+			<%= link_to "Preview keys", {previewcache:1}, class: "btn btn-sm btn-success my-1 me-2" %>
+			<%= link_to "Clear cache", {clearcache:1}, class: "btn btn-sm btn-success my-1" %>
+
+
+			<% @some_rows.each do |k,v| %>
+			<div>Key: <%= k %></div>
+			<% end %>
+
+
+			<% if params[:previewcache] %>
+
+			[<b><%= CacheAnalyze.bad_keys(matching: "*<*").length %> bad keys</b>]
+			<% CacheAnalyze.bad_keys(matching: "*<*").first(20).each do |key| %>
+				<div><%= key %></div>
+			<% end %>
+
+			<% if !params[:fast] %>
+
+			[<%= Translate.get_all_cache_misses.length %> total misses]
+			<% key_hits = Stats.redis_analyze %> 
+			<h4>Frequency of keys: (<%= key_hits.length %>)</h4>
+			<div class="row bg-white border m-1">
+			<% key_hits.each do |k,v| %>
+				<div class="col-4 fs-8 text-dark py-1">
+					<b><%= link_to k, {redis:1,cache_prefix: k,prefix_len:k.length} %></b>: <%= v %>
+				</div>
+			<% end %>
+			</div>
+
+			<% if params[:cache_prefix] %>
+
+			<% key_hits = Stats.redis_analyze(matching:params[:cache_prefix]+"*",prefix_len:params[:prefix_len]) %> 
+			<h4>Frequency of keys: (<%= key_hits.length %>)</h4>
+			<div class="row bg-white border m-1">
+			<% key_hits.each do |k,v| %>
+				<div class="col-4 fs-8 text-dark py-1">
+					<b><%= link_to k, {redis:1,cache_prefix: k,prefix_len:k.length} %></b>: <%= v %>
+				</div>
+			<% end %>
+			</div>
+
+			<% end %>
+			<% end %>
+
+
+			<h4>Some keys</h4>
+			<% CacheAnalyze.some_keys.each do |k,ttl| %>
+			<div class="border-bottom p-1">
+				<%= link_to k, {cachekey:k} %>, ttl: <%= ttl %>
+				<div class="ms-4">
+					<% begin %>
+					<%= Cache.get_obj(k) rescue Cache.get_obj(k,nil,true) %>
+					<% rescue Exception => ex %>
+					Redis Error: <%= ex %>
+					<% end %>
+				</div>
+			</div>
+
+			<% end %>
+			<% end %>
+
+
+		</div>
+	</div>
+
+
+	<div class="f1 m2">
+	REDIS INFO: <%= $redis.info %>
+	</div>
+</div>

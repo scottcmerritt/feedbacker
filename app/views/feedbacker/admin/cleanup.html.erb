@@ -1,0 +1,57 @@
+<%= render partial: "admin/manage/header" %>
+<%= render partial: "admin/manage/menu" %>
+<script>
+jQuery(document).ready(function($) {
+	$('.saveRemoteImg').bind('ajax:beforeSend', function(e) {
+		let savingHtml = `<div class="spinner-grow spinner-grow-sm text-dark" role="status"><span class="visually-hidden">Loading...</span></div>`;
+		$(this).html(`Saving ${savingHtml}`)
+	    //$(this).closest('.saveRemoteImgWrap').html('saving')
+	  //$('#mySpinner').show();
+	});
+
+	$('.saveRemoteImg').bind('ajax:complete', function(e) {
+	  //$('#mySpinner').hide();
+	  //let bookId = $(this).closest('.saveRemoteImgWrap').data('oid')
+	  //$(`a[data-oid='${bookId}']`).html('SAVED')
+	});
+})
+</script>
+
+<h4 class="pageH p-2 my-0 mt-1 fw-bold text-dark"><%= icon(icon:"shower") %> Cleanup incomplete data</h4>
+<div class="fs-6 px-2 bg-white border border-top-0 mb-2">Select a query to help cleanup the data</div>
+
+<% if false %>
+<form class="bg-white p-2" method="get" action="">
+	<input type="text" value="1" name="q"/>
+	<input type="submit" value="Show"/>
+</form>
+<% end %>
+<div class="p-1 bg-white border mb-1">
+	<% @queries.each_with_index do |query,index| %>
+	<%= link_to query, admin_cleanup_path(query_id:index), class: "btn btn-sm border #{"btn-primary" if index == @query_id}" %>
+	<% end %>
+</div>
+
+<div class="row">
+	<div class="col-7">
+<% unless @books.nil? %>
+<%= paginate @books %>
+<h4 class="pageH bg-dark text-light p-1 px-2 my-1"><%= @books.total_count %> books of <%= Book.count %> total books</h4>
+<% @books.each do |book| %>
+<%= render partial: "books/parts/list_row",locals: {book: book, row_type: "dense",save_remote_btn:true,process_pdf_btn:true} %>
+<% end %>
+<%= paginate @books %>
+<% end %>
+</div>
+<div class="col-5">
+	<% if @books2 %>
+	<h4> <%= @books2_title %></h4>
+
+
+	<% @books2.each do |book| %>
+	<%= render partial: "books/parts/list_row",locals: {book: book, row_type: "dense"} %>
+	<% end %>
+	
+	<% end %>
+</div>
+</div>

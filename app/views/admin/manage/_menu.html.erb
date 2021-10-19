@@ -31,8 +31,11 @@
 	<%= link_to icon_text(dbt('tags').capitalize,"tags",false,icon_css), admin_tags_path, class:link_css  if respond_to?(:admin_tags_path) %>
 	<%= link_to icon_text(dbt('announcements').capitalize,"bullhorn",false,icon_css), posts_path, class:link_css %>
 	<% end %>
-	
+
+	<%= link_to icon_text(dbt('messages').capitalize,"comments",false,icon_css), main_app.admin_messages_path, class:link_css %>
 	<%= link_to icon_text(dbt('database').capitalize,"server",false,icon_css), feedbacker.admin_db_path, class:link_css %>
+	<%= link_to icon_text(dbt('cache').capitalize,"server",false,icon_css), feedbacker.admin_cache_path, class:link_css %>
+
 	<%= link_to icon_text(dbt('translations').capitalize,"language",false,icon_css), feedbacker.translate_keys_path, class:link_css %>
 
 	<%= link_to icon_text(dbt('sites').capitalize,"sitemap",false,icon_css), sites_path, class:link_css %>

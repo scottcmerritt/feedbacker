@@ -1,0 +1,60 @@
+<%= render partial: "admin/manage/header" %>
+<%= render partial: "admin/manage/menu" %>
+
+<% 3.times.each do |row| %>
+<% obj = Feedbacker::Translation.new(tdomain:"blah",tkey:"mykey",lang:"en") %>
+<% obj_as_string = Marshal.dump(obj) %>
+<% hashkey = Digest::SHA256.hexdigest obj_as_string %>
+<div>HASHKEY: <%= hashkey %></div>
+<% end %>
+
+
+<div class="row">
+	<div class="col-6 fs-8">
+		<% if @exploring %>
+		<div class="bg-white p-1 my-1">
+		<h4>Exploring: <%= @exploring.length %> keys</h4>
+		<% if params[:info] %>
+			
+			<% @exploring.each do |k| %>
+			<div class="ms-4">
+				<% begin %>
+				<%= Cache.get_obj(k) rescue Cache.get_obj(k,nil,true) %>
+				<% rescue Exception => ex %>
+				Redis Error: <%= ex %>
+				<% end %>
+			</div>
+			<% end %>
+		<% else %>
+		<%= @exploring %>
+		<% end %>
+
+
+
+		</div>
+		<% end %>
+	</div>
+	<div class="col-6 fs-8">
+
+		
+		[<%= @cache_miss_count %> cache misses]
+		<div>
+		[Removed misses: <%= @removed_list_items.length %>]
+		</div>
+
+	</div>
+</div>
+
+
+<div>
+	<% if @cache_obj %>
+		<div class="bg-white p-1 my-1">
+			<h4 class="bg-bright">Investigating a cache key</h4>
+			<%= @cache_obj %>
+		</div>
+	<% end %>
+
+	<%= tag.div @removed_list_items %>
+</div>
+
+<%= render partial: "admin/analytics/redis" %>
