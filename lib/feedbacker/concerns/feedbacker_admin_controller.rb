@@ -61,23 +61,28 @@ module Feedbacker
     end
 
     def cleanup
+
       @queries = ["w/out language","No tags","No files","No images"]
       @query_id = params[:query_id].to_i
-      case @query_id
-      when 0
-        @books = Book.where("lang is NULL").page(params[:page])
-      when 1 # no tags
+      if defined? Book
+        case @query_id
+        when 0
+          @books = Book.where("lang is NULL").page(params[:page])
+        when 1 # no tags
 
-        @tagged_books = Book.select("books.*,books.name,taggings.taggable_type").joins("LEFT JOIN taggings ON taggings.taggable_id = books.id")
-        .where("taggings.taggable_type = ?","Book").group("books.id,books.name,taggable_type")
-        @books = Book.select("books.*").where.not(id:@tagged_books.pluck(:id))
-        @books = @books.page(params[:page])
-      when 2
-        @books = Book.where(file:nil,hard_copy:false).page(params[:page])
-      when 3
-        @books = Book.all.each.collect{|book| book if !book.thumb_guess_sm?}.compact
-        @books = Kaminari.paginate_array(@books).page(params[:page]).per(10)
+          @tagged_books = Book.select("books.*,books.name,taggings.taggable_type").joins("LEFT JOIN taggings ON taggings.taggable_id = books.id")
+          .where("taggings.taggable_type = ?","Book").group("books.id,books.name,taggable_type")
+          @books = Book.select("books.*").where.not(id:@tagged_books.pluck(:id))
+          @books = @books.page(params[:page])
+        when 2
+          @books = Book.where(file:nil,hard_copy:false).page(params[:page])
+        when 3
+          @books = Book.all.each.collect{|book| book if !book.thumb_guess_sm?}.compact
+          @books = Kaminari.paginate_array(@books).page(params[:page]).per(10)
+        end
+
       end
+
     end
 
     def tags
