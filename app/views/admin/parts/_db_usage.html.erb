@@ -22,7 +22,7 @@
 		<% font_lg = 5 %>
 		<% font_md = 6 %>
 
-		<div class="mx-1 text-center border rounded p-1 <%= top_rec ? "border-3 border-success" : "my-2" %>" style="min-width:<%=100.0/upgrades.length %>%;">
+		<div class="mx-1 bg-white text-center border rounded p-1 <%= top_rec ? "border-3 border-success" : "my-2" %>" style="min-width:<%=100.0/upgrades.length %>%;">
 			<%= tag.div tier[:name], class: "text-primary fw-bold text-center fs-#{ top_rec ? font_md - 1 : font_md }" unless tier[:name].nil? %> 
 			<div class="text-dark fs-<%= top_rec ? font_lg - 1 : font_lg %>">
 				<%= tier[:info] %> 
