@@ -64,7 +64,7 @@ module Feedbacker
 
       @queries = ["w/out language","No tags","No files","No images"]
       @query_id = params[:query_id].to_i
-      if defined? Book
+      if defined?(Book)
         case @query_id
         when 0
           @books = Book.where("lang is NULL").page(params[:page])
