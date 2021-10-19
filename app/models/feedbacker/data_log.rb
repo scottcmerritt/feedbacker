@@ -1,6 +1,7 @@
 module Feedbacker
 class DataLog < ApplicationRecord
 	self.table_name = "data_logs"
+	scope :recent, -> { order('created_at DESC') }
 
 	def load_value
 		begin
@@ -45,9 +46,13 @@ class DataLog < ApplicationRecord
 			dates[datekey] = {}
 			unless snapshot.nil? || snapshot[:data].nil?
 			snapshot[:data].each do |row|
+				begin
 				if table_filters.nil? || (table_filters.include?(row["table"]) || table_filters.any?{|s| s[row["table"]]})
 					tables[row["table"]] = {} unless tables.key?(row["table"])
 					tables[row["table"]][datekey] = row["count"]
+				end
+				rescue
+
 				end
 			end
 			end
