@@ -45,6 +45,23 @@ module Feedbacker
 	        info[:tables][:names] = info[:rows][:per_table].collect{|row| row["table"]}
 	        info
 		end
+
+
+		def self.redis_stats
+			CacheAnalyze.redis_stats
+		end
+
+		def self.redis_analyze matching: nil, prefix_len: 10
+			ca = CacheAnalyze.new({matching:matching,prefix_len: prefix_len})
+			ca.run
+			ca.results
+		end
+
+		def self.redis_hit_ratio
+			((Stats.redis_stats[:hits].to_f / (Stats.redis_stats[:hits] + Stats.redis_stats[:misses]))*100).round(4)
+		end
+
+
 	end
 
 end

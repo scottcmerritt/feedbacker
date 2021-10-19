@@ -1,6 +1,6 @@
 <div class="bg-white border my-1 d-flex align-items-center">
-    <div class="px-2 d-flex align-items-center"><%= @history.count %> snapshots <%= link_to icon(icon:"plus"), {snapshot:1}, class: "btn btn-sm btn-primary mx-1" %></div>
-    <%= link_to "Condense authors", {cache_authors:1}, class: "btn btn-sm btn-success mx-1" %>
+    <div class="px-2 d-flex align-items-center"><%= @history.count %> snapshots <%= link_to icon(icon:"plus"), feedbacker.admin_db_path({snapshot:1}), class: "btn btn-sm btn-primary mx-1" %></div>
+    <%= link_to "Condense authors", feedbacker.admin_db_path({cache_authors:1}), class: "btn btn-sm btn-success mx-1" if newsify %>
 
 <div class="ms-auto">
 <form method="get" action="?" class="d-flex align-items-center border bg-light p-1 m-1">
