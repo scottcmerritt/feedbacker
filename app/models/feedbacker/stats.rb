@@ -3,9 +3,8 @@ module Feedbacker
 		# returns the array of service tier hashes
 		# TODO: gather upgrade options from used plugins in a more extensible way
 		def self.service_upgrades
-			res = defined?(Feedbacker) && Feedbacker.respond_to?(:service_upgrades) ? Feedbacker.service_upgrades : []
-			res = defined?(Newsify) && Newsify.respond_to?(:service_upgrades) ? Newsify.service_upgrades : []
-			res
+			return Newsify.service_upgrades if defined?(Newsify) && Newsify.respond_to?(:service_upgrades)
+			return defined?(Feedbacker) && Feedbacker.respond_to?(:service_upgrades) ? Feedbacker.service_upgrades : []
 		end
 
 		
