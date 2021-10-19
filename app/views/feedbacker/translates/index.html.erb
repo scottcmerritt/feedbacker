@@ -60,7 +60,7 @@
 		<h6 class="d-flex align-items-center bg-light text-dark p-1 px-2 border rounded-top fs-8 mt-0 mb-1">Top translators</h6>
 		<% @translators.each do |user| %>
 		<div class="bg-white border-bottom p-1 mb-1 d-flex align-items-center">
-			<%= tag.span user.translates_count, class: "badge bg-info me-1 border fs-7" %> <%= link_to user.display_name_public, user, class: "fs-8" %>
+			<%= tag.span user.translates_count, class: "badge bg-info me-1 border fs-7" %> <%= link_to user.display_name_public, [main_app,user], class: "fs-8" %>
 		</div>
 
 		<% end %>

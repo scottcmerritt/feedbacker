@@ -131,16 +131,44 @@ module Feedbacker
     end
 
       def users
-        @role = params[:role]
-
-        manually_confirm_user! if params[:confirm_user]
+        #@role = params[:role]
+        #manually_confirm_user! if params[:confirm_user]
 
         #@user = User.find_by(id: params[:user_id]) unless params[:user_id].nil?
         
-        @users = @site_roles.include?(@role) ? User.with_role(@role.to_sym) : User.all
+        #@users = @site_roles.include?(@role) ? User.with_role(@role.to_sym) : User.all
 
-        @users = @users.order(:confirmed_at).page(params[:page]).per(20)
+        #@users = @users.order(:confirmed_at).page(params[:page]).per(20)
+      
+      @role = params[:role]
+      manually_confirm_user! if params[:confirm_user]
+
+      #@user = User.find_by(id: params[:user_id]) unless params[:user_id].nil?
+      
+      if params[:spammers]
+        users = User.spam
+      else
+        minutes_ago = params[:mins_ago] ? params[:mins_ago].to_i : 60*24
+        @active = User.active_users(minutes_ago:minutes_ago)
+        @active = @active.confirmed if params[:confirmed]
+        @active = @active.not_confirmed if params[:not_confirmed]
+        users = params[:active] ? @active : User.not_spam
       end
+      users = users.confirmed if params[:confirmed]
+      users = users.not_confirmed if params[:not_confirmed]
+
+      users = users.order("last_sign_in_at DESC") #created_at"
+
+      @users = @site_roles.include?(@role) ? users.with_role(@role.to_sym) : users
+
+      if @users.kind_of? Array
+        @users = Kaminari.paginate_array(@users) #.page(params[:page])
+      else
+        @users = @users.order(:last_sign_in_at) #:confirmed_at)) #.per(20)
+      end
+      @users = @users.page(params[:page])
+
+    end
 
       def modify_role
         @user = User.find_by(id: params[:user_id])

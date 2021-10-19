@@ -10,6 +10,7 @@ Feedbacker::Engine.routes.draw do
 	match '/admin/cms' =>"translates#cms", :as => :translates_cms, :via=>[:get,:post]
 	match '/admin/todo/translates' =>"translates#todo", :as => :translates_todo, :via=>[:get,:post]
 
+	get '/admin/users(/:role)(/:q)' => 'admin#users', as: :admin_users
 
 	match '/demo(/:filter)' =>"demo#index", :as => :demo, :via=>:get
 	match '/admin(/:filter)' =>"admin#index", :as => :admin, :via=>:get
