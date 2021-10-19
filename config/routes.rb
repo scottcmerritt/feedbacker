@@ -5,6 +5,8 @@ Feedbacker::Engine.routes.draw do
 	resources :translate_keys, path: "translations"
 
 	match '/admin/about/translations' =>"translates#about", :as => :translates_about, :via=>[:get,:post]
+	match '/admin/search/translations' =>"translate_keys#search", :as => :translates_search, :via=>[:get,:post]
+
 	match '/admin/cms' =>"translates#cms", :as => :translates_cms, :via=>[:get,:post]
 	match '/admin/todo/translates' =>"translates#todo", :as => :translates_todo, :via=>[:get,:post]
 

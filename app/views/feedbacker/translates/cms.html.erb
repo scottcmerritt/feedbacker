@@ -10,6 +10,10 @@
 <%= link_to "#{lang}: Add #{@tdomain}.#{@tkey}", feedbacker.new_translate_path(lang:lang,tdomain:@tdomain,tkey:@tkey), class: "mx-1 btn btn-sm btn-success" %>
 <% end %>
 <% end %>
+
+<%= render partial: "feedbacker/translate_keys/parts/samples_and_stats", locals: {translate_key:@translate_key} %>
+
+
 <%= render partial: "#{engine_prefix}translates/parts/list" %>
 
 <h4 class="mt-4 bg-white p-1 border">Similar keys to consider</h4>
@@ -22,7 +26,7 @@
 	 <% if translate_key.translates.count == 0 %>
 	<%= link_to 'Add translation', [engine_name,translate_key], class: "btn btn-sm btn-success" %>
 	<% else %>
-	<%= link_to "Show #{translate_key.translates.count} #{"translation".pluralize(translate_key.translates.count)}", translate_key, class: "btn btn-sm btn-secondary" %>
+	<%= link_to "Show #{translate_key.translates.count} #{"translation".pluralize(translate_key.translates.count)}", respond_to?(:engine_name) ? [engine_name,translate_key] : feedbacker.translate_key_path(translate_key), class: "btn btn-sm btn-secondary" %>
 	<% end %>
 	</div>
 

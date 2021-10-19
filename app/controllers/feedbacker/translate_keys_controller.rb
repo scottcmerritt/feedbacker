@@ -1,19 +1,21 @@
 module Feedbacker
   class TranslateKeysController < ApplicationController
+    # /translations
+    before_action :authenticate_admin!
     before_action :set_translate_key, only: %i[ show edit update destroy ]
+    before_action :set_shared, only: %i[ index search ]
+
 
     # GET /translate_keys or /translate_keys.json
     def index
-      @lang_colors = {"en"=> "primary","sw"=> "secondary","other"=> "dark"}
       cache_all! if params[:refresh_cache]
-
       Translate.reset_miss_log! if params[:reset_log]
-
-      @translate_keys = TranslateKey.order("tdomain,tkey")
-      if params[:tdomain]
-        @translate_keys = @translate_keys.where(tdomain:params[:tdomain])
-      end
+      @translate_keys = TranslateKey.order("tdomain,tkey").page(params[:page]).per(100)
+      @translate_keys = @translate_keys.where(tdomain:@tdomain) if @tdomain
+    
     end
+
+
 
     
 
@@ -44,6 +46,8 @@ module Feedbacker
           format.json { render json: @translate_key.errors, status: :unprocessable_entity }
         end
       end
+
+
     end
 
     # PATCH/PUT /translate_keys/1 or /translate_keys/1.json
@@ -57,6 +61,8 @@ module Feedbacker
           format.json { render json: @translate_key.errors, status: :unprocessable_entity }
         end
       end
+
+
     end
 
     # DELETE /translate_keys/1 or /translate_keys/1.json
@@ -68,11 +74,37 @@ module Feedbacker
       end
     end
 
+      # search both the keys AND the translations
+    def search
+      @q = params[:q] || params[:tdomain]
+      if @q.blank?
+
+        redirect_to controller: "translate_keys", action: "index"
+      else
+        @query1 = "#{@q.downcase}%"
+        @query2 = "%#{@q.downcase}%"
+        @translates = Translate.where("phrase LIKE ? OR phrase LIKE ?",@query1,@query2).page(params[:page])
+        @translate_keys = TranslateKey.where("LOWER(tdomain) LIKE ? OR LOWER(tkey) LIKE ? OR LOWER(tdomain) LIKE ? OR LOWER(tkey) LIKE ?",@query1,@query1,@query2,@query2).page(params[:page])
+        
+        @needed_translations = Translate.get_cache_misses(grouped:true,tdomain_filter:@q,tkey_filter:@q)
+        render "index"
+      end      
+    end
+
+
     private
       # Use callbacks to share common setup or constraints between actions.
       def set_translate_key
         @translate_key = TranslateKey.find(params[:id])
       end
+
+       def set_shared
+        @lang_colors = {"en"=> "primary","sw"=> "secondary","es"=>"success","other"=> "dark"}
+        @tdomain = params[:tdomain]
+        @translators = User.select("users.*,count(translates.id) as translates_count").joins("JOIN translates ON translates.user_id = users.id").group("users.id").order("translates_count DESC")
+      end
+      
+
 
       # Only allow a list of trusted parameters through.
       def translate_key_params

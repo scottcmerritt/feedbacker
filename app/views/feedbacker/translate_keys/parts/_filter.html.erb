@@ -1,0 +1,24 @@
+<h4 class="d-flex justify-content-between align-items-center"><div>Translations <%= link_to "Add", feedbacker.new_translate_key_path, class: "btn btn-sm btn-primary text-light" %></div>
+	<form method="get" action="<%= feedbacker.translates_search_path %>">
+	    <input type="text" name="q" value="<%= @q %>" class="form-control-sm"/>
+	</form>
+</h4>
+
+<h6 class="d-flex align-items-center bg-light text-dark p-1 px-2 border rounded-top fs-8 mt-0 mb-1">Filter by <%= tag.span @tdomain || @q, class: "fs-6 fw-bold text-primary mx-1" if @tdomain || @q %> <%= link_to "X", feedbacker.translates_path({tdomain:nil}), class:"nodec text-danger mx-1" if @tdomain || @q %>
+
+<%= link_to icon_text('',"edit"), feedbacker.translate_keys_path, class: "ms-auto text-dark" %>
+	</h6>
+
+<div class="d-flex mb-2" style="overflow-x:scroll;">
+	<% Feedbacker::TranslateKey.tdomain_grouped.each do |row| %>
+	<%= link_to row.tdomain, feedbacker.translate_keys_path({tdomain:row.tdomain}), class: "nodec mx-1 border p-1 #{@tdomain == row.tdomain ? "active-u bg-dark text-light" : "bg-white text-muted"}" %>
+	<% end %>
+</div>
+
+
+  <% if false && @tdomain %>
+  <div class="d-flex align-items-center justify-content-between">
+  <div>Filtered by <%= tag.span @tdomain, class: "bg-primary active-u mx-1 p-1 px-2 text-white fw-bold rounded" %></div> <%= link_to "Show all", feedbacker.translate_keys_path({tdomain:nil}), class: "btn btn-sm btn-secondary" %>
+  </div>
+
+  <% end %>

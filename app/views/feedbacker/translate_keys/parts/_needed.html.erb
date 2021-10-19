@@ -20,22 +20,14 @@
       <h6>Language: <%= lang %></h6>
       <% rows.each do |full_row| %>
       <% row = full_row.kind_of?(Feedbacker::Translation) ? full_row : (full_row.has_key?(:obj) ? full_row[:obj] : full_row) %>
-      <% samples = Feedbacker::Translate.get_logged_samples "#{row.tdomain}.#{row.tkey}" %>
-      <% hits_and_misses = Feedbacker::Translate.hits_and_misses row %>
+
       
       <div class="border-bottom">
         <%= link_to icon(icon:'trash'), feedbacker.translates_path({remove_misskey:full_row[:key]}), class:"me-2 nodec" if full_row.has_key?(:key) %>
         <%= link_to "#{row.tdomain}.#{row.tkey}", feedbacker.new_translate_path(lang:lang,tdomain:row.tdomain,tkey:row.tkey), class: "nodec" %>
-        <% unless hits_and_misses[:hits] == 0 && hits_and_misses[:misses] == 0 %>
-        <div class="p-0 px-1 fs-8">
-        <%= tag.span "#{hits_and_misses[:hits]} hits", class:"me-2" %>
-        <%= tag.span "#{hits_and_misses[:misses]} misses" %>
-        </div>
-        <% end %>
+        
+        <%= render partial: "#{engine_prefix}translate_keys/parts/samples_and_stats", locals: {translate_key:row} %>
 
-        <%= tag.div link_to(samples[:page],samples[:page], class: "fw-bold fs-8") unless samples[:page].nil? %>
-        <%= tag.div samples[:default], class: "fw-bold fs-8" unless samples[:default].nil? %>
-        <%= tag.div samples[:result], class: "fw-bold fs-8" unless samples[:result].nil? %>
 
         <%= tag.div full_row[:key], class: "fs-7" if params[:debug] %>
       </div>

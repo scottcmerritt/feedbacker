@@ -5,8 +5,16 @@ module Feedbacker
 		
 		def index
 			clear_misskeys!
-			@translate_domains_grouped = TranslateKey.tdomain_grouped
-			@translations = Translate.order('translate_key_id ASC')
+	#		@translations = Translate.order('translate_key_id ASC').page(params[:page])
+			@translations = Translate.select("translates.*").joins("LEFT JOIN translate_keys ON translate_keys.id = translates.translate_key_id").order('translates.created_at DESC')
+			
+			@tdomain = params[:tdomain]
+			@translations = @translations.where("translate_keys.tdomain = ?",@tdomain) if @tdomain
+			@translations = @translations.page(params[:page])
+
+			@translators = User.select("users.*,count(translates.id) as translates_count").joins("JOIN translates ON translates.user_id = users.id").group("users.id").order("translates_count DESC")
+			
+			@needed_translations = Translate.get_cache_misses(grouped:true,tdomain_filter:@tdomain)
 		end
 
 		def new
@@ -25,8 +33,10 @@ module Feedbacker
 			flash[:notice] = @translate.cache! if params[:cache]
 		end
 		def create
-			Feedbacker::Translate.create(translate_params)
-			redirect_to feedbacker.translates_path, notice: "Added" #controller: "translates", action: "index", notice: "Added"
+			translate = Feedbacker::Translate.create(translate_params.merge({user_id:current_user.id}))
+			redirect_to feedbacker.translates_path(tdomain: translate.translate_key.tdomain), notice: "Added, search for similar?", tdomain: translate.translate_key.tdomain
+
+			#redirect_to feedbacker.translates_path, notice: "Added" #controller: "translates", action: "index", notice: "Added"
 		end
 
 		def show
@@ -47,6 +57,8 @@ module Feedbacker
 		def cms
 			@tdomain = params[:tdomain]
 			@tkey = params[:tkey]
+
+			@translate_key = Feedbacker::TranslateKey.new(tdomain:@tdomain,tkey:@tkey)
 
 			@translations = Feedbacker::Translate.select("translates.*").joins("LEFT JOIN translate_keys ON translate_keys.id = translates.translate_key_id").order('translates.created_at DESC')
 			@translations = @translations.where("translate_keys.tdomain = ? AND translate_keys.tkey = ?",@tdomain,@tkey)

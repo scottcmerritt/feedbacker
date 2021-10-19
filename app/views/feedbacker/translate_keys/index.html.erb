@@ -12,12 +12,10 @@
 </div>
 
 <div class="col-9">
-  <% if @tdomain %>
-  <div class="d-flex align-items-center justify-content-between">
-  <div>Filtered by <%= tag.span @tdomain, class: "bg-primary active-u mx-1 p-1 px-2 text-white fw-bold rounded" %></div> <%= link_to "Show all", {tdomain:nil}, class: "btn btn-sm btn-secondary" %>
-  </div>
+  <%= render partial: "#{engine_prefix}translate_keys/parts/filter" %>
 
-  <% end %>
+  
+
   <table class="table bg-light border rounded">
     <thead>
       <tr>

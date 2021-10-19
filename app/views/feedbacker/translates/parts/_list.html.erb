@@ -6,7 +6,7 @@
 	<div class="p-2 d-flex align-items-center">
 		
 		<%= tag.span row.lang, class:"badge bg-success fs-7 me-1" %>
-		<%= link_to "#{row.tdomain}.#{row.tkey}", translate_key_path(id:row.translate_key_id), class: "nodec text-dark" %> = <span class="mx-1 btn btn-sm border bg-white text-muted">CUSTOM HTML</span>
+		<%= link_to "#{row.tdomain}.#{row.tkey}", feedbacker.translate_key_path(id:row.translate_key_id), class: "nodec text-dark" %> = <span class="mx-1 btn btn-sm border bg-white text-muted">CUSTOM HTML</span>
 
 		<div class="ms-auto">
 			<%= link_to icon_text("","edit"),feedbacker.edit_translate_path(id:row.id), class: "nodec" %>
@@ -22,7 +22,7 @@
 	<div class="p-2 d-flex align-items-center">
 		
 		<%= tag.span row.lang, class:"badge bg-success fs-7 me-1" %>
-		<%= link_to "#{row.tdomain}.#{row.tkey}", translate_key_path(id:row.translate_key_id), class: "nodec text-dark" %>
+		<%= link_to "#{row.tdomain}.#{row.tkey}", feedbacker.translate_key_path(id:row.translate_key_id), class: "nodec text-dark" %>
 		 = <%= tag.span row.phrase, class: "fw-bold" %>
 
 		<div class="ms-auto">

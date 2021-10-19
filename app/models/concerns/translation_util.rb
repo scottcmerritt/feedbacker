@@ -10,7 +10,7 @@ module TranslationUtil
   end
 
   def object_to_cache
-    Translate.object_to_cache(tdomain:tdomain,tkey:tkey,lang:self.lang)
+    Feedbacker::Translate.object_to_cache(tdomain:tdomain,tkey:tkey,lang:self.lang)
   end
 
   def object_hashkey
@@ -76,9 +76,10 @@ module TranslationUtil
       {page: self.get_logged_page(phrase),default:self.get_logged_default(phrase),result:self.get_logged_result(phrase)}
     end
 
-    def get_logged_page phrase
+    def get_logged_page phrase, remove_params: [:locale]
       cache_key = "PAGE::" + self.phrase_miss_prefix+"::"+phrase
-      Feedbacker::Cache.get_obj cache_key
+      page = Feedbacker::Cache.get_obj cache_key
+      remove_params.nil? ? page : page
     end
     def get_logged_default phrase
       cache_key = "TRANSLATE::DEFAULT::" + self.phrase_miss_prefix+"::"+phrase

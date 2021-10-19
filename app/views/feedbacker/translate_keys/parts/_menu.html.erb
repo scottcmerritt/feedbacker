@@ -3,7 +3,7 @@
 <% links = [["Translations",feedbacker.translates_path],["Keywords",feedbacker.translate_keys_path],["Tasks",feedbacker.translates_todo_path]] %>
 
 <h5 class="d-flex align-items-center bg-secondary text-light p-1 px-2 mb-0 mt-3">
-<%= link_to icon(icon:"arrow-left"), translate_keys_path, class: "me-2" unless !params[:tdomain] %>
+<%= link_to icon(icon:"arrow-left"), feedbacker.translate_keys_path, class: "me-2" unless !params[:tdomain] %>
   <div class="fs-4"><%= icon(icon:"language") %><span class="mx-1 me-5">
   Translate tools </span>
 

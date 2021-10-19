@@ -14,23 +14,7 @@
 
   <div class="mx-3">
   This will show up in the code as <span class="fw-bold">dbt('<%= translate_key.tdomain %>.<%= translate_key.tkey %>')</span>
-
   </div>
-
 </div>
 
-<div>
-<% samples = Feedbacker::Translate.get_logged_samples "#{translate_key.tdomain}.#{translate_key.tkey}" %>
-<% hits_and_misses = Feedbacker::Translate.hits_and_misses translate_key %>
-
-<% unless hits_and_misses[:hits] == 0 && hits_and_misses[:misses] == 0 %>
-<div class="p-0 px-1 fs-8">
-<%= tag.span "#{hits_and_misses[:hits]} hits", class:"me-2" %>
-<%= tag.span "#{hits_and_misses[:misses]} misses" %>
-</div>
-<% end %>
-
-<%= tag.div raw("Page: " + link_to(samples[:page],samples[:page], class: "fw-bold fs-8")) unless samples[:page].nil? %>
-<%= tag.div "Default: " + samples[:default], class: "fw-bold fs-8" unless samples[:default].nil? %>
-<%= tag.div "Result: " + samples[:result], class: "fw-bold fs-8" unless samples[:result].nil? %>
-</div>
+<%= render partial: "#{engine_prefix}translate_keys/parts/samples_and_stats", locals: {translate_key:translate_key} %>
