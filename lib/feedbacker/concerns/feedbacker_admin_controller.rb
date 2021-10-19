@@ -90,7 +90,7 @@ module Feedbacker
         #@grouped_tags_top = ActsAsTaggableOn::Tag.select("name,taggings_count").map{|row| [row.name,row.taggings_count]}.sort_by{|row| -row[1]}.first(@top)
       end
 
-  
+
       def old_analytics
       @views = Impression.select("*").order("created_at DESC")
 
@@ -223,6 +223,9 @@ module Feedbacker
 
         @history = Feedbacker::DataLog.where("domain = ? AND key = ? AND created_at >= ?","db","rows",@start.days.ago)
       end
+
+      @archives = Feedbacker::Archive.all
+      
       redirect_to controller: "admin", action: "db" if @cleaned
     end
     
