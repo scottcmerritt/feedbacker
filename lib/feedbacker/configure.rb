@@ -12,6 +12,8 @@ module Feedbacker
     @@languages = ["en","es"]
     @@default_language = "en"
 
+    @@service_upgrades = []
+
     def configure(*settings)
       return if !sanity_check(settings)
       yield self if block_given?
@@ -51,7 +53,19 @@ module Feedbacker
         config.theme = 0
         config.languages = ["en","es"]
         config.default_language = "en"
+
+        # info for updating the provided service (i.e. # of db rows etc...)
+        # an array of hash service tiers, example_tier = {name:"Tier 1",rows:100000,price:"$1 billion/month",info:"Some db rows and great customer service"}
+        config.service_upgrades = [] 
       end
+    end
+
+
+    def service_upgrades=(upgrades)
+      @@service_upgrades = upgrades
+    end
+    def service_upgrades
+      @@service_upgrades
     end
 
     def default_list_ui=(list_ui)
