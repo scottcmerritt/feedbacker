@@ -33,6 +33,65 @@ module Feedbacker
       end
 
       def analytics
+        page_size = 40
+
+        @views = Impression.select("*").order("created_at DESC")
+
+        @find_library_public = Impression.where(action_name:"find_library",user_id:nil)
+        @find_library = Impression.where("action_name = ? AND user_id > 0","find_library")
+
+        @downloads_public = Impression.where(action_name:"download_file",user_id:nil)
+        @downloads = Impression.where("action_name = ? AND user_id > 0","download_file")
+
+        @downloads_public_top   = Impression.select("impressionable_id,impressionable_type,COUNT(impressionable_id) as downloads,COUNT(DISTINCT(ip_address)) as downloaders").where(action_name:"download_file",user_id:nil,impressionable_type:"Book").group(:impressionable_type,:impressionable_id).order("COUNT(impressionable_id) DESC")
+        @downloads_top      = Impression.select("impressionable_id,impressionable_type,COUNT(impressionable_id) as downloads,COUNT(DISTINCT(user_id)) as downloaders").where("action_name = ? AND user_id > 0 AND impressionable_type = ?","download_file","Book").group(:impressionable_type,:impressionable_id).order("COUNT(impressionable_id) DESC")
+
+        @user_id = params[:user_id]
+
+        @top_viewers = User.not_spam.confirmed.where(id:Impression.select("user_id").group("user_id").pluck(:user_id))
+
+        @top_viewers = @top_viewers.sort_by{|user| -user.total_views}
+        
+        if @user_id == "anon"
+          @views = @views.where(user_id:nil)
+        elsif @user_id == "notbot"
+          botname = "bot"
+          @views = @views.where("user_id is NULL AND message NOT LIKE ?","%#{botname}%")
+        elsif @user_id == "google"
+          botname = "google"
+          @views = @views.where("user_id is NULL AND message LIKE ?","%#{botname}%")
+        elsif params[:search]
+          @views = @views.where("user_id is NULL AND message LIKE ?","%#{params[:search]}%")
+        else
+          @views = @views.where(user_id:params[:user_id]) unless params[:user_id].blank?
+        end
+
+        @views_count = @views.count
+        @views = @views.page(params[:page]).per(page_size)
+
+        range1 = 4.weeks.ago.midnight..Time.now
+        range2 = 12.weeks.ago.midnight..Time.now
+
+        @controller_usage = Impression.select("controller_name").group("controller_name")
+        @controller_usage = (@user_id == "anon" ? @controller_usage.where(user_id:nil) : @controller_usage.where(user_id:params[:user_id])) if !params[:user_id].blank?
+
+        # column_chart, line_chart, pie_chart
+        @charts = [
+          [Impression.where(impressionable_type:"Site").group_by_day(:created_at),"Views/day","column_chart",range1],
+          [Impression.where(impressionable_type:"Site").group_by_week(:created_at),"Views/week","column_chart",range2],
+          [Impression.where(impressionable_type:"Book").group_by_day(:created_at),"Book views/day","column_chart",range1],
+        ]
+
+        @charts.each_with_index do |chart,index|
+          @charts[index][0] = @charts[index][0].where(user_id:params[:user_id]) if !params[:user_id].blank?
+        end
+
+        #@grouped_tags = ActsAsTaggableOn::Tag.select("name,taggings_count").map{|row| [row.name,row.taggings_count]}.sort_by{|row| -row[1]}
+        #@grouped_tags_top = ActsAsTaggableOn::Tag.select("name,taggings_count").map{|row| [row.name,row.taggings_count]}.sort_by{|row| -row[1]}.first(@top)
+      end
+
+  
+      def old_analytics
       @views = Impression.select("*").order("created_at DESC")
 
       @top_viewers = User.where(id:Impression.select("user_id").group("user_id").pluck(:user_id))
