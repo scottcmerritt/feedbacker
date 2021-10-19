@@ -27,6 +27,11 @@ module Feedbacker
         .group("impressionable_type").map{|row| [row.type,row.views]} #.where(impressionable_type:"Site")
       end
 
+      def show
+        redirect_to controller: "admin", action: "index"
+
+      end
+
       def analytics
       @views = Impression.select("*").order("created_at DESC")
 
@@ -76,12 +81,43 @@ module Feedbacker
     end
 
     def tags
+=begin      
       @sortbys = ["count","az"]
       @sortby = @sortbys.include?(params[:sortby]) ? params[:sortby] : "az"
       @tags = ActsAsTaggableOn::Tag.all
 
       @tags = params[:sortby] && params[:sortby] == "count" ? @tags.order("taggings_count DESC") : @tags.order("name ASC")
       @tag = ActsAsTaggableOn::Tag.find_by(id:params[:id])
+
+      @top = params[:top] ?  params[:top].to_i : 10
+
+      @grouped_tags = ActsAsTaggableOn::Tag.select("name,taggings_count").map{|row| [row.name,row.taggings_count]}.sort_by{|row| -row[1]}
+      @grouped_tags_top = ActsAsTaggableOn::Tag.select("name,taggings_count").map{|row| [row.name,row.taggings_count]}.sort_by{|row| -row[1]}.first(@top)
+=end    
+
+
+    @q = params[:q]
+      @sortbys = ["count","az"]
+      @sortby = @sortbys.include?(params[:sortby]) ? params[:sortby] : "az"
+      
+      @selected_tag = Tag.find_by(id:params[:tag_id])
+
+      @parent_tags = Tag.most_used_tags otype:"Tag"
+
+      if @q.nil?
+        if params[:sortby] && params[:sortby] == "count" 
+          @tags = @selected_tag.nil? ? ActsAsTaggableOn::Tag.all : ActsAsTaggableOn::Tag.tagged_with([@selected_tag])
+          @tags = @tags.order("taggings_count DESC")# ?   : @tags.order("name ASC")
+        else
+          @tags = Tag.all_tags otype: nil, translated: (@sortby == "az"), tagged_with: @selected_tag # ActsAsTaggableOn::Tag.all
+        end
+      else
+        @tags = Tag.search(q: @q, langs: @languages, otype: nil).uniq
+      end
+      @tag = ActsAsTaggableOn::Tag.find_by(id:params[:id])
+
+      # it is easier to use our own model (to make tags Taggable)
+      @taggable_tag = Tag.find(@tag.id) unless @tag.nil?
 
       @top = params[:top] ?  params[:top].to_i : 10
 
@@ -122,6 +158,14 @@ module Feedbacker
         
     end
 
+    def flag_spammer
+      set_user
+    @user.update(is_spam:true,spam_flagged_at:Time.now,spam_flagged_by:current_user.id)
+    flash[:notice] = "User flagged as spammer"
+    redirect_to controller: "admin", action: "users"
+  end
+
+
     def user_confirm
       @user = User.find(params[:id])
       @user.update(confirmed_at:Time.now.utc)
@@ -130,7 +174,7 @@ module Feedbacker
       redirect_to controller: "admin", action: "users", errors: @user.errors.full_messages.to_s
     end
 
-      def users
+    def users
         #@role = params[:role]
         #manually_confirm_user! if params[:confirm_user]
 
@@ -205,6 +249,10 @@ module Feedbacker
 
       private
 
+      def set_user
+        @user = User.find_by(id:params[:id])
+      end
+      
         
       def process_table_filters
         @tbls_all = @db_info[:tables][:names] - @db_info[:tables][:hidden]

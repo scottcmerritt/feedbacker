@@ -31,3 +31,5 @@ require "feedbacker/concerns/feedbacker_main_controller"
 require "feedbacker/concerns/feedbacker_users_controller"
 require "feedbacker/concerns/feedbacker_posts_controller"
 require "feedbacker/concerns/feedbacker_admin_controller"
+
+require "feedbacker/concerns/user_info"

@@ -11,6 +11,8 @@ class UsersController < ApplicationController
     @user = current_user
     render "show"
   end
+
+
   
 =begin
   def index
@@ -31,5 +33,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
   end
 =end
+
+
 
 end

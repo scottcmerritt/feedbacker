@@ -1,0 +1,64 @@
+<%= render partial: "admin/manage/header" %>
+
+<% column_width = browser.mobile? ? "col-6" : "col-4" %>
+
+<h4 class="pageH p-1 px-2 text-info mb-0 rounded-top d-flex align-items-center"><%= icon(icon:"tags", lbl: "Manage and edit tags", with_span: true) %>
+
+<div class="d-flex ms-auto">
+<% @sortbys.each do |sortby| %>
+<%= link_to sortby, feedbacker.admin_tags_path(sortby:sortby), class:"mx-1 nodec fs-6 px-1 rounded #{@sortby == sortby ? "bg-white" : ""}" %>
+<% end %>
+</div>
+</h4>
+<form method="get" action="?" class="d-flex align-items-center my-1">
+	<input type="text" name="q" value="<%= @q %>" class="form-control-sm">
+	<input type="submit" value="Search" class="btn btn-sm bg-primary text-light ms-2">
+</form>
+<div class="bg-light border p-2">
+	<%= render partial: "tags/admin/form", locals: {site_tag:@tag} if @tag %>
+
+	<div class="d-flex">
+	<%= link_to "All", feedbacker.admin_tags_path({tag_id:nil}), class: "mx-1" %>
+
+	<% @parent_tags.each do |tag| %>
+	<%= link_to tag.name, feedbacker.admin_tags_path({tag_id:tag.id}), class:"mx-1" %>
+	<% end %>
+	</div>
+
+	<div class="d-flex flex-wrap">
+
+		<% if false && @q.nil? %>
+		<% @tags.each do |tag| %>
+		<div class="<%= column_width %> p-1 d-flex">
+			<div class="bg-white border p-1 d-flex flex-fill">
+			<a class="d-flex flex-fill align-items-center fw-bold nodec" href="<%= admin_tags_path(id:tag.id) %>"><%= dbt_tag(tag.name) %>
+				<span class="ms-auto me-1 badge bg-light border text-dark p-sm"><%= tag.taggings_count %></span>
+			</a>
+			<%= link_to icon(icon:"trash"), destroy_tag_path(id:tag.id), method: :delete, class:"ms-auto text-muted fs-7", data: { confirm: 'Are you sure?' } %>
+			</div>
+		</div>
+		<% end %>
+		<% else %>
+		<% @tags.each do |tag_obj| %>
+		<div class="<%= column_width %>">
+			<%= render partial: "tags/list_row", locals: {tag_obj:tag_obj,show_trash:true} %>
+		</div>
+		<% end %>
+
+
+		<% end %>
+	</div>
+
+	<div class="text-center" id="tags_chart">
+		<h4 class="mt-4">Tags per book</h4>
+		<form method="get" action="#tags_chart">
+			<input type="text" name="top" value="<%= @top %>"/><input type="submit" value="filter">
+		</form>
+
+
+		<%= pie_chart @grouped_tags_top %> <%#, title: "Books by tag (top)" %>
+		<%= pie_chart @grouped_tags, title: "Books by tag (all)" %>
+	</div>
+
+
+</div>

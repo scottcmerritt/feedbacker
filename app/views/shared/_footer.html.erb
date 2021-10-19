@@ -1,6 +1,5 @@
 <footer class="footer">
   <div class="container d-flex align-items-center justify-content-between">
-    <%= dbt("footer.test") %>
     <%= render partial: "shared/switch_lang" unless @languages.nil? || (@languages.length == 1) rescue "Error w/ language" %>
     <div>
     <%= render partial: "shared/footer_append" rescue nil %>

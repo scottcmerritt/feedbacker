@@ -1,0 +1,158 @@
+<%= render partial: "admin/manage/header" %>
+<%= render partial: "admin/manage/menu" %>
+
+<% css_on = "" %>
+<% css_off = "" %>
+<div class="d-flex mt-1 bg-light p-1 pb-0 border-bottom border-3 border-dark" style="overflow-x:scroll;">
+
+	<%= link_to("All", "?", class: "px-1 me-1 mb-0 rounded-top nodec bg-secondary text-light px-2") if params[:user_id] %>
+
+<%= link_to("Anonymous", "?user_id=anon", class: "px-1 me-1 mb-0 rounded-top nodec #{params[:user_id]=="anon" ? "bg-dark border border-dark " : "bg-secondary"} text-light") %>	
+<%= link_to("Non-bot", "?user_id=notbot", class: "px-1 me-1 mb-0 rounded-top nodec #{params[:user_id]=="notbot" ? "bg-dark border border-dark " : "bg-secondary"} text-light") %>	
+
+<%= link_to("Google", "?user_id=google", class: "px-1 me-1 mb-0 rounded-top nodec #{params[:user_id]=="google" ? "bg-dark border border-dark " : "bg-secondary"} text-light") %>	
+<% @top_viewers.each do |viewer| %>
+<% unless viewer.nil? %>
+<div class="me-1 mb-0 rounded-top <%= params[:user_id]==viewer.id.to_s ? "bg-dark border border-dark " : "bg-secondary" %>">
+	<%= link_to(viewer.email, "?user_id=#{viewer.id}", class: "px-1 nodec text-light") %>
+	<div class="d-flex justify-content-between">
+	<div class="fs-7 mx-1 badge badge-sm bg-light text-dark"><%= num_comma viewer.total_views %> views</div>
+		<%= viewer.online? ? tag.span("online", class: "text-success me-1") : "" %>
+	</div>
+</div>
+<% end %>
+<% end %>
+</div>
+<div class="bg-light border border-top-0 border-dark p-1">
+
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="bg-white">
+
+				<% if !params[:user_id].blank? %><h4 class="d-flex p-1 bg-primary text-light">Filtered by user
+					<%= link_to "View all","?user_id=", class:"ms-auto btn btn-sm btn-light border" %>
+				</h4><% end %>
+
+			<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+				<li class="nav-item" role="presentation">
+					<button class="nav-link active" id="view1" data-bs-toggle="pill" data-bs-target="#dataDownloads" type="button" role="tab" aria-controls="dataDownloads" aria-selected="true">Downloads</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="view2" data-bs-toggle="pill" data-bs-target="#dataTop" type="button" role="tab" aria-controls="dataTop" aria-selected="false">Top books</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="view3" data-bs-toggle="pill" data-bs-target="#dataViews" type="button" role="tab" aria-controls="dataViews" aria-selected="false">Views</button>
+				</li>
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="view4" data-bs-toggle="pill" data-bs-target="#dataOther" type="button" role="tab" aria-controls="dataOther" aria-selected="false">Other</button>
+				</li>
+
+				<li class="nav-item" role="presentation">
+					<button class="nav-link" id="view5" data-bs-toggle="pill" data-bs-target="#dataFindLibrary" type="button" role="tab" aria-controls="dataFindLibrary" aria-selected="false">Find library</button>
+				</li>
+			</ul>
+				
+				<div class="tab-content" id="data-tabContent">
+  					<div class="tab-pane fade show active" id="dataDownloads" role="tabpanel" aria-labelledby="view1">
+  	<% unless @downloads.nil? %>  	
+
+					<%= column_chart @downloads_public.group_by_hour(:created_at).count, title: "Downloads/hr (public)" %>
+					<%= column_chart @downloads.group_by_hour(:created_at).count, title: "Downloads/hr (signed in)" %>
+					<%= column_chart @downloads_public.group_by_day(:created_at).count, title: "Downloads/day (public)" %>
+					<%= column_chart @downloads.group_by_day(:created_at).count, title: "Downloads/day (signed in)" %>
+			<% end %>
+					</div>
+
+					<div class="tab-pane fade" id="dataTop" role="tabpanel" aria-labelledby="view2">
+						<% unless @downloads_public_top.nil? %>
+					<h6 class="bg-dark p-1 my-1 px-2 text-light">Top downloads (public)</h6>
+	  					<% @downloads_public_top.each do |row| %>
+	  					<div class="bg-light border px-1 d-flex align-items-center">
+	  						<%= tag.span row.downloads, class:"fs-8 border px-1 me-1 bg-info text-light" %>  <%= link_to row.impressionable.name,row.impressionable, class: "fs-7" %>
+
+	  						<%= tag.div icon(icon:"users",lbl:row.downloaders), class: "ms-auto px-1" %>
+	  					</div>
+	  					<% end %>
+
+	  					<h6 class="bg-dark p-1 my-1 px-2 text-light">Top downloads (signed in)</h6>
+	  					<% @downloads_top.each do |row| %>
+	  					<div class="bg-light border px-1 d-flex align-items-center">
+	  						<%= tag.span row.downloads, class:"fs-8 border px-1 me-1 bg-info text-light" %> <%= link_to row.impressionable.name,row.impressionable, class: "fs-7" %>
+
+	  						<%= tag.div icon(icon:"users",lbl:row.downloaders), class: "ms-auto px-1" %>
+	  					</div>
+	  					<% end %>
+	  					<% end %>
+	  				</div>
+
+	  				<div class="tab-pane fade" id="dataViews" role="tabpanel" aria-labelledby="view3">
+
+					<%= pie_chart @controller_usage.count, title: "Features" %>
+
+					<%= column_chart Impression.where(impressionable_type:"Site",user_id:nil).group_by_hour(:created_at).count, title: "Views/hr (public)" %>
+
+					<%= column_chart Impression.where("impressionable_type = ? AND user_id > 0","Site").group_by_hour(:created_at).count, title: "Views/hr (logged in)" %>
+					</div>
+
+
+					<div class="tab-pane fade" id="dataOther" role="tabpanel" aria-labelledby="view4">
+
+
+						<% @charts.each do |chart| %>
+						<% if chart[2] == "column_chart" %>
+						<%= column_chart chart[0].count, title: chart[1] %>
+						<% elsif chart[2] == "pie_chart" %>
+						<%= pie_chart chart[0].count, title: chart[1] %>
+						<% else %>
+						<%= line_chart chart[0].count, title: chart[1] %>
+						<% end %>
+						<% end %>
+
+						<% if !params[:user_id].blank? %><h4>Aggregate charts</h4><% end %>
+						<%= column_chart Impression.where(impressionable_type:"Site").group_by_week(:created_at).count("DISTINCT(user_id)"), title: "Users/week" %>
+						<%= column_chart Impression.where(impressionable_type:"Book").group_by_day(:created_at).count("DISTINCT(impressionable_id)"), title: "Books viewed/day" %>
+						<%= column_chart Impression.where(impressionable_type:"Book").group_by_week(:created_at).count("DISTINCT(impressionable_id)"), title: "Books viewed/week" %>
+
+					</div>
+
+					<div class="tab-pane fade show active" id="dataFindLibrary" role="tabpanel" aria-labelledby="view5">
+  	
+  					<% unless @find_library_public.nil? %>
+					<%= column_chart @find_library_public.group_by_hour(:created_at).count, title: "Find library clicks/hr (public)" %>
+					<%= column_chart @find_library.group_by_hour(:created_at).count, title: "Find library clicks/hr (signed in)" %>
+					<%= column_chart @find_library_public.group_by_day(:created_at).count, title: "Find library clicks/day (public)" %>
+					<%= column_chart @find_library.group_by_day(:created_at).count, title: "Find library clicks/day (signed in)" %>
+					<% end %>
+					</div>
+
+
+
+				</div>
+
+		</div>
+
+		</div>
+		<div class="col-sm-6">
+		
+		<%= paginate @views,window:1 rescue "Error: Paginator" %>
+		<div><%= @views_count %> rows</div>
+
+		<% prev_viewer = nil %>
+
+		<% @views.each_with_index do |view,index| %>
+			
+			<% viewer = User.find_by(id:view.user_id) %>
+			<% begin %>
+			<%= render partial: "admin/analytics/view_row", locals: {view:view,viewer:viewer,prev_viewer:prev_viewer} %>
+				
+			<% rescue Exception => ex %>
+				<%= tag.div ex, class: "alert alert-danger m-1" %>
+			<% end %>
+			<% prev_viewer = viewer %>
+
+		<% end %>
+		<%= tag.div paginate(@views,window:1), class: "m-1" rescue "Error: Paginator" %>
+		</div>
+
+	</div>
+</div>

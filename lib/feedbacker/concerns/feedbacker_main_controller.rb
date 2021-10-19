@@ -54,7 +54,9 @@ module Feedbacker
       @site_menu.push([dbt('menu.admin',d:'Admin'),admin_path,controller_name=='admin' && action_name!='updates'])
     end
 =end
-    @site_menu_admin.push [dbt('feedback',default:"Feedback"),feedbacker.admin_path,controller_name == "admin" && (respond_to?(:feedbacker?) && feedbacker?)]
+
+#    @site_menu_admin.push [dbt('feedback',default:"Feedback"),feedbacker.admin_path,controller_name == "admin" && (respond_to?(:feedbacker?) && feedbacker?)]
+
     @site_menu_admin.push [dbt('admin',default:"Admin"),main_app.admin_path,controller_name == 'admin' && !respond_to?(:feedbacker?)]
   end
 

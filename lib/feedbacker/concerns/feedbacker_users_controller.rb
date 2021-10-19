@@ -5,7 +5,8 @@ module Feedbacker
     extend ActiveSupport::Concern
     
     included do
-
+      before_action :set_user, only: %i[ show destroy ] # update
+      before_action :authenticate_admin!, only: %i[ destroy ]
 
     end
 
@@ -25,6 +26,13 @@ module Feedbacker
         @user = User.find(params[:id])
       end
 
+    def destroy
+      @user.update(removed:true,removed_at:Time.now,removed_by:current_user.id)
+      flash[:notice] = "User removed"
+      #redirect_to controller: "admin", action: "users"
+      redirect_to feedbacker.admin_users_path
+    end
+
 
 
 
@@ -33,6 +41,13 @@ module Feedbacker
     module ClassMethods
 
 
+    end
+
+
+    private
+    
+    def set_user
+      @user = User.find_by(id:params[:id])
     end
 
 

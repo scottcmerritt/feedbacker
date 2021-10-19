@@ -1,3 +1,4 @@
+<% show = {roles:false} if local_assigns[:show].nil? %>
 <%= paginate @users %>
 
 <% if browser.mobile? %>
@@ -24,21 +25,41 @@
 		<td class="col-9">User</td>
 	</tr>
 	<% @users.each do |user| %>
-
+	<% unless user.nil? %>
 	<tr class="bg-white border">
 		<td class="">
 			<%= render partial: "admin/users/change_role_btns", locals: {user:user} %>
+			
+
+
 		</td>
 
 		<td><%= tag.span user.sign_in_count %><%= tag.span icon(icon:"check"), class:"text-success ms-1" unless user.confirmed_at.nil? %></td>
-		<td class=""><%= link_to user.email, user %>
-			
+		<td class="">
+			<div class="d-flex align-items-center">
+			<%= icon(icon:"circle",icon_css:"text-success me-1 fs-7") if user.online? %> <%= link_to user.email, user %>
+
+			<div class="ms-auto"><%= tag.span "#{user.total_views} views", class: "badge mx-1 badge-sm bg-info text-light" %>
+				<% unless user.last_view.nil? %>
+				<div class="fs-8"><%= time_ago_in_words user.last_view %> ago</div>
+				 <% end %>
+			</div>
+			</div>
 			<div class="fs-8">Prev sign in <%= time_ago_in_words user.last_sign_in_at unless user.last_sign_in_at.nil? %></div>
 			<div class="fs-8">Current sign in <%= time_ago_in_words user.current_sign_in_at unless user.current_sign_in_at.nil? %></div>
-			<%= link_to "Confirm", user_confirm_path(id:user.id), method: :post if user.confirmed_at.nil? %>
-			<%= tag.div user.confirmed_at.strftime("%b %e, %l:%M %p"), class: "fs-7" unless user.confirmed_at.blank? %>
+			<div class="d-flex my-1">
+			<%= link_to "Confirm", user_confirm_path(id:user.id), method: :post, class: "btn btn-sm btn-success me-1" if user.confirmed_at.nil? %>
+			<%= link_to "Spammer", feedbacker.user_flag_spammer_path(id:user.id), method: :post, class: "btn btn-sm btn-warning me-1" if (user.is_spam.nil? || user.is_spam == false) %>
+			<%= link_to "Remove", [main_app,user], method: :delete, class: "btn btn-sm btn-danger" if !user.removed %>
+
+			
+			</div>
+
+			<%= tag.div "Confirmed at: #{user.confirmed_at.strftime("%b %e, %l:%M %p")}", class: "fs-7" unless user.confirmed_at.blank? %>
+			<%= render partial: "users/user_roles", locals: {user:user,show:{info:false,roles:true}} if show[:roles] %>
 		</td>
 	</tr>
+	<% end %>
 	<% end %>
 	</table>
 <% end %>
