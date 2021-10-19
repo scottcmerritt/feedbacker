@@ -50,6 +50,9 @@
 			<div class="d-flex my-1">
 			<%= link_to "Confirm", user_confirm_path(id:user.id), method: :post, class: "btn btn-sm btn-success me-1" if user.confirmed_at.nil? %>
 			<%= link_to "Spammer", feedbacker.user_flag_spammer_path(id:user.id), method: :post, class: "btn btn-sm btn-warning me-1" if (user.is_spam.nil? || user.is_spam == false) %>
+
+			<%= link_to "NOT Spammer", feedbacker.user_flag_spammer_path(id:user.id,is_spam:"0"), method: :post, class: "btn btn-sm btn-success me-1" if is_admin? && (user.is_spam == true) %>
+
 			<%= link_to "Remove", [main_app,user], method: :delete, class: "btn btn-sm btn-danger" if !user.removed %>
 
 			
