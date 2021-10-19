@@ -24,7 +24,7 @@
 	<%= translate_key.tdomain %>.<%= translate_key.tkey %></div>
 	<div class="ms-auto">
 	 <% if translate_key.translates.count == 0 %>
-	<%= link_to 'Add translation', [engine_name,translate_key], class: "btn btn-sm btn-success" %>
+	<%= link_to 'Add translation', respond_to?(:engine_name) ? [engine_name,translate_key] : feedbacker.translate_key_path(translate_key), class: "btn btn-sm btn-success" %>
 	<% else %>
 	<%= link_to "Show #{translate_key.translates.count} #{"translation".pluralize(translate_key.translates.count)}", respond_to?(:engine_name) ? [engine_name,translate_key] : feedbacker.translate_key_path(translate_key), class: "btn btn-sm btn-secondary" %>
 	<% end %>
