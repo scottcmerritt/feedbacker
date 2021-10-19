@@ -1,13 +1,13 @@
 <% link_css = "nav-link bg-white border rounded mb-1 d-flex align-items-center fs-7" %>
 <% icon_css = "text-dark me-2" %>
 
-<h4 class="d-flex align-items-center py-0 px-2 adminH rounded <%= "fs-6" if browser.mobile? %>"><%= link_to safe_join([icon(icon:"tools"),dbt('admin_tools',d:'Admin tools').capitalize || 'Admin tools']), admin_path, class: "nodec text-dark border rounded px-1 btn btn-sm btn-light fw-bold" %>
+<h4 class="d-flex align-items-center py-0 px-2 adminH rounded <%= "fs-6" if browser.mobile? %>"><%= link_to safe_join([icon(icon:"tools"),dbt('admin_tools',d:'Admin tools').capitalize || 'Admin tools']), main_app.admin_path, class: "nodec text-dark border rounded px-1 btn btn-sm btn-light fw-bold" %>
 	
 	<% if true || browser.mobile? %>
 		<div class="ms-auto d-flex">
 			<div class="btn-group my-1" role="group" aria-label="admin tools">
 				<%= link_to icon(icon:"users"), feedbacker.admin_users_path, class:"btn btn-sm btn-primary border" %>
-				<%= link_to icon(icon:"tags"), admin_tags_path, class:"btn btn-sm btn-primary border" if respond_to?(:admin_tags_path) %>
+				<%= link_to icon(icon:"tags"), feedbacker.admin_tags_path, class:"btn btn-sm btn-primary border" %>
 				<%= link_to icon(icon:"bullhorn"), posts_path, class:"btn btn-sm btn-primary border" %>
 				<%= link_to icon(icon:"eye"), feedbacker.admin_analytics_path, class:"btn btn-sm btn-primary border" %>
 			</div>

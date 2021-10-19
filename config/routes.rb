@@ -11,6 +11,8 @@ Feedbacker::Engine.routes.draw do
 	match '/admin/cms' =>"translates#cms", :as => :translates_cms, :via=>[:get,:post]
 	match '/admin/todo/translates' =>"translates#todo", :as => :translates_todo, :via=>[:get,:post]
 
+	
+
 	get '/admin/db(/:q)' => 'admin#db', as: :admin_db
   	get '/admin/analytics(/:q)' => 'admin#analytics', as: :admin_analytics
   	get '/admin/cleanup(/:query_id)' => 'admin#cleanup', as: :admin_cleanup
@@ -18,6 +20,9 @@ Feedbacker::Engine.routes.draw do
 	match '/admin/users(/:role)(/:q)' => 'admin#users', as: :admin_users, :via => :get
 	match '/admin/flag/user(/:id)' => 'admin#flag_spammer', :as => :user_flag_spammer, :via=> :post
 	match '/admin/roles/change' => 'admin#modify_role', :as => :modify_role, :via => :post
+
+	match '/admin(/:q)' => 'admin#index', as: :admin, :via => :get
+
 
 	match '/demo(/:filter)' =>"demo#index", :as => :demo, :via=>:get
 	#match '/admin(/:filter)' =>"admin#index", :as => :admin, :via=>:get
