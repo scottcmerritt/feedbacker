@@ -1,4 +1,4 @@
-<%= paginate @translations %>
+<%= paginate @translations rescue "Error: PAGER not working" %>
 <% @translations.each do |row| %>
 	<div class="bg-white border my-2">
 	<% if row.use_cms? %>
