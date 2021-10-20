@@ -3,7 +3,27 @@ class DataLog < ApplicationRecord
 	self.table_name = "data_logs"
 	scope :recent, -> { order('created_at DESC') }
 
+	def marshaled?
+		self.value[0...2] != "[{"
+	end
+
 	def load_value
+		begin
+			return JSON.parse(self.value) if !marshaled?
+			JSON.parse(Marshal.load(self.value))
+			#return JSON.parse(Marshal.load(self.value)) if Marshal.load(self.value).kind_of?(String)
+			#JSON.parse(self.value)
+		rescue 
+			begin
+				JSON.parse(self.value)
+			rescue
+				nil
+			end
+			
+		end
+	end
+
+	def old_load_value
 		begin
 			return Marshal.load(self.value)
 		rescue Exception => ex
@@ -29,7 +49,8 @@ class DataLog < ApplicationRecord
 		 rows.each do |row|
 		 	ca =  row.created_at #.strftime(datefmt) #row.created_at.strftime(datefmt)
 		 	begin
-		 		hash_rows.push({data:JSON.parse(row.load_value),created_at:ca,note:row.note})
+		 		#hash_rows.push({data:JSON.parse(row.load_value),created_at:ca,note:row.note})
+		 		hash_rows.push({data:row.load_value,created_at:ca,note:row.note})
 		 	rescue Exception => ex
 			 	Rails.logger.debug "Error::: db_rows: #{ex}"
 			end

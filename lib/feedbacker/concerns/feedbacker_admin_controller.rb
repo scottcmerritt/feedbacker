@@ -505,18 +505,27 @@ module Feedbacker
 
     def snapshot_db!      
       # causes errors: ["active_storage_variant_records","active_storage_blobs","active_storage_attachments"]
-      excluded_tbl_names = ["active_storage_variant_records","active_storage_blobs","active_storage_attachments"]
-      #permitted_tbl_names = ["impressions", "books", "taggings", "schema_migrations", "photos", "orders", "translates", "translate_keys", "tags", "data_logs", "settings", "comments", "payment_options", "users_roles", "room_messages", "book_checkouts", "roles", "projects", "posts", "users", "action_text_rich_texts", "sites", "site_settings","ar_internal_metadata", "rooms","room_users"] # ,  #, "active_storage_blobs", "active_storage_attachments"]
-
+      excluded_tbl_names = ["active_storage_variant_records","active_storage_blobs","active_storage_attachments","ar_internal_metadata"]
+      #permitted_tbl_names = ["users","impressions","books"] #{}","["impressions", "books", "taggings", "schema_migrations", "photos", "orders", "translates", "translate_keys", "tags", "data_logs", "settings", "comments", "payment_options", "users_roles", "room_messages", "book_checkouts", "roles", "projects", "posts", "users", "action_text_rich_texts", "sites", "site_settings","ar_internal_metadata", "rooms","room_users"] # ,  #, "active_storage_blobs", "active_storage_attachments"]
+      #permitted_tbl_names = ["source_topics", "items", "votes", "sources", "item_interests", "source_authors", "import_sources", "authors", "vote_caches", "orgs", "impressions", "guess_scopes", "source_groups", "archives", "summaries", "summary_sources", "contents", "friendships", "data_logs", "schema_migrations", "imports", "versions", "users", "user_audits", "translates", "favorites", "translate_keys", "comments", "users_roles", "roles", "posts", "ar_internal_metadata", "org_users", "taggings", "summary_logs", "source_topics_removed", "commontator_comments", "commontator_threads", "commontator_subscriptions", "summary_items", "summary_items_removed", "author_orgs", "vote_audits", "source_opinions", "opinions", "content_topics", "settings", "sites", "tags"].sample(4)
+      
       begin
         @rows_per_table = Feedbacker::Stats.database_info[:rows][:per_table]
 
         safe_rows = []
         cnt = 0
+        all_tables = []
+        current_table = nil
         if true
           @rows_per_table.each do |row|
-            val = {"table": "#{row["table"]}","count":row["count"].to_i} #.as_json
-            safe_rows.push(val) unless excluded_tbl_names.include?(row["table"]) # permitted_tbl_names.include?(row["table"]) #unless row["table"].blank? || row["count"].nil?
+
+            if true # && (rand(10) > 8)
+            current_table = row["table"]
+            all_tables.push current_table
+            val = {"table":row["table"].to_s,"count":row["count"].to_i} #.as_json
+            safe_rows.push(val) unless excluded_tbl_names.include?(row["table"]) # || (permitted_tbl_names.length > 0 && !permitted_tbl_names.include?(row["table"])) #unless row["table"].blank? || row["count"].nil?
+            end
+
   #           
           # safe_rows.push({:table=> row["table"], :count => row["count"].to_i}) unless row["count"].nil? || row["table"].blank?
           end
@@ -529,7 +538,14 @@ module Feedbacker
 
         #marshaled = Marshal.dump(@rows_per_table.to_json.to_s.force_encoding('iso8859-1').encode('utf-8'))
         #marshaled = Marshal.dump(@rows_per_table).force_encoding(Encoding::UTF_8) #.encode(Encoding::UTF_8) #.gsub("\u0000", '') #.to_json)
-        marshaled = Marshal.dump(safe_rows.to_json) #.gsub("\u0000", '')
+
+#        json_rows = JSON.parse(safe_rows.to_json)
+#        marshaled = Marshal.dump(json_rows) #.gsub("\u0000", '')
+
+        json_rows = safe_rows.to_json.to_s
+        marshaled = json_rows 
+        
+
 
         #marshaled = Marshal.dump(safe_rows.to_json)
         logger.debug "SAFE_ROWS"
@@ -541,10 +557,27 @@ module Feedbacker
 
         #marshaled = Marshal.dump(@rows_per_table.to_json)
         
-        Feedbacker::DataLog.create(note:"cleaning db",created_by:current_user.id,domain:"db",key:"rows", value: marshaled)
+        snapshot = Feedbacker::DataLog.create(note:"cleaning db",created_by:current_user.id,domain:"db",key:"rows", value: marshaled)
+        @errors = [] if @errors.nil?
+        @errors.push snapshot.errors.full_messages.to_s
+        @errors.push all_tables
+        #@errors.push "PERMITTED"
+        #@errors.push permitted_tbl_names.to_s
+
+        flash[:notice] = "Snapshot created"
+        @errors.push "ROWS"
+        @errors.push json_rows
+
       rescue Exception => ex
+        flash[:notice] = "Error creating snapshot"
         @errors = [] if @errors.nil?
         @errors.push "Snapshot_db error: #{ex}"
+        @errors.push "Current table: #{current_table}"
+        @errors.push "All tables: #{all_tables}"
+        #@errors.push "PERMITTED"
+        #@errors.push permitted_tbl_names.to_s
+        @errors.push "ROWS"
+        @errors.push json_rows
       end
     end
 
