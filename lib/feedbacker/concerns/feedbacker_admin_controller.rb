@@ -37,6 +37,9 @@ module Feedbacker
 
         @views = Impression.select("*").order("created_at DESC")
 
+        @listen_book_public = Impression.where(action_name:"listen",user_id:nil)
+        @listen_book = Impression.where("action_name = ? AND user_id > 0","listen")
+
         @find_library_public = Impression.where(action_name:"find_library",user_id:nil)
         @find_library = Impression.where("action_name = ? AND user_id > 0","find_library")
 
