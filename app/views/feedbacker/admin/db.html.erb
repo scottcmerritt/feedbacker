@@ -16,10 +16,9 @@ jQuery(document).ready(function($) {
 <%= render partial: "admin/manage/menu" %>
 <% tag.div @db_info[:error], class: "alert alert-danger" if @db_info[:error] %>
 
-<% if @errors %>
+<% if params[:debug] && @errors && is_admin? %>
 <h4>Errors with snapshot</h4>
 <%= @errors %>
-
 <% end %>
 
 <div class="bg-white border p-1">
