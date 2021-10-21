@@ -2,6 +2,32 @@ module Feedbacker
   module UserInfo
     extend ActiveSupport::Concern
 
+    # this is a method thats called when you include the module in a class.
+    def self.included(base)
+      base.extend ClassMethods
+
+      # was klass
+      base.instance_eval do
+        #scope :ordered_for_display, order("#{self.to_s.tableize}.rank asc")
+        scope :spam, -> { where("(removed = ? AND is_spam = ?)",false,true) }
+        scope :not_spam, -> { where("(removed = ? AND (is_spam is null OR is_spam = ?) )",false,false) }
+        scope :confirmed, -> { where("(NOT confirmed_at is null)")}
+        scope :not_confirmed, -> { where("(confirmed_at is null)")}
+      end
+    end
+
+=begin
+     included do
+      # to get table name, do self.to_s.tableize
+      #scope :ordered_for_display, -> { order("#{self.to_s.tableize}.rank asc") }
+
+      scope :spam, -> { where("(removed = ? AND is_spam = ?)",false,true) }
+      scope :not_spam, -> { where("(removed = ? AND (is_spam is null OR is_spam = ?) )",false,false) }
+      scope :confirmed, -> { where("(NOT confirmed_at is null)")}
+      scope :not_confirmed, -> { where("(confirmed_at is null)")}
+    end
+=end    
+
 
     def display_name_default
       "User #{self.id}"
@@ -35,6 +61,26 @@ module Feedbacker
   #    (!user.current_sign_in_at.nil? && (user.current_sign_in_at > minutes_ago.minutes.ago)) || (!user.last_sign_in_at.nil? && (user.last_sign_in_at > minutes_ago.minutes.ago) )
 
     end
+
+    
+  
+  # for including static methods
+  module ClassMethods
+    def order_by_ids(ids)
+      t = User.arel_table
+      condition = Arel::Nodes::Case.new(t[:id])
+      ids.each_with_index do |id, index|
+        condition.when(id).then(index)
+      end
+      order(condition)
+    end
+
+    def active_users minutes_ago: 60
+      user_list = User.not_spam.each.collect{|user| user if user.online? || (user.last_activity > minutes_ago.minutes.ago) }.compact.sort_by{|user| user.last_activity}.reverse
+      ids = user_list.pluck(:id)
+      User.where(id: ids).order_by_ids(ids)
+    end
+  end
 
 
   end
