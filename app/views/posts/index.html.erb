@@ -25,9 +25,11 @@
 
     </div>
 
+    <% if post.respond_to?(:content) %>
     <div class="bg-light border rounded p-1 my-2">
       <%= post.content %>
     </div>
+    <% end %>
     
     <%= tag.p post.details, class: "fs-6" %>
     
