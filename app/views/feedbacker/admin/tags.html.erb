@@ -2,7 +2,7 @@
 
 <% column_width = browser.mobile? ? "col-6" : "col-4" %>
 
-<h4 class="pageH p-1 px-2 text-info mb-0 rounded-top d-flex align-items-center"><%= icon(icon:"tags", lbl: "Manage and edit tags", with_span: true) %>
+<h4 class="pageH p-1 px-2 text-info mb-0 rounded-top d-flex align-items-center bg-dark text-light"><%= icon(icon:"tags", lbl: "Manage and edit tags", with_span: true) %>
 
 <div class="d-flex ms-auto">
 <% @sortbys.each do |sortby| %>
@@ -17,11 +17,11 @@
 <div class="bg-light border p-2">
 	<%= render partial: "tags/admin/form", locals: {site_tag:@tag} if @tag %>
 
-	<div class="d-flex">
+	<div class="d-flex mb-1">
 	<%= link_to "All", feedbacker.admin_tags_path({tag_id:nil}), class: "mx-1" %>
 
 	<% @parent_tags.each do |tag| %>
-	<%= link_to tag.name, feedbacker.admin_tags_path({tag_id:tag.id}), class:"mx-1" %>
+	<%= link_to tag.name, feedbacker.admin_tags_path({tag_id:tag.id}), class:"mx-1 px-1 #{ params[:tag_id] == tag.id ? "border text-dark fw-bold px-1" : ""}" %>
 	<% end %>
 	</div>
 
