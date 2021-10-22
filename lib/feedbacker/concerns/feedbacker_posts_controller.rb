@@ -7,16 +7,21 @@ module Feedbacker
     included do
       # method to add to controller
 
+        before_action :authenticate_admin!, except: [:show,:index] # recently added, TODO: permit people to edit/update their own posts??
         before_action :set_post, only: %i[ show edit update destroy ]
         before_action :load_posts_tabs, :load_posts_links
   
-      end
-
-  
+      end  
+ 
+      
       # GET /posts or /posts.json
       def index
-        @posts = Post.all
+        @posts = user_signed_in? ? (is_admin? ? Post.all.updated : Post.is_public.updated) : Post.is_global.updated
+        @posts = @posts.tagged_with([params[:tag]]) if params[:tag]
+
+        @posts = @posts.page(params[:page])
       end
+
       def popular
         @page_title = "Popular"
         @posts = Post.popular
@@ -34,12 +39,24 @@ module Feedbacker
         render "index"
       end
 
+
       # GET /posts/1 or /posts/1.json
       def show
-        @new_comment    = Comment.build_from(@post, current_user.id, "")
-        
-
+        if @post.nil?
+          flash[:notice] = "Post is not viewable, or does not exist"
+          redirect_to controller:"posts",action:"index"
+        else
+          impressionist @post
+          if params[:tag] && is_admin?
+            @post.tag_list.add(params[:tag])
+            @post.save
+          end
+          
+          @new_comment    = Comment.build_from(@post, current_user.id, "") if user_signed_in? && !@post.nil?
+          
+        end
       end
+
 
       # GET /posts/new
       def new
@@ -50,9 +67,9 @@ module Feedbacker
       def edit
       end
 
-      # POST /posts or /posts.json
+       # POST /posts or /posts.json
       def create
-        @post = Post.new(post_params.merge({user_id:current_user.id}))
+        @post = Post.new(post_params.merge({createdby:current_user.id}))
 
         respond_to do |format|
           if @post.save
@@ -68,7 +85,7 @@ module Feedbacker
       # PATCH/PUT /posts/1 or /posts/1.json
       def update
         respond_to do |format|
-          if @post.update(post_params)
+          if @post.update(post_params.merge({updatedby:current_user.id}))
             format.html { redirect_to @post, notice: "Post was successfully updated." }
             format.json { render :show, status: :ok, location: @post }
           else
@@ -77,6 +94,7 @@ module Feedbacker
           end
         end
       end
+
 
       # DELETE /posts/1 or /posts/1.json
       def destroy
@@ -97,7 +115,8 @@ module Feedbacker
 
       # Only allow a list of trusted parameters through.
       def post_params
-        params.require(:post).permit(:user_id, :title, :details)
+        #params.require(:post).permit(:user_id, :title, :details)
+        params.require(:post).permit(:title, :details, :content, :createdby, :is_public, :is_global)
       end
 
       def load_posts_links
