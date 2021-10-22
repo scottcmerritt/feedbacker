@@ -14,7 +14,7 @@
 <div class="bg-light border p-2">
 
 	<% if @tag %>
-	<%= simple_form_for(@tag, url: update_tag_path(@tag)) do |f| %>
+	<%= simple_form_for(@tag, url: feedbacker.update_tag_path(@tag)) do |f| %>
 	<div class="d-flex align-items-center">
 		<%= f.input :name, input_html: { name: 'tag[name]', class: "form-control form-control-sm" }  %>
 		<%= f.button :submit, class: "btn btn-sm btn-primary mx-1" %>
@@ -29,7 +29,7 @@
 			<a class="d-flex flex-fill align-items-center fw-bold nodec" href="<%= admin_tags_path(id:tag.id) %>"><%= tag.name %>
 				<span class="ms-auto me-1 badge bg-light border text-dark p-sm"><%= tag.taggings_count %></span>
 			</a>
-			<%= link_to icon(icon:"trash"), destroy_tag_path(id:tag.id), method: :delete, class:"ms-auto text-muted fs-7", data: { confirm: 'Are you sure?' } %>
+			<%= link_to icon(icon:"trash"), feedbacker.destroy_tag_path(id:tag.id), method: :delete, class:"ms-auto text-muted fs-7", data: { confirm: 'Are you sure?' } %>
 			</div>
 		</div>
 		<% end %>
