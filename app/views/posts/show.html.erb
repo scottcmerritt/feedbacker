@@ -38,7 +38,7 @@
         <div class="col-sm-5">
           
           <div class="collapse" id="addTags">
-          <%= render partial: "shared/tags/add_tag", locals: {target:@post,url_to_post:add_tag_path(post_id:@post.id),url_to_search:search_tag_path(oid:@post.id,otype:'Post',post_id:@post.id)} if (defined?(can?) && can?(:manage, target)) || is_admin? %>
+          <%= render partial: "shared/tags/add_tag", locals: {target:@post,url_to_post:add_tag_path(post_id:@post.id),url_to_search:search_tag_path(oid:@post.id,otype:'Post',post_id:@post.id)} if (defined?(can?) && can?(:manage, @post)) || is_admin? %>
           </div>
 
         </div>
