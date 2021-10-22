@@ -21,7 +21,7 @@
 	<%= link_to "All", feedbacker.admin_tags_path({tag_id:nil}), class: "mx-1" %>
 
 	<% @parent_tags.each do |tag| %>
-	<%= link_to tag.name, feedbacker.admin_tags_path({tag_id:tag.id}), class:"mx-1 px-1 #{ params[:tag_id] == tag.id ? "border text-dark fw-bold px-1" : ""}" %>
+	<%= link_to tag.name, feedbacker.admin_tags_path({tag_id:tag.id}), class:"mx-1 px-1 #{ params[:tag_id] == tag.id.to_s ? "border text-dark fw-bold px-1" : ""}" %>
 	<% end %>
 	</div>
 
