@@ -4,10 +4,14 @@ class CreatePosts < ActiveRecord::Migration[6.1]
 	    t.string :title
 	    t.text :details
 
+	    t.string :name_slug
+
 	    # the listed creator
 	    t.integer :user_id
 	    # the actual creator
 	    t.integer :createdby
+	    t.integer :updatedby
+
 	    t.boolean :is_public
 	    t.boolean :is_global
 	    t.boolean :approved
