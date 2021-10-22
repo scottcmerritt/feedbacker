@@ -1,3 +1,4 @@
+module Feedbacker
 class TagsController < ApplicationController
 	before_action :authenticate_user! #, except: [:updates]
 	before_action :set_taggable
@@ -110,4 +111,5 @@ class TagsController < ApplicationController
 		end
 =end		
 	end
+end
 end
