@@ -1,0 +1,30 @@
+<% size = "micro" if local_assigns[:size].nil? %>
+<% user_css = "m-0 p-0 border rounded bg-light" %>
+<% is_admin = is_admin? if local_assigns[:is_admin].nil? %>
+
+<% wrap_margin = "my-1" if local_assigns[:wrap_margin].nil? %>
+
+<% show = {creator:true,updater:true} if local_assigns[:show].nil? %>
+
+<div class="d-flex flex-wrap align-items-center <%= wrap_margin %>">
+<% if show[:creator] %>
+  <%= tag.span "Created #{time_ago_in_words(post.created_at)} #{dbt('ago')}", class: "fs-7 mx-1" %> 
+  <% unless post.creator.nil? %>
+  <%= tag.span "by", class:"mx-1" %>
+  <%= render partial: "users/parts/list_row", locals: {user:post.creator,show_extra:false,size:size,wrap_css: user_css,is_admin:is_admin} %>
+  <% end %>
+  <% end %>
+
+  <% if show[:updater] %>
+  <%= tag.span "Updated #{time_ago_in_words(post.updated_at)} #{dbt('ago')}", class: "fs-7 mx-1" %> 
+
+  <% unless post.updater.nil? || (show[:creator] && (post.updater == post.creator)) %>
+  <%= tag.span "by", class:"mx-1" %>
+  <%= render partial: "users/parts/list_row", locals: {user:post.updater,show_extra:false,size:size,wrap_css: user_css,is_admin:is_admin} %>
+  <% end %>
+  <% end %>
+
+
+  <%= link_to post.creator.email, post.creator unless true || post.creator.nil? %>
+    
+</div>

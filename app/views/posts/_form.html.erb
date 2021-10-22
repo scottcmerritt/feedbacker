@@ -1,34 +1,36 @@
-<%= form_with(model: post, html: {class:"bg-white border p-2"}) do |form| %>
-  <% if post.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(post.errors.count, "error") %> prohibited this post from being saved:</h2>
+<div class="bg-white p-2 border my-2">
+<%= simple_form_for(@post) do |f| %>
+  <%= f.error_notification %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
-      <ul>
-        <% post.errors.each do |error| %>
-          <li><%= error.full_message %></li>
-        <% end %>
-      </ul>
+  <div class="d-flex justify-content-between align-items-center">
+    <div>
+    <%= f.button :submit, class: "btn btn-sm btn-primary" %>
+    <%= link_to "Cancel", @post, class: "mx-1 btn btn-sm btn-secondary" %>
     </div>
-  <% end %>
 
-<% if false %>
-  <div class="field">
-    <%= form.label :user_id %>
-    <%= form.number_field :user_id %>
+    <div>
+      <%= f.input :is_public %>
+      <%= f.input :is_global %>
+    </div>
+  </div>
+  <div class="form-inputs">
+    <%= f.input :title, input_html: {class: "form-control bg-light"} %>
+    <%= f.label :content %>
+    <%= f.rich_text_area :content, input_html: {class: "form-control bg-light"} %>
+
+    <%= f.input :details, input_html: {class: "form-control bg-light"} %>
+    <%= f.input :createdby if false %>
+    
+  </div>
+
+  <div class="form-actions my-1">
+    <div>
+    <%= f.button :submit, class: "btn btn-sm btn-primary" %>
+
+    <%= link_to "Cancel", @post, class: "mx-1 btn btn-sm btn-secondary" %>
+  </div>
+
   </div>
 <% end %>
-
-  <div class="form-row">
-    <%= form.label :title, class: "form-label" %>
-    <%= form.text_field :title, class: "form-control" %>
-  </div>
-
-  <div class="form-row">
-    <%= form.label :content, class: "form-label" %>
-    <%= form.text_area :content, class: "form-control" %>
-  </div>
-
-  <div class="actions my-1">
-    <%= form.submit "Add post", class: "btn btn-primary text-light" %>
-  </div>
-<% end %>
+</div>

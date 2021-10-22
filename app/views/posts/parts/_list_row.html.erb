@@ -1,0 +1,14 @@
+<% contributors_show = {creator:false,updater:true} if local_assigns[:contributors_show].nil? %>
+<div class="bg-white border p-2 my-1" style="word-break: break-word;">
+	<a href="<%= post_path(row) %>" class="nodec">
+	<div class="d-flex align-items-top">
+		<%= tag.span row.title, class:"fw-bold fs-4" unless row.title.blank? %>
+		<%= tag.span "#{time_ago_in_words(row.created_at)} #{dbt('ago')}", class: "fs-7 ms-auto" %>
+	</div>
+	</a>
+
+	<%= tag.p row.details unless row.details.blank? %>
+	<%= row.content %>
+	
+	 <%= render partial: "posts/parts/contributors", locals: {post:row,is_admin:false,size:"nano",show:contributors_show} unless row.creator.nil? && row.updater.nil? %>
+</div>

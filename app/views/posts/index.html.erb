@@ -1,29 +1,48 @@
-<%= page_menu %>
-
-<% is_filtered = @ui && !@ui.filter[:within][:mins].nil? %>
-
-<div class="d-flex">
-<% if is_filtered %>
-Active within <%= @ui.filter[:within][:mins].to_i %> minutes
+<% if is_admin? %>
+<%= render partial: "admin/manage/header" %>
+<%= render partial: "admin/manage/menu" %>
 <% end %>
+<h2 class="d-flex align-items-center pageH text-dark p-1 px-2 mb-0">Announcements 
 
-<div class="ms-auto ml-auto">
-<%= link_to "Table", "?view=table" %> <%= link_to "List", "?view=list", class:"mx-2" %>
-</div>
+  <%= link_to icon(icon:"plus",lbl:'Post'), new_post_path, class: "btn btn-sm btn-primary ms-auto" %></h2>
+<div class="bg-white mb-2 px-2 pt-1 border border-top-0 rounded-bottom">
+<%= render partial: "shared/tags/tag_filters",locals: {otype:"Post",path_to_tag: :posts_path} %>
 </div>
 
-<% if params[:view] == "list" %>
-  <%= feedbacker_list({rows: @posts, title: @page_title,page:params[:page]}) %>
-<% else %>
-  <%= feedbacker_table({title: (@page_title || "Posts"), rows: @posts, page:params[:page], page_size:20, with_borders: false, filtered: {:comments=>is_filtered}}) %>
+<%= paginate @posts %>
+
+<% @posts.each do |post| %>
+  <div class="bg-white border p-2 my-2">
+    <div class="d-flex align-items-top">
+      <%= link_to post.title.blank? ? "[No title]" : post.title,  posts_slug_path(post,name_slug:post.name_slug), class: "h5 nodec px-1" %>
+
+      <div class="d-flex ms-auto align-items-center">
+
+     <%= render partial: "shared/permissions/show", locals: {target:post} %>
+   <%= link_to icon_text(browser.mobile? ? '' : 'edit','edit'), edit_post_path(post), class:"btn btn-sm btn-secondary text-light" if is_admin? %>
+
+      </div>
+
+    </div>
+
+    <div class="bg-light border rounded p-1 my-2">
+      <%= post.content %>
+    </div>
+    
+    <%= tag.p post.details, class: "fs-6" %>
+    
+    <div class="d-flex justify-content-between align-items-center">
+      <%= render partial: "posts/parts/contributors", locals: {post:post,is_admin:false} %>            
+
+    <%= link_to icon_text('Delete','trash'), post, class:"btn btn-sm bg-danger text-light ms-2 ms-auto", method: :delete, data: { confirm: 'Are you sure?' } if is_admin? && !browser.mobile? %>
+    
+    </div>
+
+    <div class="d-flex">
+<%= render partial: "shared/tags/tag_filters", locals: {path_to_tag: :projects_path,tags:post.tag_list,otype:"Post",show_title:true,show_all_filter:false,tag_css:"rounded-pill p-1 me-1 bg-white text-dark border rounded text-decoration-none fs-8"} unless post.tag_list.empty? %>
+</div>
+
+  </div>
 <% end %>
-<%= feedbacker_marketing_link %>
-<br>
-
-<%= link_to 'New Post', new_post_path %>
-
-
-
-
 
 

@@ -1,22 +1,112 @@
-<p id="notice"><%= notice %></p>
-<%= link_to "Edit settings", feedbacker.admin_path %>
-<h2><%= @post.title %></h2>
-<p class="px-2">
-  by <strong>User <%= @post.user_id %></strong>
+<div class="col-sm-9 mx-sm-auto bg-white p-1 border my-2">
+  
+
+    <h4 class="pageH d-flex align-items-top p-1 px-2 my-0">
+      <%= @post.title %>
+
+
+
+      <div class="d-flex align-items-center ms-1">
+        <%= render partial: "shared/permissions/show", locals: {target:@post} %>
+        
+        <%= link_to icon(icon:"edit",lbl:'Edit'), edit_post_path(@post), class: "mx-1 nodec btn btn-sm bg-primary text-light" unless true || browser.mobile? %>
+      </div>
+            
+        
+      <div class="ms-auto ml-auto">
+        <%= link_to 'Back', posts_path, class: "nodec fs-6 btn btn-sm bg-secondary text-light" %> 
+      </div>
+
+      </h4>
+      <div class="d-flex">
+        <%= render partial: "posts/parts/contributors", locals: {post:@post,is_admin:false,size:"nano",show:{creator:true,updater:true}} unless @post.creator.nil? && @post.updater.nil? %>            
+        <%= link_to icon(icon:"edit",lbl:'Edit'), edit_post_path(@post), class: "mx-1 nodec  text-dark ms-auto" %>
+      </div>
+
+    <% if false && browser.mobile? %>
+
+
+    <% else %>
+      <div class="row my-1 me-1">
+        <div class="col-sm-7">
+          <div class="d-flex justify-content-between">
+          <%= render partial: "shared/tags/show_tags", locals: {tags:@post.tag_list,target:@post} %>
+          <a class="mx-1" href="#addTags" data-bs-toggle="collapse" data-bs-target="#addTags">Add tag</a>
+          </div>
+
+        </div>
+        <div class="col-sm-5">
+          
+          <div class="collapse" id="addTags">
+          <%= render partial: "shared/tags/add_tag", locals: {target:@post,url_to_post:add_tag_path(post_id:@post.id),url_to_search:search_tag_path(oid:@post.id,otype:'Post',post_id:@post.id)} if can? :manage, @post %>
+          </div>
+
+        </div>
+      </div>
+  <% end %>
+
+<div class="bg-light my-2 border rounded p-2">
+  
+  <%= @post.content %>
+</div>
+
+<p>
+  <strong>Details:</strong>
+  <%= @post.details %>
 </p>
 
-<% if @post.respond_to?(:details) %>
-<div class="bg-white border p-2 my-2">
-  <strong>Content:</strong>
-  <%= @post.details %>
+
+
+<% if false %>
+<p>
+  <strong>Is public:</strong>
+  <%= @post.is_public %>
+</p>
+
+<p>
+  <strong>Is global:</strong>
+  <%= @post.is_global %>
+</p>
+
+<p>
+  <strong>Approved:</strong>
+  <%= @post.approved %>
+</p>
+
+<p>
+  <strong>Approved at:</strong>
+  <%= @post.approved_at %>
+</p>
+
+<p>
+  <strong>Approved by:</strong>
+  <%= @post.approved_by %>
+</p>
+
+<p>
+  <strong>Removed:</strong>
+  <%= @post.removed %>
+</p>
+
+<p>
+  <strong>Removed by:</strong>
+  <%= @post.removed_by %>
+</p>
+
+<p>
+  <strong>Removed at:</strong>
+  <%= @post.removed_at %>
+</p>
+<% end %>
+
+<% if is_admin? %>
+<div class="text-center border-top pt-1">
+  <%= link_to icon_text('Delete','trash'), @post, class:"btn btn-sm bg-danger text-light ms-2", method: :delete, data: { confirm: 'Are you sure?' } %>
 </div>
 <% end %>
 
-<%= feedbacker_comments target: @post, new_comment: @new_comment %>
 
-<%= render partial: "comments/template", locals: {commentable: @post, new_comment: @new_comment} if false %>
+</div>
 
-<%= commontator_thread(@post) if false %>
+<%= feedbacker_comments target: @post, new_comment: @new_comment unless @new_comment.nil? %>
 
-<%= link_to 'Edit', edit_post_path(@post) %> |
-<%= link_to 'Back', posts_path %>
