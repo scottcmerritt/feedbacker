@@ -41,7 +41,7 @@
     </div>
 
     <div class="d-flex">
-<%= render partial: "shared/tags/tag_filters", locals: {path_to_tag: :projects_path,tags:post.tag_list,otype:"Post",show_title:true,show_all_filter:false,tag_css:"rounded-pill p-1 me-1 bg-white text-dark border rounded text-decoration-none fs-8"} unless post.tag_list.empty? %>
+<%= render partial: "shared/tags/tag_filters", locals: {path_to_tag: :posts_path,tags:post.tag_list,otype:"Post",show_title:true,show_all_filter:false,tag_css:"rounded-pill p-1 me-1 bg-white text-dark border rounded text-decoration-none fs-8"} unless post.tag_list.empty? %>
 </div>
 
   </div>
