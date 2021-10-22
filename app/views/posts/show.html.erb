@@ -45,10 +45,11 @@
       </div>
   <% end %>
 
+<% if @post.respond_to?(:content) %>
 <div class="bg-light my-2 border rounded p-2">
-  
   <%= @post.content %>
 </div>
+<% end %>
 
 <p>
   <strong>Details:</strong>
