@@ -20,7 +20,7 @@
     <div class="d-flex flex-wrap">
     <% @translates.each do |translate| %>
       <div class="p-1 m-1 border bg-light text-dark fs-7">
-      <%= tanslate.translate_key.nil? ? link_to(translate.phrase, edit_translate_path(translate)) : link_to(translate.phrase,translate.translate_key) %>
+      <%= translate.translate_key.nil? ? link_to(translate.phrase, edit_translate_path(translate)) : link_to(translate.phrase,translate.translate_key) %>
       </div>
     <% end %>
     </div>
