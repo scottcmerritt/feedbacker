@@ -162,9 +162,13 @@ module TranslationUtil
         end
         res
       else
-        row = tdomain.blank? ? Translate.joins(:translate_key).where("(translate_keys.tdomain is null or translate_keys.tdomain = '') AND translate_keys.tkey = ?", tkey).where(lang:locale).first : Translate.joins(:translate_key).where(translate_keys: {tdomain:tdomain,tkey:tkey},lang:locale).first
+        row = self.top_translation tdomain: tdomain, tkey: tkey, locale: locale
         row.nil? || !row.has_attribute?(:phrase) ? nil : row.phrase
       end
+    end
+
+    def top_translation tdomain:, tkey:, locale:
+      tdomain.blank? ? Feedbacker::Translate.joins(:translate_key).where("(translate_keys.tdomain is null or translate_keys.tdomain = '') AND translate_keys.tkey = ?", tkey).where(lang:locale).first : Feedbacker::Translate.joins(:translate_key).where(translate_keys: {tdomain:tdomain,tkey:tkey},lang:locale).first
     end
 
 
@@ -190,6 +194,7 @@ module TranslationUtil
     def get_all_cache_misses with_keys: true
       Feedbacker::CacheBase.get_list_objects Feedbacker::Translate.cache_miss_log_key, load_objects: true, with_keys: with_keys
     end
+
     def get_cache_misses grouped:false,sorted:true, tdomain_filter:nil, tkey_filter:nil
       #data = get_all_cache_misses with_keys: true
       data = Feedbacker::CacheBase.get_list_objects Feedbacker::Translate.cache_miss_log_key, load_objects: true, with_keys: true
@@ -198,7 +203,6 @@ module TranslationUtil
         idx = {}
         data.each do |full_row|
           row = full_row[:obj]
-
 
           unless row.nil? 
             idx[row.lang] = [] if idx[row.lang].nil? #['lang']].nil?

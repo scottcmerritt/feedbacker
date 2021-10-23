@@ -1,26 +1,20 @@
 <div class="p-2 py-1 bg-light border my-1">
       <%= render partial: "feedbacker/translate_keys/parts/key", locals: {translate_key: @translate_key} %>
     <div class="my-2 mx-2">
-
-
+      <% if false %>
       <div class="bg-primary text-light p-1 px-3 fs-5 d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center">
-        Used by <span class="mx-1 fw-bold"><%= @translate_key.languages.count %> <%= "language".pluralize(@translate_key.languages.count) %></span>
-
-
-        <div class="p-1">
-        <% @translate_key.languages.pluck(:lang).each do |lang| %>
-          <%= tag.span lang, class: "badge bg-dark ms-1 fs-6" %>
-        <% end %>
+        Used <%= @translate_key.languages.length %> times in <span class="mx-1 fw-bold"><%= @translate_key.langs_used.length %> <%= "language".pluralize(@translate_key.langs_used.length) %></span>
+          <div class="p-1">
+          <% @translate_key.langs_used.each do |lang| %>
+            <%= tag.span lang, class: "badge bg-dark ms-1 fs-6" %>
+          <% end %>
+          </div>
         </div>
 
-        </div>
-
-        <%= render partial: "#{engine_prefix}translate_keys/parts/suggest_add", locals: {translate_key: @translate_key} %>
-
-
+        <%= render partial: "#{engine_prefix}translate_keys/parts/suggest_add", locals: {translate_key: @translate_key} if false %>
       </div>
-
+      <% end %>
 
 
       <% @translate_key.translates.each do |row| %>
@@ -32,7 +26,7 @@
 
         <div class="d-flex align-items-center">
 
-            <div class="p-2 fs-5">Used by <span class="fw-bold"><%= @translate_key.languages.count %> <%= "language".pluralize(@translate_key.languages.count) %></span></div>
+            <div class="p-2 fs-5">Used by <span class="fw-bold"><%= @translate_key.langs_used.length %> <%= "language".pluralize(@translate_key.langs_used.length) %></span></div>
 
         </div>
         <% end %>

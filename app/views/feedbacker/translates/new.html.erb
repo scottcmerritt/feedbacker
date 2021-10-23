@@ -1,2 +1,6 @@
+<%= render partial: "admin/manage/header" %>
+<%= render partial: "admin/manage/menu" if false %>
+<%= render partial: "feedbacker/translate_keys/parts/menu", locals: {selected:1} %>
+
 <h4><%= link_to icon_text("","arrow-left"), feedbacker.translates_path, class: "btn btn-sm btn-outline-secondary" %> Add a new translation</h4>
 <%= render partial: "#{engine_prefix}translates/form" %>

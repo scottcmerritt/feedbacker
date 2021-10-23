@@ -5,8 +5,14 @@ module Feedbacker
 		scope :tdomain_grouped, -> { select('tdomain').where.not(tdomain:nil).group("tdomain")}
 
 		def languages
-			translates.select('DISTINCT(lang)') #group("lang")
+			translates.distinct(:lang)
+#			translates.select('DISTINCT(lang)') #group("lang")
 		end
+		
+		def langs_used
+			languages.pluck(:lang)
+		end
+
 		def creator
 			User.find_by(id:self.createdby)
 		end

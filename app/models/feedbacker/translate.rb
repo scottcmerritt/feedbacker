@@ -15,6 +15,19 @@ module Feedbacker
 		def use_cms?
 			!self.tdomain.nil? && self.tdomain.include?('::content')
 		end
+
+		def related
+			self.translate_key.translates.where.not(translates: {id:self.id})
+			.joins("LEFT JOIN translate_keys ON translate_keys.id = translates.translate_key_id").order('translates.created_at DESC')
+		end
+
+		# TODO: speed this up AND add other tool for determining the BEST, but for now this should indicate if the phrase is being used
+		def best?
+			return nil if translate_key.nil?
+			top_translation = Translate.top_translation(tdomain:translate_key.tdomain, tkey:translate_key.tkey, locale:self.lang)
+			!top_translation.nil? && self.id == top_translation.id
+		end
+
 =begin
 		def self.lookup text, locale:, use_cache: true
 			tdomain = text.split(".",2).first if text.split(".",2).length > 1
