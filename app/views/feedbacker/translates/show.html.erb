@@ -1,0 +1,8 @@
+<%= render partial: "admin/manage/header" %>
+<%= render partial: "admin/manage/menu" if false %>
+
+<%= render partial: "#{engine_prefix}translate_keys/parts/menu" %>
+
+<%= render partial: "#{engine_prefix}translate_keys/parts/key", locals: {translate_key: @translate.id.nil? ? Feedbacker::TranslateKey.find_by(id:@translate.translate_key_id) : @translate.translate_key} unless @translate.translate_key.nil?  %>
+
+  <%= render partial: "#{engine_prefix}translates/parts/translate",locals:{translate:@translate} %>

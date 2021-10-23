@@ -1,0 +1,7 @@
+<div class="d-flex align-items-center bg-white border m-1 mx-2 px-2 rounded text-dark fs-5">
+<%= tag.span "Add", class: "fw-bold me-2 fs-6" %>
+<% get_all_langs.each do |lang| %>
+<%= tag.div link_to(lang, feedbacker.new_translate_path(lang:lang,key_id:translate_key.id), class: "badge bg-success text-light mx-1") %>
+
+<% end %>
+</div>

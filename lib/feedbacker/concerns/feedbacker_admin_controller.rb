@@ -332,24 +332,24 @@ module Feedbacker
 
     def flag_spammer
 
-    is_spam = params[:is_spam] == "0" ? false : true
-    set_user
-    if is_spam
-      @user.update(is_spam:true,spam_flagged_at:Time.now,spam_flagged_by:current_user.id)
-      flash[:notice] = "User flagged as spammer"
-    else
-      @user.update(is_spam:false,spam_flagged_at:Time.now,spam_flagged_by:current_user.id)
-      flash[:notice] = "User unflagged as spammer"
+      is_spam = params[:is_spam] == "0" ? false : true
+      set_user
+      if is_spam
+        @user.update(is_spam:true,spam_flagged_at:Time.now,spam_flagged_by:current_user.id)
+        flash[:notice] = "User flagged as spammer"
+      else
+        @user.update(is_spam:false,spam_flagged_at:Time.now,spam_flagged_by:current_user.id)
+        flash[:notice] = "User unflagged as spammer"
+      end
+
+      if defined?(Room) && Room.respond_to?(:admin_messages)
+        message = "User #{is_spam ? "FLAGGED" : "UNFLAGGED"} as spammer: user #{@user.id}: #{@user.email}"
+        Room.admin_messages.room_messages.create(message: message,user_id:current_user.id)
+      end
+
+
+      redirect_to controller: "admin", action: "users"
     end
-
-    if defined?(Room) && Room.respond_to?(:admin_messages)
-      message = "User #{is_spam ? "FLAGGED" : "UNFLAGGED"} as spammer: user #{@user.id}: #{@user.email}"
-      Room.admin_messages.room_messages.create(message: message,user_id:current_user.id)
-    end
-
-
-    redirect_to controller: "admin", action: "users"
-  end
 
 
     def user_confirm
@@ -433,6 +433,10 @@ module Feedbacker
 
       end
 
+      def html_sandbox
+        @translate = Feedbacker::Translate.find_by(id:params[:translate_id])
+      end
+
       private
 
       def set_user
@@ -504,6 +508,8 @@ module Feedbacker
 
         ]
       end
+
+
 
 
     def snapshot_db!      

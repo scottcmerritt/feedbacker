@@ -1,7 +1,5 @@
 <%= render partial: "admin/manage/header" %>
 <%= render partial: "admin/manage/menu" if false %>
-
-
 <%= render partial: "feedbacker/translate_keys/parts/menu", locals: {selected:1} %>
 
 
@@ -25,10 +23,14 @@
     <% end %>
     </div>
   </div>
-
+  <% else %>
+    <%= tag.div "No phrase matches", class: "alert alert-warning my-2 p-1 px-2" %>
   <% end %>
   
 
+    <% if @translate_keys.empty? %>
+      <%= tag.div "No translation key matches", class: "alert alert-warning my-2 p-2" %>
+    <% else %>
   <table class="table bg-light border rounded">
     <thead>
       <tr>
@@ -53,6 +55,7 @@
     </thead>
 
     <tbody>
+
       <% @translate_keys.each do |translate_key| %>
         <tr>
           
@@ -94,8 +97,10 @@
           <td><%= link_to icon(icon:'trash'), feedbacker.translate_key_path(translate_key), method: :delete, data: { confirm: 'This will remove ALL translations for the current (Domain,Key) pair. Are you sure?' } %></td>
         </tr>
       <% end %>
+
     </tbody>
   </table>
+  <% end %>
 </div>
 </div>
 

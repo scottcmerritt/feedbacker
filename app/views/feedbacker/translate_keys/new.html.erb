@@ -1,4 +1,13 @@
-<h1>New Translate Key</h1>
+<%= render partial: "admin/manage/header" %>
+<%= render partial: "admin/manage/menu" if false %>
+<%= render partial: "feedbacker/translate_keys/parts/menu", locals: {selected:1} %>
+
+
+<h6 class="bg-dark text-light px-2 py-0 mt-1 mb-0 d-flex align-items-center">Add a New Translate Key
+<%= tag.span "for DEVELOPER use only", class: "ms-auto alert alert-warning p-1 m-1" %>
+</h6>
+<div class="alert alert-danger p-1 px-2 mt-0 rounded-top-0">Warning: Adding a new "translate key" is NOT a common task for site administrators. Adding a key MAY CAUSE ISSUES with your site. You might instead be looking to <%= link_to "edit a translation", feedbacker.translates_path %> for a specific language.</div>
+
 
 <%= render 'form', translate_key: @translate_key %>
 

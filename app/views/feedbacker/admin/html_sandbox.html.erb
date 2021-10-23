@@ -1,0 +1,130 @@
+<%= render partial: "admin/manage/header" %>
+<%= render partial: "admin/manage/menu" if false %>
+
+
+<%= render partial: "feedbacker/translate_keys/parts/menu", locals: {selected:1} %>
+<script>
+var loadingHtml = '<div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Loading...</span></div>';
+$(function() {
+	$("#editor").on("keydown keyup change",function(e) {
+		updateSandbox()
+	})
+updateSandbox();
+})
+
+function updateSandbox() {
+	$("#sandbox_status").html(loadingHtml)
+		setTimeout(()=>{
+			$("#sandbox_status").html("")
+		},2000)
+		$("#sandbox").html($("#editor").val())
+}
+</script>
+
+<% sample_icons = '<span>Anything you type here will render to the right as html</span>
+
+<!- Sample columns, link with an icon -->
+<div class="row">
+
+<div class="col-4 border bg-dark">
+<a href="https://www.maktaba.org/books/teachers" class="p-2 d-flex align-items-center nodec"><i class="fa fa-school fs-3 text-info"></i>
+<span class="px-3 fs-4 text-light">Teachers</span>
+</a>
+</div>
+
+<div class="col-4 border bg-dark">
+<a href="https://www.maktaba.org/books/youth" class="p-2 d-flex align-items-center nodec"><i class="fa fa-child fs-3 text-success"></i>
+<span class="px-3 fs-4 text-light">Youth</span>
+</a>
+</div>
+
+<div class="col-4 border bg-dark">
+<a href="https://www.maktaba.org/books/farmers" class="p-2 d-flex align-items-center nodec"><i class="fa fa-seedling fs-3 text-primary"></i>
+<span class="px-3 fs-4 text-light">Farmers</span>
+</a>
+</div>
+
+</div>
+
+' %>
+
+<% sample_rows = '<!- Sample rows -->
+<div class="bg-white p-2 border border-dark">row 1</div>
+<div class="bg-white p-2 border border-dark rounded my-1">row 2</div>
+<div class="bg-dark text-light p-2 my-1 rounded">row 3</div>' %>
+
+<% sample_html = '<!- Sample bold text -->
+<div>
+<div class="text-dark">
+<div class="fw-bold">testing</div>
+<h4>Testing</h4>
+
+</div>
+</div>' %>
+
+<% sample2_html = '<!- Sample columns -->
+<div class="row">
+<div class="col-4 border bg-white"><div class="p-3">Section 1</div></div>
+<div class="col-4 border bg-white">Section 1</div>
+<div class="col-4 border bg-white">Section 1</div>
+</div>' %>
+
+<div class="row">
+	<div class="col-6">
+<%= link_to "Edit", [feedbacker,@translate], class:"me-2", target: "_blank" if @translate %> <span class="fw-bold">Preview HTML as you type...nothing is saved!</span>
+<% if @translate %>
+<%= simple_form_for([feedbacker,@translate], :html=> { class: 'bg-white border p-2 rounded' }) do |form| %>
+<%= form.input :phrase, as: :text, :input_html=>{rows:5,id:"editor"} %>
+<div class="text-center my-2 d-flex justify-content-between col-12 col-sm-10 mx-auto">
+    <div></div>
+
+    <div class="d-flex">
+    <%= form.button :submit,"Save", class: "btn-sm btn-primary" %>
+    <%= link_to "Cancel", feedbacker.translate_path(@translate), class: "ms-1 btn btn-sm btn-outline-secondary" %>
+    <%= link_to icon_text("Delete phrase","trash"), [feedbacker,@translate], method: :delete, class: "ms-5 btn btn-sm btn-danger text-light" unless @translate.id.nil? %>
+    </div>
+    <div></div>
+    
+</div>
+
+<% end %>
+<% else %>
+
+<textarea id="editor" style="width:100%;height:100%;" rows="10"><% if @translate %><%= @translate.phrase %><% else %><%= sample_icons %><% end %>
+</textarea>
+<% end %>
+</div>
+<div class="col-6">
+	<div class="fw-bold d-flex align-items-center">Live html preview <span id="sandbox_status" class="mx-1" style="height:22px;"></span></div>
+	
+
+<div id="sandbox">
+HTML shows here
+
+</div>
+
+</div>
+
+<div class="bg-white border p-2 my-2 mt-5">
+<h4 class="text-dark"><span class="text-black">HTML Ideas:</span> Copy and paste a section above to see how it looks</h4>
+<div>
+	<div>Fonts: https://getbootstrap.com/docs/5.0/content/typography/</div>
+	<div>Colors: https://getbootstrap.com/docs/5.0/customize/color/</div>
+
+</div>
+
+
+<pre><code><%=h sample_rows %>
+
+<%=h sample_icons %>
+
+<%=h sample_html %>
+
+<%=h sample2_html %>
+</code>
+</pre>
+
+<span class="d-none d-sm-block">This would show on medium and large screens</span>
+<span class="d-block d-sm-none">This would show on ONLY mobile/small screens</span>
+
+	</div>

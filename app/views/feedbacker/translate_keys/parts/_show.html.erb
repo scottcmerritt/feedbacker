@@ -1,18 +1,6 @@
-<% target = @translate_key if local_assigns[:target].nil? %>
-
-<h4 class="pageH d-flex align-items-center mt-3 p-2 text-dark">
-<%= link_to icon(icon:"arrow-left"), feedbacker.translate_keys_path, class: "me-2" unless !params[:id] %>
-
-  Site translation 
-  <span class="fs-6 ms-auto">
-    <%= link_to icon(icon:"edit"), feedbacker.edit_translate_key_path(target), class: "nodec text-muted"  %>
-    </span>
-
-</h4>
-
- <div class="p-2 bg-light border my-2">
+<div class="p-2 py-1 bg-light border my-1">
       <%= render partial: "feedbacker/translate_keys/parts/key", locals: {translate_key: @translate_key} %>
-    <div class="my-5 mx-2">
+    <div class="my-2 mx-2">
 
 
       <div class="bg-primary text-light p-1 px-3 fs-5 d-flex align-items-center justify-content-between">
@@ -28,14 +16,7 @@
 
         </div>
 
-
-        <div class="d-flex align-items-center bg-white border-top border-bottom mx-2 px-2 rounded text-dark fs-5">
-        <%= tag.span "Add", class: "fw-bold me-2 fs-6" %>
-        <% get_all_langs.each do |lang| %>
-        <%= tag.div link_to(lang, feedbacker.new_translate_path(lang:lang,key_id:@translate_key.id), class: "badge bg-success text-light mx-1") %>
-
-        <% end %>
-      </div>
+        <%= render partial: "#{engine_prefix}translate_keys/parts/suggest_add", locals: {translate_key: @translate_key} %>
 
 
       </div>
@@ -43,9 +24,7 @@
 
 
       <% @translate_key.translates.each do |row| %>
-        <div class="bg-white border my-1 p-2">
-        <%= row.lang %>: <%= link_to row.phrase, feedbacker.edit_translate_path(row) %>
-        </div>
+        <%= render partial: "#{engine_prefix}translates/parts/translate",locals:{translate:row} %>
       <% end %>
       
         <% if false %>

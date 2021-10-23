@@ -1,20 +1,39 @@
-<div class="d-flex">
-  <div class="d-inline-flex bg-white">
-    <div class="text-center fs-6 border ms-1">
-      <div class="bg-dark text-light m-0 px-2">Domain</div>
-      <div class="px-2"><%= translate_key.tdomain %></div>
+<% target = translate_key if local_assigns[:target].nil? %>
+<h6 class="pageH d-flex align-items-center p-2 text-dark fs-7">
+<%= link_to icon(icon:"arrow-left"), feedbacker.translate_keys_path, class: "me-2" unless !params[:id] %>
+  Site translation 
+</h6>
+
+<div class="">
+  <div class="row">
+    <div class="col-7">
+        <div class="d-inline-flex bg-white">
+          <div class="text-center fs-6 border ms-1">
+            <div class="bg-dark text-light m-0 px-2">Domain</div>
+            <div class="px-2"><%= translate_key.tdomain %></div>
+
+          </div>
+
+          <div class="text-center fs-6 border me-1">
+            <div class="bg-primary text-light m-0">Key</div>
+            <div class="px-2"><%= translate_key.tkey %></div>
+          </div>
+          
+          <span class="fs-6 mx-1">
+          <%= link_to icon(icon:"edit"), feedbacker.edit_translate_key_path(target), class: "nodec text-muted"  %>
+          </span>
+        </div>
 
     </div>
+    <div class="col-5">
+      <%= render partial: "#{engine_prefix}translate_keys/parts/samples_and_stats", locals: {translate_key:translate_key} %>
 
-    <div class="text-center fs-6 border me-1">
-      <div class="bg-primary text-light m-0">Key</div>
-      <div class="px-2"><%= translate_key.tkey %></div>
     </div>
   </div>
+
 
   <div class="mx-3">
   This will show up in the code as <span class="fw-bold">dbt('<%= translate_key.tdomain %>.<%= translate_key.tkey %>')</span>
   </div>
 </div>
 
-<%= render partial: "#{engine_prefix}translate_keys/parts/samples_and_stats", locals: {translate_key:translate_key} %>

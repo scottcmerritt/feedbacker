@@ -3,6 +3,14 @@
 
 <%= render partial: "#{engine_prefix}translate_keys/parts/menu" %>
 
+<% if @translate %>
+<div class="border border-success border-2 bg-light p-1 my-1">
+	<h6 class="bg-success text-light rounded p-1 px-2">Added/updated new translation</h6>
+<%= render partial: "#{engine_prefix}translate_keys/parts/key", locals: {translate_key: @translate.id.nil? ? Feedbacker::TranslateKey.find_by(id:@translate.translate_key_id) : @translate.translate_key} unless @translate.translate_key.nil?  %>
+<%= render partial: "#{engine_prefix}translates/parts/translate",locals:{translate:@translate} %>
+</div>
+<% end %>
+
 <% if false %>
 <div class="row mt-3">
 	<div class="col-">

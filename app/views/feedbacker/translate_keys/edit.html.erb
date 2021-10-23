@@ -1,5 +1,14 @@
-<h1 class="pageH border p-1 px-2">Editing Translate Key</h1>
-<div class="alert alert-danger">Warning: Editing the "translate key" is NOT a common task and MAY CAUSE ISSUES with your site. You might instead be looking to edit a translation for a specific language.</div>
+<%= render partial: "admin/manage/header" %>
+<%= render partial: "admin/manage/menu" if false %>
+<%= render partial: "feedbacker/translate_keys/parts/menu", locals: {selected:1} %>
+
+
+<h6 class="bg-dark text-light p-0 px-2 mb-0 d-flex align-items-center">Editing Translate Key
+<div class="alert alert-warning p-1 px-2 m-1 fs-7 ms-auto">for DEVELOPERS only!</div>
+
+</h6>
+<div class="alert alert-danger p-1 px-2 mt-0 rounded-top-0">Warning: Editing the "translate key" is NOT a common task and MAY CAUSE ISSUES with your site. You might instead be looking to <%= link_to "edit a translation", feedbacker.translates_path %> for a specific language.</div>
+
 
 <%= render 'form', translate_key: @translate_key %>
 

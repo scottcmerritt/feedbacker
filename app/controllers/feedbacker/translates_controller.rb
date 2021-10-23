@@ -10,6 +10,11 @@ module Feedbacker
 			
 			@tdomain = params[:tdomain]
 			@translations = @translations.where("translate_keys.tdomain = ?",@tdomain) if @tdomain
+
+			@translations = @translations.where.not("translates.id = ?",@translate.id) unless @translate.nil?
+
+
+
 			@translations = @translations.page(params[:page])
 
 			@translators = User.select("users.*,count(translates.id) as translates_count").joins("JOIN translates ON translates.user_id = users.id").group("users.id").order("translates_count DESC")
@@ -34,7 +39,7 @@ module Feedbacker
 		end
 		def create
 			translate = Feedbacker::Translate.create(translate_params.merge({user_id:current_user.id}))
-			redirect_to feedbacker.translates_path(tdomain: translate.translate_key.tdomain), notice: "Added, search for similar?", tdomain: translate.translate_key.tdomain
+			redirect_to feedbacker.translates_path(tdomain: translate.translate_key.tdomain, translate_id: translate.id), notice: "Added, search for similar?", tdomain: translate.translate_key.tdomain
 
 			#redirect_to feedbacker.translates_path, notice: "Added" #controller: "translates", action: "index", notice: "Added"
 		end
@@ -80,13 +85,15 @@ module Feedbacker
 
 		def update
 			@translate.update(translate_params)
-			flash[:notice] = @translate.cache!
-			redirect_to action:"index" #@translate
+			flash[:notice] = "Updated, filtering for similar..." #@translate.cache!
+			#redirect_to action:"index" #@translate
+			redirect_to feedbacker.translates_path(tdomain: @translate.translate_key.tdomain,translate_id: @translate.id), notice: "Updated, filtering for similar...", tdomain: @translate.translate_key.tdomain
 		end
 
 		private
 		def set_translate
-			@translate = Feedbacker::Translate.find_by(id:params[:id])
+			translate_id = params[:translate_id] || params[:id]
+			@translate = Feedbacker::Translate.find_by(id:translate_id)
 		end
 		def translate_params
 	      params.require(:translate).permit(:lang, :phrase,:translate_key_id)
