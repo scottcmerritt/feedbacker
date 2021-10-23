@@ -16,11 +16,11 @@
 
   <% if @translates %>
   <h6 class="fs-7 bg-light border p-1 px-2">Matches based on translated phrase</h6>
-  <div class="p-1 border rounded rounded-top-0">
+  <div class="px-1 border rounded rounded-top-0 bg-white mb-1">
     <div class="d-flex flex-wrap">
     <% @translates.each do |translate| %>
       <div class="p-1 m-1 border bg-light text-dark fs-7">
-      <%= translate.translate_key.nil? ? link_to(translate.phrase, edit_translate_path(translate)) : link_to(translate.phrase,translate.translate_key) %>
+      <%= translate.translate_key.nil? ? link_to(translate.phrase, feedbacker.edit_translate_path(translate)) : link_to(translate.phrase,[feedbacker,translate.translate_key]) %>
       </div>
     <% end %>
     </div>
