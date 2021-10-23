@@ -14,7 +14,7 @@
 <div class="col-9">
   <%= render partial: "#{engine_prefix}translate_keys/parts/filter" %>
 
-  <% if @translates %>
+  <% if @translates && @translates.count > 0 %>
   <h6 class="fs-7 bg-light border p-1 px-2">Matches based on translated phrase</h6>
   <div class="px-1 border rounded rounded-top-0 bg-white mb-1">
     <div class="d-flex flex-wrap">
