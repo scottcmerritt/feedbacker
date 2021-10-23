@@ -83,7 +83,7 @@ module Feedbacker
       else
         @query1 = "#{@q.downcase}%"
         @query2 = "%#{@q.downcase}%"
-        @translates = Translate.where("phrase LIKE ? OR phrase LIKE ?",@query1,@query2).page(params[:page])
+        @translates = Translate.where("LOWER(phrase) LIKE ? OR LOWER(phrase) LIKE ?",@query1,@query2).page(params[:page])
         @translate_keys = TranslateKey.where("LOWER(tdomain) LIKE ? OR LOWER(tkey) LIKE ? OR LOWER(tdomain) LIKE ? OR LOWER(tkey) LIKE ?",@query1,@query1,@query2,@query2).page(params[:page])
         
         @needed_translations = Translate.get_cache_misses(grouped:true,tdomain_filter:@q,tkey_filter:@q)
