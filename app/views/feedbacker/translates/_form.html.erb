@@ -56,4 +56,4 @@
 
 <% end %>
 
-<%= render partial: "#{engine_prefix}translates/parts/preview", locals: {translate: @translate} unless @translate.nil? %>
+<%= render partial: "#{engine_prefix}translates/parts/preview", locals: {translate: @translate} unless @translate.nil? || @translate.id.nil? %>

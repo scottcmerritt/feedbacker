@@ -3,6 +3,10 @@
 
 <%= render partial: "#{engine_prefix}translate_keys/parts/menu" %>
 
-<%= render partial: "#{engine_prefix}translate_keys/parts/key", locals: {translate_key: @translate.id.nil? ? Feedbacker::TranslateKey.find_by(id:@translate.translate_key_id) : @translate.translate_key} unless @translate.translate_key.nil?  %>
+<% translate_key = (@translate.id.nil? ? Feedbacker::TranslateKey.find_by(id:@translate.translate_key_id) : @translate.translate_key) unless @translate.translate_key.nil? %>
+
+<%= render partial: "#{engine_prefix}translate_keys/parts/key", locals: {translate_key: translate_key} unless translate_key.nil?  %>
 
   <%= render partial: "#{engine_prefix}translates/parts/translate",locals:{translate:@translate} %>
+
+  <%= render partial: "#{engine_prefix}translate_keys/parts/suggest_add", locals: {translate_key: translate_key} unless translate_key.nil? %>
