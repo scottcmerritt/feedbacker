@@ -1,4 +1,4 @@
-<div class="bg-white border rounded mt-1 text-dark fs-6">
+<div class="bg-white border rounded my-1 text-dark fs-6">
     <%= tag.div "Add translation for this key", class: "fw-bold p-1 px-2 fs-8" if false %>
 
     <div class="d-flex align-items-center">
@@ -8,7 +8,7 @@
             <% congrats_lbl = "#{get_all_langs.length == 2 ? 'Both' : 'All'} languages already added" %>
             <%= tag.div icon(icon:"check-circle",lbl:congrats_lbl,icon_css:"text-success me-1"), class: "d-flex align-items-center alert alert-success p-1 m-1" %>
             <% else %>
-            <div class="border rounded px-1 d-flex align-items-center mx-2 my-1">
+            <div class="border rounded px-1 d-flex align-items-center mx-2 my-1 pb-1">
             <% suggested.each do |lang| %>
 
                 <%= tag.div link_to(lang, feedbacker.new_translate_path(lang:lang,key_id:translate_key.id), class: "badge bg-success text-light mx-1 mt-0") %>

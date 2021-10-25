@@ -47,7 +47,7 @@
 
     <div class="d-flex">
     <%= form.button :submit,"Save", class: "btn-sm btn-primary" %>
-    <%= link_to "Cancel", feedbacker.translates_path, class: "ms-1 btn btn-sm btn-outline-secondary" %>
+    <%= link_to "Cancel", @translate.nil? || @translate.id.nil? ? feedbacker.translates_path : [feedbacker,@translate], class: "ms-1 btn btn-sm btn-outline-secondary" %>
     <%= link_to icon_text("Delete phrase","trash"), [feedbacker,@translate], method: :delete, class: "ms-5 btn btn-sm btn-danger text-light" unless @translate.id.nil? %>
     </div>
     <div></div>
@@ -56,4 +56,4 @@
 
 <% end %>
 
-<%= render partial: "#{engine_prefix}translates/parts/preview", locals: {translate: @translate} unless @translate.nil? || @translate.id.nil? %>
+<%= render partial: "#{engine_prefix}translates/parts/preview", locals: {translate: @translate,show: {edit:false,delete:false}} unless @translate.nil? || @translate.id.nil? %>

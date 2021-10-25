@@ -2,24 +2,20 @@ module Feedbacker
 	class TranslatesController < ApplicationController
 		before_action :authenticate_admin! #:authenticate_user!
 		before_action :set_translate
+		before_action :set_needed_translations
 		
 		def index
 			clear_misskeys!
 	#		@translations = Translate.order('translate_key_id ASC').page(params[:page])
 			@translations = Translate.select("translates.*").joins("LEFT JOIN translate_keys ON translate_keys.id = translates.translate_key_id").order('translates.created_at DESC')
 			
-			@tdomain = params[:tdomain]
+			
 			@translations = @translations.where("translate_keys.tdomain = ?",@tdomain) if @tdomain
-
 			@translations = @translations.where.not("translates.id = ?",@translate.id) unless @translate.nil?
-
-
 
 			@translations = @translations.page(params[:page])
 
-			@translators = User.select("users.*,count(translates.id) as translates_count").joins("JOIN translates ON translates.user_id = users.id").group("users.id").order("translates_count DESC")
-			
-			@needed_translations = Translate.get_cache_misses(grouped:true,tdomain_filter:@tdomain)
+			@translators = User.select("users.*,count(translates.id) as translates_count").joins("JOIN translates ON translates.user_id = users.id").group("users.id").order("translates_count DESC")			
 		end
 
 		def new
@@ -60,8 +56,7 @@ module Feedbacker
 		# translates_cms_path
 		# admin/cms?tdomain=page::content&tkey=about_p1
 		def cms
-			@tdomain = params[:tdomain]
-			@tkey = params[:tkey]
+			
 
 			@translate_key = Feedbacker::TranslateKey.new(tdomain:@tdomain,tkey:@tkey)
 
@@ -91,10 +86,20 @@ module Feedbacker
 		end
 
 		private
+		
 		def set_translate
+			@tdomain = params[:tdomain]
+			@tkey = params[:tkey]
+
 			translate_id = params[:translate_id] || params[:id]
 			@translate = Feedbacker::Translate.find_by(id:translate_id)
 		end
+
+		def set_needed_translations
+			filter_q = @tdomain || @q
+			@needed_translations = Translate.get_cache_misses(grouped:true,tdomain_filter:filter_q,tkey_filter:filter_q)
+		end
+
 		def translate_params
 	      params.require(:translate).permit(:lang, :phrase,:translate_key_id)
 	    end

@@ -4,6 +4,8 @@
     <%= tag.span icon(icon:"exclamation",lbl:"Ignored",icon_css:"text-muted me-1 fs-8",with_span:true, span_css:"fs-8 border me-1 my-1 p-1 bg-secondary text-light") if !translate.best? %>
 
     <%= tag.div translate.lang, class:"badge badge-sm bg-success fs-7 me-1" %> <%= link_to translate.phrase, feedbacker.translate_path(translate) %>
+
+    <%= link_to icon(icon:"edit"), feedbacker.edit_translate_path(translate), class: "ms-auto me-1 text-muted" %>
     </div>
 
 
