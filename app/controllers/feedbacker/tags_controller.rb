@@ -11,8 +11,9 @@ class TagsController < ApplicationController
 
 
 		unless @name.nil?
-			@tag.name = @name
-			if @tag.save
+			#@tag.name = @name
+
+			if @tag.update(tag_params) #.save
 				flash[:notice] = "Tag updated"
 			else
 				flash[:notice] = "Errors updating the tag: #{@tag.errors.full_messages[0]}"
@@ -75,6 +76,10 @@ class TagsController < ApplicationController
 	end
 
 	private
+
+	def tag_params
+	  params.require(:tag).permit(:name, :icon,:itype, :css)
+	end
 
 	
 

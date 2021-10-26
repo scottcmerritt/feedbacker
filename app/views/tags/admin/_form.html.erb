@@ -1,0 +1,42 @@
+<% site_tag = @tag if local_assigns[:tag].nil? %>
+<div class="row bg-white border rounded m-1 p-1">
+	<div class="col-6">
+		  <% site_tag.errors.full_messages.each do |msg| %>
+		  <div><%= msg %></div>
+		  <% end %>
+		  <% if site_tag.errors.any? %>
+	    <div id="error_explanation":html=> { class: 'my_error' } >
+	      <h2><%= pluralize(site_tag.errors.count, "error") %> prohibited this tag from being saved:</h2>
+
+	      <ul>
+
+	        <% site_tag.errors.each do |error| %>
+	          <li><%= error.full_message %></li>
+	        <% end %>
+	      </ul>
+	    </div>
+	  <% end %>
+
+		<%= simple_form_for(site_tag, url: feedbacker.update_tag_path(site_tag)) do |f| %>
+		<div class="d-flex align-items-center">
+			<%= f.input :name, input_html: { name: 'tag[name]', class: "form-control form-control-sm" }  %>
+			<%= f.input :icon, input_html: { name: 'tag[icon]', class: "form-control form-control-sm" }  %>
+			<%= f.input :itype, input_html: { name: 'tag[itype]', class: "form-control form-control-sm" }  %>
+			<%= f.input :css, input_html: { name: 'tag[css]', class: "form-control form-control-sm" }  %>
+			<%= f.button :submit, class: "btn btn-sm btn-primary mx-1" %>
+		</div>
+		<% end %>
+
+		<div class="ms-3 p-2">
+		<div class="text-dark fw-bold py-1">Translations</div>
+		<% @taggable_tag.translates.each_with_index do |translate,index| %>
+		<div><%= index + 1 %>) <%= translate.lang %>: <%= tag.span translate.phrase, class: "fw-bold" %></div>
+		<% end %>
+		</div>
+
+	</div>
+	<div class="col-6">
+		<h6>Tags can now have TAGS</h6>
+		<%= tag.div render(partial: "shared/tags/show_add_tags", locals: {target:@taggable_tag,otype:'Tag'}), class: "mt-3 text-start" %>
+	</div>
+</div>
