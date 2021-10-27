@@ -28,7 +28,7 @@
 		<% end %>
 
 		<div class="ms-3 p-2">
-		<div class="text-dark fw-bold py-1">Translations: <%= tag.div tag_w_icon(site_tag,class:"d-flex align-items-center") rescue "Preview not available" %></div>
+		<div class="text-dark fw-bold py-1">Translations: <%= tag.div tag_w_icon(site_tag),class:"d-flex align-items-center" rescue "Preview not available" %></div>
 		<% @taggable_tag.translates.each_with_index do |translate,index| %>
 		<div><%= index + 1 %>) <%= translate.lang %>: <%= tag.span translate.phrase, class: "fw-bold" %></div>
 		<% end %>
