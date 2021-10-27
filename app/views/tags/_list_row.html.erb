@@ -2,7 +2,7 @@
 <% path_of_tag = main_app.admin_tags_path(id:tag_obj.id) if local_assigns[:path_of_tag].nil? %>
 <div class="bg-white border">
 <div class="p-1 d-flex flex-fill">
-	<a class="d-flex flex-fill align-items-center fw-bold nodec" href="<%= path_of_tag %>"><%= dbt_tag(tag_obj.name) %>
+	<a class="d-flex flex-fill align-items-center fw-bold nodec" href="<%= path_of_tag %>"><%= icon(icon:tag_obj.icon,lbl:dbt_tag(tag_obj.name)) %>
 		<span class="ms-auto me-1 badge bg-light border text-dark p-sm"><%= tag_obj.taggings_count %></span>
 	</a>
 	<%= link_to icon(icon:"trash"), main_app.destroy_tag_path(id:tag_obj.id), method: :delete, class:"ms-auto text-muted fs-7", data: { confirm: 'Are you sure?' } if show_trash %>
