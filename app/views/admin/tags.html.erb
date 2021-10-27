@@ -26,7 +26,7 @@
 		<% @tags.each do |tag| %>
 		<div class="<%= column_width %> p-1 d-flex">
 			<div class="bg-white border p-1 d-flex flex-fill">
-			<a class="d-flex flex-fill align-items-center fw-bold nodec" href="<%= admin_tags_path(id:tag.id) %>"><%= tag.name %>
+			<a class="d-flex flex-fill align-items-center fw-bold nodec" href="<%= admin_tags_path(id:tag.id) %>"><%= tag.respond_to?(:icon) ? icon(icon:tag.icon,lbl:tag.name) : tag.name %>
 				<span class="ms-auto me-1 badge bg-light border text-dark p-sm"><%= tag.taggings_count %></span>
 			</a>
 			<%= link_to icon(icon:"trash"), feedbacker.destroy_tag_path(id:tag.id), method: :delete, class:"ms-auto text-muted fs-7", data: { confirm: 'Are you sure?' } %>
