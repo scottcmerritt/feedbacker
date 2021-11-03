@@ -168,7 +168,7 @@ module TranslationUtil
     end
 
     def top_translation tdomain:, tkey:, locale:
-      tdomain.blank? ? Feedbacker::Translate.joins(:translate_key).where("(translate_keys.tdomain is null or translate_keys.tdomain = '') AND translate_keys.tkey = ?", tkey).where(lang:locale).first : Feedbacker::Translate.joins(:translate_key).where(translate_keys: {tdomain:tdomain,tkey:tkey},lang:locale).first
+      tdomain.blank? ? Feedbacker::Translate.joins(:translate_key).where("(translate_keys.tdomain is null or translate_keys.tdomain = '') AND translate_keys.tkey = ?", tkey).order("translates.updated_at DESC").where(lang:locale).first : Feedbacker::Translate.joins(:translate_key).where(translate_keys: {tdomain:tdomain,tkey:tkey},lang:locale).order("translates.updated_at DESC").first
     end
 
 

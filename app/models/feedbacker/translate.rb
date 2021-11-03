@@ -25,7 +25,7 @@ module Feedbacker
 		def best?
 			return nil if translate_key.nil?
 			top_translation = Translate.top_translation(tdomain:translate_key.tdomain, tkey:translate_key.tkey, locale:self.lang)
-			!top_translation.nil? && self.id == top_translation.id
+			!top_translation.nil? && (self.id == top_translation.id)
 		end
 
 =begin

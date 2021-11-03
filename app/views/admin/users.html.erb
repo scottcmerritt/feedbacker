@@ -55,7 +55,7 @@
 	</td>
 	<td>[<%= user.confirmed_at rescue alert_devise_not_configured %>]
 <%= tag.span icon_text("Confirmed","check",true) unless user.confirmed_at.nil? rescue alert_devise_not_configured %>
-<%= link_to "Confirm", user_confirm_path(id:user.id), method: :post if user.confirmed_at.nil? rescue alert_devise_not_configured %>
+<%= link_to "Confirm", feedbacker.user_confirm_path(id:user.id), method: :post if user.confirmed_at.nil? rescue alert_devise_not_configured %>
 </td>
 </tr>
 <% end %>

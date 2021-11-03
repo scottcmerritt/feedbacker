@@ -48,7 +48,7 @@
 			<div class="fs-8">Prev sign in <%= time_ago_in_words user.last_sign_in_at unless user.last_sign_in_at.nil? %></div>
 			<div class="fs-8">Current sign in <%= time_ago_in_words user.current_sign_in_at unless user.current_sign_in_at.nil? %></div>
 			<div class="d-flex my-1">
-			<%= link_to "Confirm", user_confirm_path(id:user.id), method: :post, class: "btn btn-sm btn-success me-1" if user.confirmed_at.nil? %>
+			<%= link_to "Confirm", feedbacker.user_confirm_path(id:user.id), method: :post, class: "btn btn-sm btn-success me-1" if user.confirmed_at.nil? %>
 			<%= link_to "Spammer", feedbacker.user_flag_spammer_path(id:user.id), method: :post, class: "btn btn-sm btn-warning me-1" if (user.is_spam.nil? || user.is_spam == false) %>
 
 			<%= link_to "NOT Spammer", feedbacker.user_flag_spammer_path(id:user.id,is_spam:"0"), method: :post, class: "btn btn-sm btn-success me-1" if (user.is_spam == true) %>
