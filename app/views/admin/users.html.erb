@@ -47,7 +47,7 @@
 
 	</td>
 	<td><%= tag.span user.sign_in_count rescue alert_devise_not_configured %></td>
-	<td class=""><%= link_to user.email, user %>
+	<td class=""><%= link_to user.email, [main_app,user] %>
 		
 		<div class="fs-8">Prev sign in <%= time_ago_in_words user.last_sign_in_at rescue alert_devise_not_configured %></div>
 		<div class="fs-8">Current sign in <%= time_ago_in_words user.current_sign_in_at rescue alert_devise_not_configured %></div>
