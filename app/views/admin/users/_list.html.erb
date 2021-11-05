@@ -37,7 +37,7 @@
 		<td><%= tag.span user.sign_in_count %><%= tag.span icon(icon:"check"), class:"text-success ms-1" unless user.confirmed_at.nil? %></td>
 		<td class="">
 			<div class="d-flex align-items-center">
-			<%= icon(icon:"circle",icon_css:"text-success me-1 fs-7") if user.online? %> <%= link_to user.email, user %>
+			<%= icon(icon:"circle",icon_css:"text-success me-1 fs-7") if user.online? %> <%= link_to user.email, [main_app,user] %>
 
 			<div class="ms-auto"><%= tag.span "#{user.total_views} views", class: "badge mx-1 badge-sm bg-info text-light" %>
 				<% unless user.last_view.nil? %>
