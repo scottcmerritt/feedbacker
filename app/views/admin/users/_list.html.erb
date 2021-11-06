@@ -1,5 +1,5 @@
 <% show = {roles:false} if local_assigns[:show].nil? %>
-<%= paginate @users rescue "Error with users PAGER" %>
+<%= feedbacker_paginate @users,page: params[:page] %>
 
 <% if browser.mobile? %>
 
