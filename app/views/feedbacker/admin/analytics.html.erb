@@ -147,7 +147,7 @@
 		</div>
 		<div class="col-sm-6">
 		
-		<%= paginate @views,window:1 rescue "Error: Paginator" %>
+		<%= feedbacker_paginate @views,page: params[:page] %>
 		<div><%= @views_count %> rows</div>
 
 		<% prev_viewer = nil %>

@@ -31,6 +31,24 @@ module Feedbacker
       render partial: "comments/template", locals: {commentable: target, new_comment: new_comment} 
     end
 
+
+  def current_path(params={})
+    feedbacker.url_for(request.params.merge(params))
+  end
+
+  def feedbacker_paginate data, page: 1
+    page = [1,"1",nil].include?(page) ? 1 : page.to_i
+    prev_page = current_path(page:page-1) 
+    next_page = current_path(page:page+1)
+
+    begin
+      render(partial:"util/my_paginate", locals: {data: data, page:page,paths: {prev:prev_page,next:next_page}})
+    rescue
+     render(partial:"feedbacker/util/my_paginate", locals: {data: data, paths: {prev:prev_page,next:next_page}})      
+    end
+
+  end
+
     
 
 
