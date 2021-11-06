@@ -1,6 +1,5 @@
 <% translations = @translations if local_assigns[:translations].nil? %>
-<%= paginate translations rescue "Error: PAGER not working" %>
-
+<%= feedbacker_paginate translations,page: params[:page] %>
 <% translations.each do |row| %>
 	<%= render partial: "#{engine_prefix}translates/parts/list_row", locals: {row: row} %>
 <% end %>
