@@ -1,3 +1,4 @@
+<% st = Time.now %>
 <% needed = local_assigns[:needed] unless local_assigns[:needed].nil? %>
 <% needed = @needed_translations if needed.nil? %>
 
@@ -37,3 +38,4 @@
     <% end %>
   </div>
 <% end %>
+<div class="px-1 fs-8">Loaded in <%= num_comma(Time.now - st,3) %> seconds</div>

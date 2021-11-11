@@ -6,13 +6,16 @@ module Feedbacker
 
 
 		def self.tdomains_sorted refresh: false, cache_duration: 600
-			cache_key = "TRANSLATE_KEY::tdomains_sorted"
-			res = Feedbacker::Cache.get_obj cache_key
-			if refresh || res.nil?
-				res = self.tdomain_grouped.sort_by{|row| -(row.missed_keys_count + row.tkey_count) }
-				Feedbacker::Cache.set_obj cache_key,res,nil,cache_duration
+			if false
+				cache_key = "TRANSLATE_KEY::tdomains_sorted"
+				res = Feedbacker::Cache.get_obj cache_key
+				if refresh || res.nil?
+					res = self.tdomain_grouped.sort_by{|row| -(row.missed_keys_count + row.tkey_count) }
+					Feedbacker::Cache.set_obj cache_key,res,nil,cache_duration
+				end
+				res
 			end
-			res
+			self.tdomain_grouped.sort_by{|row| -(row.missed_keys_count + row.tkey_count) }
 		end
 
 		def languages
