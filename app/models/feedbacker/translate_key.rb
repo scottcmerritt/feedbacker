@@ -10,7 +10,7 @@ module Feedbacker
 			res = Feedbacker::Cache.get_obj cache_key
 			if refresh || res.nil?
 				res = self.tdomain_grouped.sort_by{|row| -(row.missed_keys.count + row.tkey_count) }
-				Feedbacker::Cache.set_obj cache_key,res,cache_duration
+				Feedbacker::Cache.set_obj cache_key,res,nil,cache_duration
 			end
 			res
 		end
