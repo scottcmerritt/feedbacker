@@ -3,7 +3,7 @@ module Feedbacker
     # /translations
     before_action :authenticate_admin!
     before_action :set_translate_key, only: %i[ show edit update destroy ]
-    before_action :set_shared, only: %i[ index search ]
+    before_action :set_shared, only: %i[ index search email ]
 
 
     # GET /translate_keys or /translate_keys.json
@@ -17,6 +17,16 @@ module Feedbacker
 
 
 
+    def email
+
+      #TODO: make sure keys exist for english 
+      @tdomain = "email::"
+      email_keys = ["user.confirmation_instructions","user.email_changed","user.password_change","user.reset_password_instructions","user.unlock_instructions"]
+      @translate_keys = TranslateKey.order("tdomain,tkey").page(params[:page]).per(100)
+      @translate_keys = @translate_keys.where(tdomain:@tdomain) if @tdomain
+
+      render "index"
+    end
     
 
 

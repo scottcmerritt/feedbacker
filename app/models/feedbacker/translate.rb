@@ -12,6 +12,10 @@ module Feedbacker
 		scope :active, -> { where(active:true) }
 		scope :inactive, -> { where(active:false) }
 
+		def sample_page
+			self.translate_key.sample_page unless self.translate_key.nil?
+		end
+
 		def use_cms?
 			!self.tdomain.nil? && self.tdomain.include?('::content')
 		end

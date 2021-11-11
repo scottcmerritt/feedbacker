@@ -35,7 +35,8 @@ module Feedbacker
 		end
 		def create
 			translate = Feedbacker::Translate.create(translate_params.merge({user_id:current_user.id}))
-			redirect_to feedbacker.translates_path(tdomain: translate.translate_key.tdomain, translate_id: translate.id), notice: "Added, search for similar?", tdomain: translate.translate_key.tdomain
+			flash[:notice] = "Updated, filtering for similar..." #@translate.cache!
+			redirect_to feedbacker.translates_path(tdomain: translate.translate_key.tdomain, translate_id: translate.id), tdomain: translate.translate_key.tdomain # notice: "Added, search for similar?", 
 
 			#redirect_to feedbacker.translates_path, notice: "Added" #controller: "translates", action: "index", notice: "Added"
 		end
@@ -56,8 +57,6 @@ module Feedbacker
 		# translates_cms_path
 		# admin/cms?tdomain=page::content&tkey=about_p1
 		def cms
-			
-
 			@translate_key = Feedbacker::TranslateKey.new(tdomain:@tdomain,tkey:@tkey)
 
 			@translations = Feedbacker::Translate.select("translates.*").joins("LEFT JOIN translate_keys ON translate_keys.id = translates.translate_key_id").order('translates.created_at DESC')
@@ -80,9 +79,10 @@ module Feedbacker
 
 		def update
 			@translate.update(translate_params)
-			flash[:notice] = "Updated, filtering for similar..." #@translate.cache!
+			flash_msg = "Updated, filtering for similar..." #@translate.cache!
+			flash[:notice] = flash_msg
 			#redirect_to action:"index" #@translate
-			redirect_to feedbacker.translates_path(tdomain: @translate.translate_key.tdomain,translate_id: @translate.id), notice: "Updated, filtering for similar...", tdomain: @translate.translate_key.tdomain
+			redirect_to feedbacker.translates_path(tdomain: @translate.translate_key.tdomain,translate_id: @translate.id), tdomain: @translate.translate_key.tdomain # notice: "Updated, filtering for similar...",
 		end
 
 		private

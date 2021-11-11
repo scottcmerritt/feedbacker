@@ -1,7 +1,7 @@
 <% needed = local_assigns[:needed] unless local_assigns[:needed].nil? %>
 <% needed = @needed_translations if needed.nil? %>
 
-<% needed = Feedbacker::Translate.get_cache_misses(grouped:true,tdomain_filter:params[:tdomain] || params[:q],tkey_filter:params[:tdomain] || params[:q]) if needed.nil? %>
+<% needed = Feedbacker::Translate.get_cache_misses(grouped:true,tdomain_filter:@tdomain || params[:tdomain] || params[:q],tkey_filter:params[:tdomain] || params[:q]) if needed.nil? %>
 
 <h5 class="bg-primary text-light rounded-top p-1 px-2 mb-0"><%= local_assigns[:title].nil? ? "Translations need" : title %></h5>
 

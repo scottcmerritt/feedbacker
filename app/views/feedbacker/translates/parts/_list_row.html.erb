@@ -1,4 +1,16 @@
-<div class="bg-white border my-2">
+<div class="bg-white border border-secondary rounded-top my-2">
+
+	<div class="px-2 fs-7 d-flex align-items-center border-bottom bg-light rounded-top">
+		<div class="d-flex align-items-center fs-8">
+			<div>by <%= link_to User.find(row.user_id).email, User.find(row.user_id) rescue "Anonymous" %></div>
+			<div class="text-muted mx-1"><%= time_ago_in_words row.created_at %> ago</div>
+		</div>
+
+		<%= tag.div safe_join(["As seen on: ",link_to("#{request.protocol}#{request.host_with_port}#{row.sample_page}",row.sample_page,class:"fw-bold")]), class: "fs-7 text-end ms-auto me-1" unless row.sample_page.nil? %>
+	</div>
+
+	
+
 	<% if row.use_cms? %>
 	<div>
 	<div class="p-2 d-flex align-items-center">
@@ -6,10 +18,12 @@
 		<%= tag.span row.lang, class:"badge bg-success fs-7 me-1" %>
 		<%= link_to "#{row.tdomain}.#{row.tkey}", feedbacker.translate_key_path(id:row.translate_key_id), class: "nodec text-dark" %> = <span class="mx-1 btn btn-sm border bg-white text-muted">CUSTOM HTML</span>
 
+		<% if false %>
 		<div class="ms-auto">
 			<%= link_to icon_text("","edit"),feedbacker.edit_translate_path(id:row.id), class: "nodec text-secondary" %>
 			<%= link_to icon_text("","trash"),feedbacker.translate_path(id:row.id), method: :delete, class: "nodec" if false %>
 		</div>
+		<% end %>
 	</div>
 
 	<%= tag.div row.phrase, class: "text-muted fs-7 p-1" %>
@@ -32,11 +46,6 @@
 
 	<% end %>
 
-	<div class="px-2 fs-7 d-flex align-items-center justify-content-between">
-		<div>by <%= link_to User.find(row.user_id).email, User.find(row.user_id) rescue "Anonymous" %></div>
-		<div class="text-muted"><%= time_ago_in_words row.created_at %> ago</div>
-
-	</div>
 	
 	<%= tag.div row.object_hashkey if params[:debug] %>
 	</div>

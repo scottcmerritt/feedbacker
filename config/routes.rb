@@ -13,7 +13,8 @@ Feedbacker::Engine.routes.draw do
 	match '/tag/delete(/:id)' => 'tags#destroy', :as => :destroy_tag, :via=> :delete
 
 
-
+	match '/admin/emails/customize' =>"translate_keys#email", :as => :customize_emails, :via=>:get
+	
 	match '/admin/about/translations' =>"translates#about", :as => :translates_about, :via=>[:get,:post]
 	match '/admin/search/translations' =>"translate_keys#search", :as => :translates_search, :via=>[:get,:post]
 

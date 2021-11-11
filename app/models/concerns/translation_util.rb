@@ -198,9 +198,9 @@ module TranslationUtil
     def get_cache_misses grouped:false,sorted:true, tdomain_filter:nil, tkey_filter:nil
       #data = get_all_cache_misses with_keys: true
       data = Feedbacker::CacheBase.get_list_objects Feedbacker::Translate.cache_miss_log_key, load_objects: true, with_keys: true
-
+      
       if grouped
-        idx = {}
+        idx = {}    
         data.each do |full_row|
           row = full_row[:obj]
 
@@ -221,8 +221,15 @@ module TranslationUtil
             data[k] = v.sort_by{|row| row[:obj].tdomain.to_s}.reverse # sort_by{|row| row[:obj].tdomain}, # collect{|row| row[:obj]}
           end
         else
-          data = idx
+          data = idx          
         end
+      else
+        idx = []
+        data.each do |full_row|
+          row = full_row[:obj]
+          idx.push(full_row) if (!row.tdomain.nil? && row.tdomain.include?(tdomain_filter))
+        end
+        data = idx
       end
       data
   #     !sorted ? data : data.sort_by{|k,v| v[:obj].tdomain}

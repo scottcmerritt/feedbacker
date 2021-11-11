@@ -1,6 +1,6 @@
 <%= render partial: "admin/manage/header" %>
 <%= render partial: "admin/manage/menu" if false %>
-<%= render partial: "feedbacker/translate_keys/parts/menu", locals: {selected:1} %>
+<%= render partial: "feedbacker/translate_keys/parts/menu", locals: {selected:params[:action] == "email" ? 3 : 1} %>
 
 
 <div class="row mt-2">

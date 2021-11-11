@@ -1,7 +1,13 @@
 <% target = translate_key if local_assigns[:target].nil? %>
-<h6 class="pageH d-flex align-items-center p-2 text-dark fs-7">
+<% show_updated = false if local_assigns[:show_updated].nil? %>
+<h6 class="pageH d-flex align-items-center p-1 px-2 text-dark fs-7">
 <%= link_to icon(icon:"arrow-left"), feedbacker.translate_keys_path, class: "me-2" unless !params[:id] %>
-  Site translation 
+  Site translation
+  <%= tag.div "Added/updated", class: "bg-success text-light mx-1 fw-bold p-1 rounded" if show_updated %>
+
+
+<%= tag.div safe_join(["As seen on: ",link_to("#{request.protocol}#{request.host_with_port}#{translate_key.sample_page}",translate_key.sample_page,class:"fw-bold")]), class: "ms-auto me-1 fs-7" unless translate_key.sample_page.nil? %>
+
 </h6>
 
 <div class="">
@@ -28,10 +34,11 @@
 
     </div>
     <div class="col-5">
+      <%= render partial: "#{engine_prefix}translate_keys/parts/samples_and_stats", locals: {translate_key:translate_key,show_page:false} %>
       <div class="alert alert-warning fs-8 p-2 py-1">
       <b>DEVELOPER NOTE:</b> Find in the source code as <span class="fw-bold">dbt('<%= translate_key.tdomain %>.<%= translate_key.tkey %>')</span>
       </div>
-      <%= render partial: "#{engine_prefix}translate_keys/parts/samples_and_stats", locals: {translate_key:translate_key} %>
+      
 
 
     </div>

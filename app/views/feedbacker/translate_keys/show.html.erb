@@ -2,12 +2,15 @@
 <%= render partial: "admin/manage/menu" if false %>
 <%= render partial: "feedbacker/translate_keys/parts/menu", locals: {selected:1} %>
 
+
 <div class="row">
   <div class="col-3">
+    <%= render partial: "#{engine_prefix}translate_keys/parts/needed", locals: {title: "Translations needed"} %>
 
 
   </div>
   <div class="col-9">
+    <%= render partial: "#{engine_prefix}translate_keys/parts/filter" %>
     <%= render partial: "#{engine_prefix}translate_keys/parts/show", target: @translate_key %>
    
 
