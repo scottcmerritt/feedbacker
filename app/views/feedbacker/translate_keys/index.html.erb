@@ -110,4 +110,4 @@
 
 <%= link_to 'New Translate Key', feedbacker.new_translate_key_path %>
 
-<%= render partial: "shared/delayed_load", locals: {path:feedbacker.translates_delayed_path(format:'js',tdomain:@tdomain)} %>
+<%= render partial: "shared/delayed_load", locals: {path:feedbacker.translates_delayed_path(format:'js',tdomain:@tdomain,refresh:params[:refresh])} %>

@@ -11,26 +11,38 @@ module Feedbacker
       cache_all! if params[:refresh_cache]
       Translate.reset_miss_log! if params[:reset_log]
       @translate_keys = TranslateKey.order("tdomain,tkey").page(params[:page]).per(100)
-      @translate_keys = @translate_keys.where(tdomain:@tdomain) if @tdomain
-    
+      @translate_keys = @translate_keys.where(tdomain:@tdomain) if @tdomain    
     end
-
 
     # moved needed translations to a new page to speed up page load
     def needed
 
-
     end
 
     def delayed
+      do_refresh = true # params[:refresh]
       respond_to do |format|
         format.html {  }
         format.js do 
-          html = "" 
-          side_menu = render_to_string(:partial=>"feedbacker/translate_keys/parts/needed",:locals=>{},:layout=>false)
-          sub_menu = render_to_string(:partial=>"feedbacker/translate_keys/parts/tdomain_filters",:locals=>{tdomain:@tdomain},:layout=>false)
+          html = ""
+          cache_duration = 60*10
+          side_menu_key = "TRANSLATE_KEY::needed_html:#{@tdomain}"
+          side_menu = Feedbacker::Cache.get_obj side_menu_key
 
-          render json: {html: html, parts: {side_menu:side_menu,sub_menu:sub_menu}}
+          cache_used = true
+          if side_menu.blank? || do_refresh
+            cache_used = false
+            side_menu = render_to_string(:partial=>"feedbacker/translate_keys/parts/needed",:locals=>{},:layout=>false)
+          end  
+
+          sub_menu_key = "TRANSLATE_KEY::tdomain_filters_html:#{@tdomain}"
+          sub_menu = Feedbacker::Cache.get_obj sub_menu_key
+          sub_menu = render_to_string(:partial=>"feedbacker/translate_keys/parts/tdomain_filters",:locals=>{tdomain:@tdomain},:layout=>false) if sub_menu.blank? || params[:refresh]
+
+          Feedbacker::Cache.set_obj side_menu_key,side_menu,nil,cache_duration
+          Feedbacker::Cache.set_obj sub_menu_key,sub_menu,nil,cache_duration
+
+          render json: {html: html, cache_used:cache_used, parts: {side_menu:side_menu,sub_menu:sub_menu}}
 
         end
         #format.json { head :no_content }

@@ -3,7 +3,8 @@
 
 <% needed = Feedbacker::Translate.get_cache_misses(grouped:true,tdomain_filter:@tdomain || params[:tdomain] || params[:q],tkey_filter:params[:tdomain] || params[:q]) if needed.nil? %>
 
-<h5 class="bg-primary text-light rounded-top p-1 px-2 mb-0"><%= local_assigns[:title].nil? ? "Translations need" : title %></h5>
+<h5 class="bg-primary text-light rounded-top p-1 px-2 mb-0 d-flex align-items-center"><%= local_assigns[:title].nil? ? "Translations needed" : title %>
+</h5>
 
 <% if needed.empty? %>
 <%= tag.div "No translations needed", class: "alert alert-notice" %>
@@ -25,14 +26,10 @@
       <% rows.each do |full_row| %>
       <% row = full_row.kind_of?(Feedbacker::Translation) ? full_row : (full_row.has_key?(:obj) ? full_row[:obj] : full_row) %>
 
-      
       <div class="border-bottom">
         <%= link_to icon(icon:'trash'), feedbacker.translates_path({remove_misskey:full_row[:key]}), class:"me-2 nodec" if full_row.has_key?(:key) %>
         <%= link_to "#{row.tdomain}.#{row.tkey}", feedbacker.new_translate_path(lang:lang,tdomain:row.tdomain,tkey:row.tkey), class: "nodec" %>
-        
         <%= render partial: "#{engine_prefix}translate_keys/parts/samples_and_stats", locals: {translate_key:row} %>
-
-
         <%= tag.div full_row[:key], class: "fs-7" if params[:debug] %>
       </div>
       <% end %>
