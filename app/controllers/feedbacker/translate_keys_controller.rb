@@ -100,9 +100,10 @@ module Feedbacker
 
     # DELETE /translate_keys/1 or /translate_keys/1.json
     def destroy
+      old_tdomain = @translate_key.tdomain.to_s
       @translate_key.destroy
       respond_to do |format|
-        format.html { redirect_to translate_keys_url, notice: "Translate key was successfully destroyed." }
+        format.html { redirect_to translate_keys_url(tdomain: old_tdomain), notice: "Translate key was successfully destroyed." }
         format.json { head :no_content }
       end
     end

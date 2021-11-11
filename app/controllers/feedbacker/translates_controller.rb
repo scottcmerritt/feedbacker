@@ -74,8 +74,9 @@ module Feedbacker
 		end
 
 		def destroy
+			old_tdomain = @translate.translate_key.tdomain.to_s unless @translate.translate_key.nil?
 			@translate.destroy
-			redirect_to action: "index"
+			redirect_to action: "index", tdomain: old_tdomain
 		end
 
 		def update
