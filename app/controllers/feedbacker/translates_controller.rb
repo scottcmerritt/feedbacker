@@ -1,5 +1,6 @@
 module Feedbacker
 	class TranslatesController < ApplicationController
+		before_action :set_start_time
 		before_action :authenticate_admin! #:authenticate_user!
 		before_action :set_translate
 		before_action :set_needed_translations
@@ -87,6 +88,10 @@ module Feedbacker
 
 		private
 		
+		def set_start_time
+	        @timer_action = Time.now
+	      end
+
 		def set_translate
 			@tdomain = params[:tdomain]
 			@tkey = params[:tkey]

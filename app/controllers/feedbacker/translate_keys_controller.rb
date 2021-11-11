@@ -1,10 +1,12 @@
 module Feedbacker
   class TranslateKeysController < ApplicationController
     # /translations
+    before_action :set_start_time
     before_action :authenticate_admin!
     before_action :set_translate_key, only: %i[ show edit update destroy ]
     before_action :set_shared, only: %i[ index search email delayed needed ]
     protect_from_forgery except: :delayed
+
 
     # GET /translate_keys or /translate_keys.json
     def index
@@ -143,6 +145,10 @@ module Feedbacker
 
 
     private
+      def set_start_time
+        @timer_action = Time.now
+      end
+
       # Use callbacks to share common setup or constraints between actions.
       def set_translate_key
         @translate_key = TranslateKey.find(params[:id])
