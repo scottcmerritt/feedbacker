@@ -3,7 +3,7 @@ module Feedbacker
     # /translations
     before_action :authenticate_admin!
     before_action :set_translate_key, only: %i[ show edit update destroy ]
-    before_action :set_shared, only: %i[ index search email ]
+    before_action :set_shared, only: %i[ index search email delayed needed ]
 
 
     # GET /translate_keys or /translate_keys.json
@@ -19,6 +19,22 @@ module Feedbacker
     # moved needed translations to a new page to speed up page load
     def needed
 
+
+    end
+
+    def delayed
+      respond_to do |format|
+        format.html {  }
+        format.js do 
+          html = "" 
+          side_menu = render_to_string(:partial=>"feedbacker/translate_keys/parts/needed",:locals=>{},:layout=>false)
+          sub_menu = render_to_string(:partial=>"feedbacker/translate_keys/parts/tdomain_filters",:locals=>{tdomain:@tdomain},:layout=>false)
+
+          render json: {html: html, parts: {side_menu:side_menu,sub_menu:sub_menu}}
+
+        end
+        #format.json { head :no_content }
+      end
 
     end
 

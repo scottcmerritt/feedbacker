@@ -13,11 +13,11 @@
 
 	
 <div class="row mt-3">
-	<div class="col-sm-3">
+	<div class="col-sm-3" id="sideMenu">
 		<%= render partial: "#{engine_prefix}translate_keys/parts/needed", locals: {title: "Translations needed"} if params[:needed] %>
 	</div>
 	<div class="col-sm-7">
-		<%= render partial: "#{engine_prefix}translate_keys/parts/filter" %>
+		<%= render partial: "#{engine_prefix}translate_keys/parts/filter", locals: {show_sub_menu:false} %>
 		<h4 class="pageH d-flex p-1 px-2 text-light bg-dark mb-0">Recent translations <%= link_to icon(icon:"plus",lbl:"Add"), feedbacker.translates_about_path, class: "btn btn-sm btn-primary text-light ms-auto" %></h4>
 		<div class="p-1 bg-white border">
 
@@ -37,3 +37,5 @@
 		<% end %>
 	</div>
 </div>
+
+<%= render partial: "shared/delayed_load", locals: {path:feedbacker.translates_delayed_path(format:'js',tdomain:@tdomain)} %>
