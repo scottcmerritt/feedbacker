@@ -15,7 +15,7 @@ module Feedbacker
 				end
 				res
 			end
-			self.tdomain_grouped.sort_by{|row| -(row.missed_keys_count + row.tkey_count) }
+			self.tdomain_grouped.sort_by{|row| -(row.missed_keys_count(refresh:refresh) + row.tkey_count) }
 		end
 
 		def languages

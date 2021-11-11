@@ -33,10 +33,13 @@ module TranslationUtil
       feedback.push "Removed: #{object_hashkey}"
       feedback.push object_to_cache
 
+      tmp_cache_clear = self.translate_key.missed_keys_count(refresh:true)
+
       #target_obj = Translate.object_to_cache(tdomain:tdomain,tkey:tkey,lang:self.lang)
       #removed_hashkey = Cache.remove_list_object Translate.cache_miss_log_key, target_obj
       #feedback.push "object removed from miss log: #{removed_hashkey}"
       #feedback.push target_obj
+
     end
     feedback
   end
