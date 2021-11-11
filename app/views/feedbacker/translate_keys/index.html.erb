@@ -5,7 +5,7 @@
 
 <div class="row mt-2">
   <div class="col-3">
-    <%= render partial: "#{engine_prefix}translate_keys/parts/needed", locals: {title: "Translations needed"} %>
+    <%= render partial: "#{engine_prefix}translate_keys/parts/needed", locals: {title: "Translations needed"} if params[:needed] %>
 
 </div>
 

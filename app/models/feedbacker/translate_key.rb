@@ -5,8 +5,14 @@ module Feedbacker
 		scope :tdomain_grouped, -> { select('tdomain,count(tkey) as tkey_count').where.not(tdomain:nil).group("tdomain").order('tkey_count DESC')}
 
 
-		def self.tdomains_sorted
-			self.tdomain_grouped.sort_by{|row| -(row.missed_keys.count + row.tkey_count) }
+		def self.tdomains_sorted refresh: false, cache_duration: 600
+			cache_key = "TRANSLATE_KEY::tdomains_sorted"
+			res = Feedbacker::Cache.get_obj cache_key
+			if refresh || res.nil?
+				res = self.tdomain_grouped.sort_by{|row| -(row.missed_keys.count + row.tkey_count) }
+				Feedbacker::Cache.set_obj cache_key,res,cache_duration
+			end
+			res
 		end
 
 		def languages

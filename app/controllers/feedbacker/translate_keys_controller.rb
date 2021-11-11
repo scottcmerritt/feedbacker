@@ -16,6 +16,11 @@ module Feedbacker
     end
 
 
+    # moved needed translations to a new page to speed up page load
+    def needed
+
+
+    end
 
     def email
 
