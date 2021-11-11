@@ -32,7 +32,7 @@ module Feedbacker
           cache_used = true
           if side_menu.blank? || do_refresh
             cache_used = false
-            side_menu = render_to_string(:partial=>"feedbacker/translate_keys/parts/needed",:locals=>{},:layout=>false)
+            side_menu = render_to_string(:partial=>"feedbacker/translate_keys/parts/needed",:locals=>{tdomain:@tdomain},:layout=>false)
           end  
 
           sub_menu_key = "TRANSLATE_KEY::tdomain_filters_html:#{@tdomain}"
