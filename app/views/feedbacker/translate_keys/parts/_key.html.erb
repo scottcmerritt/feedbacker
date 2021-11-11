@@ -3,7 +3,7 @@
 <h6 class="pageH d-flex align-items-center p-1 px-2 text-dark fs-7">
 <%= link_to icon(icon:"arrow-left"), feedbacker.translate_keys_path, class: "me-2" unless !params[:id] %>
   Site translation
-  <%= tag.div "Added/updated", class: "bg-success text-light mx-1 fw-bold p-1 rounded" if show_updated %>
+  <%= tag.div "Added/updated", class: "bg-success text-light mx-1 fw-bold p-1 rounded animate__animated animate__bounce" if show_updated %>
 
 
 <%= tag.div safe_join(["As seen on: ",link_to("#{request.protocol}#{request.host_with_port}#{translate_key.sample_page}",translate_key.sample_page,class:"fw-bold")]), class: "ms-auto me-1 fs-7" unless translate_key.sample_page.nil? %>

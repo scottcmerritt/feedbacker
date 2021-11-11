@@ -5,7 +5,7 @@
 
 
 <% if @translate %>
-<div class="border border-success border-2 bg-light p-1 my-1">
+<div class="border border-success border-2 bg-light p-1 my-1 animate__animated animate__heartBeat">
 <%= render partial: "#{engine_prefix}translate_keys/parts/key", locals: {show_updated:true,translate_key: @translate.id.nil? ? Feedbacker::TranslateKey.find_by(id:@translate.translate_key_id) : @translate.translate_key} unless @translate.translate_key.nil?  %>
 <%= render partial: "#{engine_prefix}translates/parts/translate",locals:{translate:@translate} %>
 </div>
