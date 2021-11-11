@@ -9,7 +9,7 @@ module Feedbacker
 			cache_key = "TRANSLATE_KEY::tdomains_sorted"
 			res = Feedbacker::Cache.get_obj cache_key
 			if refresh || res.nil?
-				res = self.tdomain_grouped.sort_by{|row| -(row.missed_keys.count + row.tkey_count) }
+				res = self.tdomain_grouped.sort_by{|row| -(row.missed_keys_count + row.tkey_count) }
 				Feedbacker::Cache.set_obj cache_key,res,nil,cache_duration
 			end
 			res
@@ -33,6 +33,18 @@ module Feedbacker
 #		end
 		def full_key
 			(self.tdomain.nil? ? "" : self.tdomain) +"." + (self.tkey.nil? ? "" : +self.tkey)
+		end
+
+		def missed_keys_count refresh:false, cache_duration: 600
+			cache_key = "TRANSLATE_KEY::ID::#{self.id}::missed_keys_count"
+			res = Feedbacker::Cache.get_obj cache_key
+			if refresh || res.nil?
+				res = self.missed_keys.count
+				Feedbacker::Cache.set_obj cache_key,res,nil,cache_duration
+				res
+			else
+				res.to_i
+			end
 		end
 
 		def missed_keys
