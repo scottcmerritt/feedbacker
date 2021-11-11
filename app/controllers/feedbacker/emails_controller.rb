@@ -5,7 +5,6 @@ module Feedbacker
 
     def index
       build_email_keys!
-      @tdomain = "email::content::"
       set_translate_keys
     end
 
@@ -33,7 +32,7 @@ module Feedbacker
     
 
     def email_descriptions
-      @tdomain = "email::content::"
+      @tdomain = "email::content"
       @email_keys = {
         "user.inactive_reminder": "Sent to remind someone to use the site",
         "user.confirmation_instructions": "Sent after someone signs up",
