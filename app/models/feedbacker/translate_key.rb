@@ -39,7 +39,7 @@ module Feedbacker
 		end
 
 		def missed_keys_count refresh:false, cache_duration: 600
-			cache_key = "TRANSLATE_KEY::ID::#{self.id}::missed_keys_count"
+			cache_key = "TRANSLATE_KEY::TDOMAIN::#{self.tdomain}::missed_keys_count"
 			res = Feedbacker::Cache.get_obj cache_key
 			if refresh || res.nil?
 				res = self.missed_keys.count
