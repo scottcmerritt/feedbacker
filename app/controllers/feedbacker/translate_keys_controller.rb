@@ -5,6 +5,7 @@ module Feedbacker
     before_action :authenticate_admin!
     before_action :set_translate_key, only: %i[ show edit update destroy ]
     before_action :set_shared, only: %i[ index search email delayed needed ]
+    before_action :set_translate_keys, only: %i[ index ]
     protect_from_forgery except: :delayed
 
 
@@ -12,9 +13,8 @@ module Feedbacker
     def index
       cache_all! if params[:refresh_cache]
       Translate.reset_miss_log! if params[:reset_log]
-      @translate_keys = TranslateKey.order("tdomain,tkey").page(params[:page]).per(100)
-      @translate_keys = @translate_keys.where(tdomain:@tdomain) if @tdomain    
     end
+
 
     # moved needed translations to a new page to speed up page load
     def needed
@@ -50,19 +50,7 @@ module Feedbacker
         #format.json { head :no_content }
       end
 
-    end
-
-    def email
-
-      #TODO: make sure keys exist for english 
-      @tdomain = "email::"
-      email_keys = ["user.confirmation_instructions","user.email_changed","user.password_change","user.reset_password_instructions","user.unlock_instructions"]
-      @translate_keys = TranslateKey.order("tdomain,tkey").page(params[:page]).per(100)
-      @translate_keys = @translate_keys.where(tdomain:@tdomain) if @tdomain
-
-      render "index"
-    end
-    
+    end    
 
 
     # GET /translate_keys/1 or /translate_keys/1.json
@@ -152,6 +140,11 @@ module Feedbacker
       # Use callbacks to share common setup or constraints between actions.
       def set_translate_key
         @translate_key = TranslateKey.find(params[:id])
+      end
+
+      def set_translate_keys
+        @translate_keys = TranslateKey.order("tdomain,tkey").page(params[:page]).per(30)
+        @translate_keys = @translate_keys.where(tdomain:@tdomain) if @tdomain   
       end
 
        def set_shared

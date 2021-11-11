@@ -1,7 +1,7 @@
 Feedbacker::Engine.routes.draw do
 	root controller: :home, action: :index
 	resources :comments #, :admin
-	resources :translates
+	resources :translates, :emails
 	resources :translate_keys, path: "translations"
 
 
@@ -11,9 +11,6 @@ Feedbacker::Engine.routes.draw do
 	#match '/tag/remove' => 'tags#remove', :as => :remove_tag, :via=> :delete
 	match '/tag/update(/:id)' => 'tags#update', :as => :update_tag, :via=> :patch
 	match '/tag/delete(/:id)' => 'tags#destroy', :as => :destroy_tag, :via=> :delete
-
-
-	match '/admin/emails/customize' =>"translate_keys#email", :as => :customize_emails, :via=>:get
 	
 	match '/admin/about/translations' =>"translates#about", :as => :translates_about, :via=>[:get,:post]
 	match '/admin/search/translations' =>"translate_keys#search", :as => :translates_search, :via=>[:get,:post]

@@ -1,6 +1,11 @@
 <% refresh = false if local_assigns[:refresh].nil? %>
+<% title = "Translations" if local_assigns[:title].nil? %>
+<% show_add = true if local_assigns[:show_add].nil? %>
+
 <% show_sub_menu = true if local_assigns[:show_sub_menu].nil? %>
-<h4 class="d-flex justify-content-between align-items-center"><div>Translations <%= link_to "Add", feedbacker.new_translate_key_path, class: "btn btn-sm btn-primary text-light" %></div>
+<% load_sub_menu = true if local_assigns[:load_sub_menu].nil? %>
+
+<h4 class="d-flex justify-content-between align-items-center"><div><%= title %> <%= link_to "Add", feedbacker.new_translate_key_path, class: "btn btn-sm btn-primary text-light" if show_add %></div>
 	<form method="get" action="<%= feedbacker.translates_search_path %>">
 	    <input type="text" name="q" value="<%= @q %>" class="form-control-sm"/>
 	</form>
@@ -11,11 +16,10 @@
 <%= link_to icon_text('',"edit"), feedbacker.translate_keys_path, class: "ms-auto text-dark" %>
 	</h6>
 
-	<% if show_sub_menu %>
-	<%= render(partial: "#{engine_prefix}translate_keys/parts/tdomain_filters",locals: {refresh:refresh,tdomain:@tdomain}) %>
-	<% else %>
-	<%= tag.div("", id: "subMenu", style:"min-height:70px;", class: "bg-white border rounded p-1 mb-1") %>
-	<% end %>
+<% if show_sub_menu %>
+	<%= render(partial: "#{engine_prefix}translate_keys/parts/tdomain_filters",locals: {refresh:refresh,tdomain:@tdomain}) if load_sub_menu %>
+	<%= tag.div("", id: "subMenu", style:"min-height:70px;", class: "bg-white border rounded p-1 mb-1") if !load_sub_menu %>
+<% end %>
 
 
   <% if false && @tdomain %>

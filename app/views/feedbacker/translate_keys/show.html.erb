@@ -1,6 +1,6 @@
 <%= render partial: "admin/manage/header" %>
 <%= render partial: "admin/manage/menu" if false %>
-<%= render partial: "feedbacker/translate_keys/parts/menu", locals: {selected:1} %>
+<%= render partial: "feedbacker/translate_keys/parts/menu", locals: {selected:controller_name == "emails" ? 3 : 1} %>
 
 
 <div class="row">
@@ -10,7 +10,7 @@
 
   </div>
   <div class="col-9">
-    <%= render partial: "#{engine_prefix}translate_keys/parts/filter" %>
+    <%= render partial: "#{engine_prefix}translate_keys/parts/filter", locals: @filter_locals %>
     <%= render partial: "#{engine_prefix}translate_keys/parts/show", target: @translate_key %>
    
 

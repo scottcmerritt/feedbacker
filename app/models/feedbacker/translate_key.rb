@@ -61,5 +61,6 @@ module Feedbacker
 			samples[:page] unless samples[:page].nil?
 		end
 
+
 	end
 end
