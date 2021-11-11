@@ -1,6 +1,7 @@
 <% st = Time.now %>
 <% tdomain = @tdomain if local_assigns[:tdomain].nil? %>
 <div class="d-flex mb-2" style="overflow-x:scroll;">
+	<%# missed_keys_count,tdomain,tkey_count %>
 	<% Feedbacker::TranslateKey.tdomains_sorted.each do |row| %>
 	<% misses = row.missed_keys_count > 0 ? tag.span("#{row.missed_keys_count} needed", class: "fs-8 badge bg-info text-dark ms-1") : nil %>
 	<%= link_to safe_join([row.tdomain,tag.span(row.tkey_count,class:'badge ms-1 border fs-8 bg-light text-dark'),misses]), feedbacker.translate_keys_path({tdomain:row.tdomain}), class: "d-flex align-items-center nodec mx-1 border p-1 #{tdomain == row.tdomain ? "active-u bg-dark text-light" : "bg-white text-muted"}" %>
