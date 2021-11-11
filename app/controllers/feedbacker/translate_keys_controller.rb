@@ -4,7 +4,7 @@ module Feedbacker
     before_action :authenticate_admin!
     before_action :set_translate_key, only: %i[ show edit update destroy ]
     before_action :set_shared, only: %i[ index search email delayed needed ]
-
+    protect_from_forgery except: :delayed
 
     # GET /translate_keys or /translate_keys.json
     def index
