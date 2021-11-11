@@ -10,8 +10,11 @@
 <%= link_to icon_text('',"edit"), feedbacker.translate_keys_path, class: "ms-auto text-dark" %>
 	</h6>
 
-
-	<%= show_sub_menu ? render(partial: "#{engine_prefix}translate_keys/parts/tdomain_filters",locals: {tdomain:@tdomain}) : tag.div("", id: "subMenu", style:"min-height:70px;", class: "bg-white border rounded p-1 mb-1")  %>
+	<% if show_sub_menu %>
+	<%= render(partial: "#{engine_prefix}translate_keys/parts/tdomain_filters",locals: {tdomain:@tdomain}) %>
+	<% else %>
+	<%= tag.div("", id: "subMenu", style:"min-height:70px;", class: "bg-white border rounded p-1 mb-1") %>
+	<% end %>
 
 
   <% if false && @tdomain %>

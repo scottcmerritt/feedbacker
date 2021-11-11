@@ -30,9 +30,9 @@ function doDelayedPageLoad(refreshCache) {
     return reject({msg:`RARE SERVER ERROR fetching {$url}`,error:'ERROR INFO'})
 }
 
-function addDivWrap(html,cacheUsed)
+function addDivWrap(html,cacheUsed,css)
 {
-  const divCss = cacheUsed ? '' : '' //'rounded border border-danger' : 'border border-success rounded'
+  const divCss = css + (cacheUsed ? '' : '') //'rounded border border-danger' : 'border border-success rounded'
   const cacheTitle = cacheUsed ? '<div class="text-center text-success fw-bold fs-8">From cache <a href="#" onlick="doDelayedPageLoadRefresh();" class="text-dark">Refresh</a></div>' : ''
   return `<div class='${divCss}'>${cacheTitle}${html}</div>`
 }
@@ -43,7 +43,7 @@ function addDivWrap(html,cacheUsed)
 
 let loadingHtml = '<div class="m-3"><div class="spinner-grow" role="status"><span class="visually-hidden">Loading...</span></div></div>'
 
-let sections = {'subMenu':'sub_menu','sideMenu':'side_menu'}
+let sections = {'sideMenu':'side_menu'} //{'subMenu':'sub_menu','sideMenu':'side_menu'}
 
     Object.keys(sections).forEach((k, i)=> {
       $("#"+k).html(loadingHtml)
@@ -57,7 +57,7 @@ let res = doDelayedPageLoad(false)
   if(result.response.parts)
   {
     $("#subMenu").html(result.response.parts.sub_menu)
-    $("#sideMenu").html(addDivWrap(result.response.parts.side_menu,cacheUsed))
+    $("#sideMenu").html(addDivWrap(result.response.parts.side_menu,cacheUsed,'animate__animated animate__fadeInLeft'))
   }
   else {
     $("#delayed").html(result.response.html)
