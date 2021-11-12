@@ -41,15 +41,16 @@ Demo/test accounts: <%= link_to "Include", feedbacker.admin_users_path(request.p
 		<td class="">
 			<div class="d-flex align-items-center">
 			<%= icon(icon:"circle",icon_css:"text-success me-1 fs-7") if user.online? %> 
-			<%= render partial: "shared/best_image", locals: {target:user,img_css: "user me-1 img-fluid rounded-circle",default_icon:"user",wrap_css:"",size:"nano"} %>
+			<%= render partial: "shared/best_image", locals: {target:user,img_css: "user me-1 img-fluid rounded-circle",default_icon:"user",wrap_css:"",size:"nano"} rescue nil %>
 			<%= link_to user.display_name_public, [main_app,user] %>
 			
 
-			<div class="ms-auto d-flex"><%= tag.span "#{user.total_views} views", class: "badge mx-1 badge-sm bg-info text-light" %>
-				<% unless user.last_view.nil? %>
-				<div class="fs-8"><%= time_ago_in_words user.last_view %> ago</div>
-				 <% end %>
-				 <%= tag.span "Demo/tester", class: "badge bg-warning text-dark fs-8 mx-1" if user.is_demo %>
+			<div class="ms-auto">
+				<div class="d-flex">
+				<%= tag.div "#{num_comma(user.total_views)} views", class: "badge mx-1 badge-sm bg-info text-light" %>
+				<%= tag.span "Demo/tester", class: "badge bg-warning text-dark fs-8 ms-1" if user.is_demo %>
+				</div>
+				<%= tag.div "#{time_ago_in_words user.last_view} ago", class: "fs-8" unless user.last_view.nil? %>				 
 			</div>
 
 			</div>

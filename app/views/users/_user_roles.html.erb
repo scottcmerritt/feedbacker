@@ -1,9 +1,11 @@
 <% unless user.nil? %>
 <div class="my-2 p-2 bg-white border alert-dismissible alert">
+	<% if false %>
 	<h4 class="d-flex">
 		<%= tag.span user.email %>
 		<a href="#" data-dismiss="alert" data-bs-dismiss="alert" class="ms-auto btn btn-close"><span class="sr-only">Close</span></a>
 	</h4>
+	<% end %>
 
 	<div class="">
 	<%= tag.span "Roles" %>
