@@ -33,27 +33,32 @@ Demo/test accounts: <%= link_to "Include", feedbacker.admin_users_path(request.p
 	<tr class="bg-white border">
 		<td class="">
 			<%= render partial: "admin/users/change_role_btns", locals: {user:user} %>
+			<%= tag.div safe_join([tag.div("Confirmed",class:"text-center fs-8"),tag.div(user.confirmed_at.strftime("%b %e, %l:%M %p"),class:"fs-8 text-center fw-bold")]), class: "fs-8" unless user.confirmed_at.blank? %>
+			<%= link_to "Confirm", feedbacker.user_confirm_path(id:user.id), method: :post, class: "btn btn-sm btn-success me-1" if user.confirmed_at.nil? %>
 		</td>
 
 		<td><%= tag.span user.sign_in_count %><%= tag.span icon(icon:"check"), class:"text-success ms-1" unless user.confirmed_at.nil? %></td>
 		<td class="">
 			<div class="d-flex align-items-center">
-			<%= icon(icon:"circle",icon_css:"text-success me-1 fs-7") if user.online? %> <%= link_to user.display_name_public, [main_app,user] %>
+			<%= icon(icon:"circle",icon_css:"text-success me-1 fs-7") if user.online? %> 
+			<%= render partial: "shared/best_image", locals: {target:user,img_css: "user me-1 img-fluid rounded-circle",default_icon:"user",wrap_css:"",size:"nano"} %>
+			<%= link_to user.display_name_public, [main_app,user] %>
 			
 
-			<div class="ms-auto"><%= tag.span "#{user.total_views} views", class: "badge mx-1 badge-sm bg-info text-light" %>
+			<div class="ms-auto d-flex"><%= tag.span "#{user.total_views} views", class: "badge mx-1 badge-sm bg-info text-light" %>
 				<% unless user.last_view.nil? %>
 				<div class="fs-8"><%= time_ago_in_words user.last_view %> ago</div>
 				 <% end %>
-				 <%= tag.span "Demo/tester", class: "badge bg-info text-dark fs-8 mx-1" if user.is_demo %>
+				 <%= tag.span "Demo/tester", class: "badge bg-warning text-dark fs-8 mx-1" if user.is_demo %>
 			</div>
 
 			</div>
 			<%= tag.div user.email, class: "fs-7" if user.email != user.display_name_public %>
-			<div class="fs-8">Prev sign in <%= time_ago_in_words user.last_sign_in_at unless user.last_sign_in_at.nil? %></div>
-			<div class="fs-8">Current sign in <%= time_ago_in_words user.current_sign_in_at unless user.current_sign_in_at.nil? %></div>
+			<%= tag.div "Current sign in #{time_ago_in_words user.current_sign_in_at} ago", class: "fs-8" unless user.current_sign_in_at.nil? %>
+			<%= tag.div "Prev sign in #{time_ago_in_words user.last_sign_in_at} ago", class: "fs-8" unless user.last_sign_in_at.nil? %>
+
 			<div class="d-flex my-1">
-			<%= link_to "Confirm", feedbacker.user_confirm_path(id:user.id), method: :post, class: "btn btn-sm btn-success me-1" if user.confirmed_at.nil? %>
+			
 			<%= link_to "Spammer", feedbacker.user_flag_spammer_path(id:user.id), method: :post, class: "btn btn-sm btn-warning me-1" if (user.is_spam.nil? || user.is_spam == false) %>
 
 			<%= link_to "NOT Spammer", feedbacker.user_flag_spammer_path(id:user.id,is_spam:"0"), method: :post, class: "btn btn-sm btn-success me-1" if (user.is_spam == true) %>
@@ -63,7 +68,7 @@ Demo/test accounts: <%= link_to "Include", feedbacker.admin_users_path(request.p
 			
 			</div>
 
-			<%= tag.div "Confirmed at: #{user.confirmed_at.strftime("%b %e, %l:%M %p")}", class: "fs-7" unless user.confirmed_at.blank? %>
+			
 			<%= render partial: "users/user_roles", locals: {user:user,show:{info:false,roles:true}} if show[:roles] %>
 		</td>
 	</tr>
