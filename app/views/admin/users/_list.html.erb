@@ -33,8 +33,8 @@ Demo/test accounts: <%= link_to "Include", feedbacker.admin_users_path(request.p
 	<tr class="bg-white border">
 		<td class="">
 			<%= render partial: "admin/users/change_role_btns", locals: {user:user} %>
-			<%= tag.div safe_join([tag.div("Confirmed",class:"text-center fs-8"),tag.div(user.confirmed_at.strftime("%b %e, %l:%M %p"),class:"fs-8 text-center fw-bold")]), class: "fs-8" unless user.confirmed_at.blank? %>
-			<%= link_to "Confirm", feedbacker.user_confirm_path(id:user.id), method: :post, class: "btn btn-sm btn-success me-1" if user.confirmed_at.nil? %>
+			<%= tag.div safe_join([tag.div("Email confirmed",class:"text-center fs-8"),tag.div(user.confirmed_at.strftime("%b %e, %l:%M %p"),class:"fs-8 text-center fw-bold")]), class: "fs-8" unless user.confirmed_at.blank? %>
+			<%= link_to "Confirm email", feedbacker.user_confirm_path(id:user.id), method: :post, class: "btn btn-sm btn-success me-1" if user.confirmed_at.nil? %>
 		</td>
 
 		<td><%= tag.span user.sign_in_count %><%= tag.span icon(icon:"check"), class:"text-success ms-1" unless user.confirmed_at.nil? %></td>
