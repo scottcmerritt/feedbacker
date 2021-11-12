@@ -13,6 +13,8 @@ module Feedbacker
         scope :not_spam, -> { where("(removed = ? AND (is_spam is null OR is_spam = ?) )",false,false) }
         scope :confirmed, -> { where("(NOT confirmed_at is null)")}
         scope :not_confirmed, -> { where("(confirmed_at is null)")}
+        scope :is_demo, -> {where("is_demo =?",true)}
+        scope :not_demo, -> {where("(is_demo =? OR is_demo is null)",false)}
       end
     end
 

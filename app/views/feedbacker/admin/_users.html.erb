@@ -34,8 +34,12 @@
 		<% else %>
 			<h7>Roles <%= link_to "All",feedbacker.admin_users_path(all:1,role:@role), class:"mx-1 p-1 fs-7 #{!params[:active] ? "bg-dark text-light" : ""}" %> <%= link_to "Active", feedbacker.admin_users_path(active:1,role:@role), class: "p-1 fs-7 #{params[:active] ? "bg-dark text-light" : ""}" %> </h7>
 			<%= link_to badge_with_count("All users",User.not_spam.count), feedbacker.admin_users_path, class: "nav-link border my-1 btn btn-light #{@role == nil ? "active bg-dark text-white" : ""}" %>
-			<%= link_to badge_with_count("Confirmed",User.not_spam.confirmed.count), feedbacker.admin_users_path(confirmed:1), class: "nav-link border my-1 btn btn-light #{@role.nil? && params[:confirmed] ? 'active bg-dark text-white' : ''}" %>
-			<%= link_to badge_with_count("Not confirmed",User.not_spam.not_confirmed.count), feedbacker.admin_users_path(not_confirmed:1), class: "nav-link border my-1 btn btn-light #{@role.nil? && params[:not_confirmed] ? 'active bg-dark text-white' : ''}" %>
+			<%= link_to badge_with_count("Confirmed",User.not_spam.confirmed.not_demo.count), feedbacker.admin_users_path(confirmed:1), class: "nav-link border my-1 btn btn-light #{@role.nil? && params[:confirmed] ? 'active bg-dark text-white' : ''}" %>
+			<%= link_to badge_with_count("Not confirmed",User.not_spam.not_confirmed.not_demo.count), feedbacker.admin_users_path(not_confirmed:1), class: "nav-link border my-1 btn btn-light #{@role.nil? && params[:not_confirmed] ? 'active bg-dark text-white' : ''}" %>
+
+			<%= link_to badge_with_count("Demo accounts",User.is_demo.count), feedbacker.admin_users_path(is_demo:1), class: "nav-link border my-1 btn btn-light #{@role.nil? && params[:is_demo] ? 'active bg-dark text-white' : ''}" %>
+
+			
 
 
 			<% @site_roles.each do |role_name| %>

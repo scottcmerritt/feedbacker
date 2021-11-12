@@ -401,12 +401,15 @@ def cleanup
       else
         minutes_ago = params[:mins_ago] ? params[:mins_ago].to_i : 60*24
         @active = User.active_users(minutes_ago:minutes_ago)
-        @active = @active.confirmed if params[:confirmed]
+        @active = @active.confirmed.not_demo if params[:confirmed]
         @active = @active.not_confirmed if params[:not_confirmed]
         users = params[:active] ? @active : User.not_spam
       end
       users = users.confirmed if params[:confirmed]
       users = users.not_confirmed if params[:not_confirmed]
+
+      users = users.is_demo if params[:is_demo]
+      users = users.not_demo if params[:no_demo]
 
       users = users.order("last_sign_in_at DESC") #created_at"
 
@@ -424,13 +427,16 @@ def cleanup
       def modify_role
         @user = User.find_by(id: params[:user_id])
         
-        
         if @site_roles.include?(params[:role])
           if params[:act] == "add"
             @user.add_role params[:role].to_sym
           elsif params[:act] == "del"
             @user.remove_role params[:role].to_sym
           end
+        elsif params[:role] == "is_demo"
+          @user.update(is_demo:true) if params[:act] == "add"
+          @user.update(is_demo:false) if params[:act] == "del"
+          flash[:notice] = params[:act] == "add" ? "User #{@user.id} was converted to a demo account" : "User #{@user.id} is no longer a demo account"
         end
 
         redirect_to controller: "admin", action: "users", user_id: @user.id

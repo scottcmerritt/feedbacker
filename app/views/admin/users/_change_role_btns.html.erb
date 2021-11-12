@@ -5,6 +5,9 @@
   <% end %>
   <li><hr class="dropdown-divider"></li>
   <li><a class="dropdown-item" href="#">Block user</a></li>
+  <% if !user.is_demo %>
+    <li><%= link_to "Make demo account", feedbacker.modify_role_path(user_id: user.id,act:"add",role:"is_demo"), class: "dropdown-item btn #{user.is_demo ? "btn-danger" : "btn-success"}", method: :post %></li>
+    <% end %>
 </ul>
 
 <button class="btn btn-tiny bg-danger text-white btn-outline-secondary dropdown-toggle me-1 mb-1" type="button" data-bs-toggle="dropdown" aria-expanded="false"><%= icon_text("","user-minus") %></button>
@@ -14,4 +17,7 @@
     <% end %>
     <li><hr class="dropdown-divider"></li>
     <li><a class="dropdown-item" href="#">Block user</a></li>
+    <% if user.is_demo %>
+    <li><%= link_to user.is_demo ? "Not demo account" : "Make demo account", feedbacker.modify_role_path(user_id: user.id,act:user.is_demo ? "del" : "add",role:"is_demo"), class: "dropdown-item btn #{user.is_demo ? "btn-danger" : "btn-success"}", method: :post %></li>
+    <% end %>
 </ul>

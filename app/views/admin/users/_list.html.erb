@@ -1,17 +1,21 @@
 <% show = {roles:false} if local_assigns[:show].nil? %>
 <%= feedbacker_paginate @users,page: params[:page] %>
-
+<div class="fs-7 text-end">
+Demo/test accounts: <%= link_to "Include", feedbacker.admin_users_path(request.parameters.except(:controller,:action,:no_demo)), class: "badge badge-sm border rounded fs-7 #{!params[:no_demo] ? "bg-success text-light" : "bg-muted text-dark"}" %> <%= link_to "Exclude", feedbacker.admin_users_path(request.parameters.except(:controller,:action,:no_demo).merge({no_demo:1})), class: "badge badge-sm border rounded fs-7 #{params[:no_demo] ? "bg-success text-light" : "bg-muted text-dark"}" %>
+</div>
 <% if browser.mobile? %>
 
 	<% @users.each do |user| %>
 	<div class="bg-white border mb-1">
 		<div class="d-flex p-1">
-			<%= link_to user.email, user %>
+			<%= link_to user.display_name_public, user %>
 			<div class="ms-auto d-flex">
 			<%= tag.span icon(icon:"check"), class:"text-success ms-1" unless user.confirmed_at.nil? %>
 			<%= tag.span user.sign_in_count, class:"ms-1 fs-7" %>
 			</div>
 		</div>
+		<%= tag.div user.email, class: "fs-7" if user.email != user.display_name_public %>
+		
 		<div class="text-end">
 			<%= render partial: "admin/users/change_role_btns", locals: {user:user} %>
 		</div>
@@ -29,22 +33,23 @@
 	<tr class="bg-white border">
 		<td class="">
 			<%= render partial: "admin/users/change_role_btns", locals: {user:user} %>
-			
-
-
 		</td>
 
 		<td><%= tag.span user.sign_in_count %><%= tag.span icon(icon:"check"), class:"text-success ms-1" unless user.confirmed_at.nil? %></td>
 		<td class="">
 			<div class="d-flex align-items-center">
-			<%= icon(icon:"circle",icon_css:"text-success me-1 fs-7") if user.online? %> <%= link_to user.email, [main_app,user] %>
+			<%= icon(icon:"circle",icon_css:"text-success me-1 fs-7") if user.online? %> <%= link_to user.display_name_public, [main_app,user] %>
+			
 
 			<div class="ms-auto"><%= tag.span "#{user.total_views} views", class: "badge mx-1 badge-sm bg-info text-light" %>
 				<% unless user.last_view.nil? %>
 				<div class="fs-8"><%= time_ago_in_words user.last_view %> ago</div>
 				 <% end %>
+				 <%= tag.span "Demo/tester", class: "badge bg-info text-dark fs-8 mx-1" if user.is_demo %>
 			</div>
+
 			</div>
+			<%= tag.div user.email, class: "fs-7" if user.email != user.display_name_public %>
 			<div class="fs-8">Prev sign in <%= time_ago_in_words user.last_sign_in_at unless user.last_sign_in_at.nil? %></div>
 			<div class="fs-8">Current sign in <%= time_ago_in_words user.current_sign_in_at unless user.current_sign_in_at.nil? %></div>
 			<div class="d-flex my-1">
