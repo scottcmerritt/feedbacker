@@ -122,30 +122,51 @@ module Feedbacker
       #@grouped_tags_top = ActsAsTaggableOn::Tag.select("name,taggings_count").map{|row| [row.name,row.taggings_count]}.sort_by{|row| -row[1]}.first(@top)
     end
 
-    def cleanup
+def cleanup
+    per_page = 15
+    @queries = ["w/out language","No tags","No files","Remote images ONLY","All (w/out pic)","PDF (w/out pic)","PDF (w/out page count)","All (w/out page count)","No filesize", "Metadata (run)"]
+    @query_id = params[:query_id].to_i
+    if defined?(Book)
+    case @query_id
+    when 0
+      @books = Book.where("lang is NULL").page(params[:page])
+    when 1 # no tags
 
-      @queries = ["w/out language","No tags","No files","No images"]
-      @query_id = params[:query_id].to_i
-      if defined?(Book)
-        case @query_id
-        when 0
-          @books = Book.where("lang is NULL").page(params[:page])
-        when 1 # no tags
+      @tagged_books = Book.select("books.*,books.name,taggings.taggable_type").joins("LEFT JOIN taggings ON taggings.taggable_id = books.id")
+      .where("taggings.taggable_type = ?","Book").group("books.id,books.name,taggable_type")
+      @books = Book.select("books.*").where.not(id:@tagged_books.pluck(:id))
+      @books = @books.page(params[:page])
+    when 2 # no file, NOT hard_copy
+      @books = Book.where(file:nil,hard_copy:false).page(params[:page])
+    when 3 # No images #ONLY remote images (no saved thumbnail)
+      @books = Book.all.each.collect{|book| book if book.remote_thumb_guess? && !book.thumbnail?}.compact
+      @books = Kaminari.paginate_array(@books).page(params[:page]).per(per_page)
 
-          @tagged_books = Book.select("books.*,books.name,taggings.taggable_type").joins("LEFT JOIN taggings ON taggings.taggable_id = books.id")
-          .where("taggings.taggable_type = ?","Book").group("books.id,books.name,taggable_type")
-          @books = Book.select("books.*").where.not(id:@tagged_books.pluck(:id))
-          @books = @books.page(params[:page])
-        when 2
-          @books = Book.where(file:nil,hard_copy:false).page(params[:page])
-        when 3
-          @books = Book.all.each.collect{|book| book if !book.thumb_guess_sm?}.compact
-          @books = Kaminari.paginate_array(@books).page(params[:page]).per(10)
-        end
 
+      #books with a local image
+      @books2 = Book.all.each.collect{|book| book if book.thumbnail?}.compact
+      @books2_title = "#{@books2.length} books with a local image"
+    when 4 # No images #ONLY remote images (no saved thumbnail)
+      @books = Book.all.each.collect{|book| book if !book.thumb_guess_sm?}.compact
+      @books = Kaminari.paginate_array(@books).page(params[:page]).per(per_page)
+    when 5 # PDF (w/out pic)
+      @books = Book.where.not(file:nil).each.collect{|book| book if book.remote_thumb_guess.blank? && !book.thumbnail?}.compact
+      @books = Kaminari.paginate_array(@books).page(params[:page]).per(per_page)
+    when 6 # without page count
+      @books = Book.with_file.where(hard_copy:false,page_count:nil).page(params[:page]).per(per_page)
+    when 7
+      @books = Book.where(page_count:nil).page(params[:page])
+
+    when 8
+      @books = Book.with_file.where(filesize:nil).page(params[:page])
+    when 9
+      Book.all.each do |book|
+        book.update_meta_data! langs: @languages
       end
-
+      redirect_to controller: "admin", action: "cleanup", notice: "Meta data populated using tags in BOTH languages"
     end
+    end
+  end
 
     def tags
 =begin      
