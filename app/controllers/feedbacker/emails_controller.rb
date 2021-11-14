@@ -34,16 +34,14 @@ module Feedbacker
     def email_descriptions
       @tdomain = "email::content"
       @email_keys = {
-        "user.recommend_book", "Send a book recommendation to someone",
-        "user.inactive_reminder": "Sent to remind someone to use the site",
-        "user.confirmation_instructions": "Sent after someone signs up",
-        "user.email_changed": "Sent when an email is changed",
-        "user.password_change": "Sent when a password is changed",
-        "user.reset_password_instructions": "Sent when someone requets a reset of their password",
-        "user.unlock_instructions": "Sent when anaccount is locked"
-      }
-
-      @email_keys = @email_keys.with_indifferent_access
+        "user.recommend_book" => "Send a book recommendation to someone",
+        "user.inactive_reminder" => "Sent to remind someone to use the site",
+        "user.confirmation_instructions" => "Sent after someone signs up",
+        "user.email_changed" => "Sent when an email is changed",
+        "user.password_change" => "Sent when a password is changed",
+        "user.reset_password_instructions" => "Sent when someone requets a reset of their password",
+        "user.unlock_instructions" => "Sent when anaccount is locked"
+      }.with_indifferent_access
       
       @email_parts = ["::subject","::body"]
 
