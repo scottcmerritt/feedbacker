@@ -41,7 +41,9 @@ module Feedbacker
         "user.password_change": "Sent when a password is changed",
         "user.reset_password_instructions": "Sent when someone requets a reset of their password",
         "user.unlock_instructions": "Sent when anaccount is locked"
-      }.with_indifferent_access
+      }
+
+      @email_keys = @email_keys.with_indifferent_access
       
       @email_parts = ["::subject","::body"]
 
