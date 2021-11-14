@@ -24,12 +24,12 @@
     <% needed.each do |lang,rows| %>
     <% is_active = needed.keys[0] == lang %>
 
-    <div id="langs-<%= lang %>" data-lang="<%= lang %>" class="bg-white border mb-1 p-1 tab-pane fade <%= "show active" if is_active %>" role="tabpanel" aria-labelledby="langs-<%= lang %>-tab">
+    <div id="langs-<%= lang %>" data-lang="<%= lang %>" class="search-data bg-white border mb-1 p-1 tab-pane fade <%= "show active" if is_active %>" role="tabpanel" aria-labelledby="langs-<%= lang %>-tab">
       <h6>Language: <%= lang %></h6>
       <% rows.each do |full_row| %>
       <% row = full_row.kind_of?(Feedbacker::Translation) ? full_row : (full_row.has_key?(:obj) ? full_row[:obj] : full_row) %>
 
-      <div class="border-bottom">
+      <div class="border-bottom search-row">
         <%= link_to icon(icon:'trash'), feedbacker.translates_path({remove_misskey:full_row[:key]}), class:"me-2 nodec" if full_row.has_key?(:key) %>
         <%= link_to "#{row.tdomain}.#{row.tkey}", feedbacker.new_translate_path(lang:lang,tdomain:row.tdomain,tkey:row.tkey), class: "nodec" %>
         <%= render partial: "#{engine_prefix}translate_keys/parts/samples_and_stats", locals: {translate_key:row} %>

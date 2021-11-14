@@ -1,13 +1,17 @@
 <script type="text/javascript"> 
-jQuery(document).ready(function($) {
+	function setupRealTimeTranslate() {
+
+
 var $searchBox = $('#search-translations');
 var $browseDivs = $('.search-data a');
+var $browseCols = $('.search-data .search-row');
 
 $searchBox.on('input', function() {
   var scope = this;
   if (!scope.value || scope.value == '') {
     //$browseDivs.show();
     $browseDivs.removeClass('d-none');
+    $browseCols.removeClass('d-none');
     return;
   }
 
@@ -24,8 +28,29 @@ $searchBox.on('input', function() {
     	$div.addClass('d-none')
     }
   })
+
+   $browseCols.each(function(i, div) {
+    var $div = $(div);
+    let divText = $div.text()
+    console.log('inside browseCols')
+    console.log(divText)
+    //$div.toggle($div.text().toLowerCase().indexOf(scope.value.toLowerCase()) > -1);
+    if($div.text().toLowerCase().indexOf(scope.value.toLowerCase()) > -1)
+    {
+    	$div.removeClass('d-none')
+    }
+    else {
+    	$div.addClass('d-none')
+    }
+  })
+  
+
 });
 
+}
+
+jQuery(document).ready(function($) {
+	setupRealTimeTranslate()
 })
 
 </script>
