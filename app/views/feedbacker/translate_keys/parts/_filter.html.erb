@@ -1,3 +1,35 @@
+<script type="text/javascript"> 
+jQuery(document).ready(function($) {
+var $searchBox = $('#search-translations');
+var $browseDivs = $('.search-data a');
+
+$searchBox.on('input', function() {
+  var scope = this;
+  if (!scope.value || scope.value == '') {
+    //$browseDivs.show();
+    $browseDivs.removeClass('d-none');
+    return;
+  }
+
+  $browseDivs.each(function(i, div) {
+    var $div = $(div);
+    let divText = $div.text()
+    console.log(divText)
+    //$div.toggle($div.text().toLowerCase().indexOf(scope.value.toLowerCase()) > -1);
+    if($div.text().toLowerCase().indexOf(scope.value.toLowerCase()) > -1)
+    {
+    	$div.removeClass('d-none')
+    }
+    else {
+    	$div.addClass('d-none')
+    }
+  })
+});
+
+})
+
+</script>
+
 <% refresh = false if local_assigns[:refresh].nil? %>
 <% title = "Translations" if local_assigns[:title].nil? %>
 <% show_add = true if local_assigns[:show_add].nil? %>
@@ -7,7 +39,7 @@
 
 <h4 class="d-flex justify-content-between align-items-center"><div><%= title %> <%= link_to "Add", feedbacker.new_translate_key_path, class: "btn btn-sm btn-primary text-light" if show_add %></div>
 	<form method="get" action="<%= feedbacker.translates_search_path %>">
-	    <input type="text" name="q" value="<%= @q %>" class="form-control-sm"/>
+	    <input type="text" name="q" value="<%= @q %>" class="form-control-sm" id="search-translations"/>
 	</form>
 </h4>
 

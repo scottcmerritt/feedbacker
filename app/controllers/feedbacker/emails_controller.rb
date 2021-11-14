@@ -30,10 +30,11 @@ module Feedbacker
     end
 
     
-
+    # Feedbacker::Translate.dbt('email::content.user.recommend_book::body') %>
     def email_descriptions
       @tdomain = "email::content"
       @email_keys = {
+        "user.recommend_book", "Send a book recommendation to someone",
         "user.inactive_reminder": "Sent to remind someone to use the site",
         "user.confirmation_instructions": "Sent after someone signs up",
         "user.email_changed": "Sent when an email is changed",
