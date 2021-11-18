@@ -33,3 +33,5 @@ require "feedbacker/concerns/feedbacker_posts_controller"
 require "feedbacker/concerns/feedbacker_admin_controller"
 
 require "feedbacker/concerns/user_info"
+
+require 'diffy'
