@@ -36,6 +36,7 @@ Feedbacker::Engine.routes.draw do
 	match '/confirm/user/:id' => 'admin#user_confirm', :as => :user_confirm, :via => :post
 	
 	match '/admin/html/sandbox' => 'admin#html_sandbox', :as=> :admin_html_sandbox, :via=>:get
+	match '/admin/html/diff' => 'admin#html_diff', :as=> :admin_html_diff, :via=>:post
 
 
 	match '/admin(/:q)' => 'admin#index', as: :admin, :via => :get

@@ -1,3 +1,25 @@
+<script>
+jQuery(document).ready(function($) {
+	$("#toggleDiff").on('click',function(e) {
+		e.preventDefault()
+		e.stopPropagation()
+		$(".diff li.del").css({'display':'table-row'}) //show()
+		//$(this).hide() 
+	})
+
+//	$("#showDiff").on('click',function(e) {
+//		postDiffCode('t1here','t2here changed')
+//	})
+
+})
+
+</script>
+<style>
+	<%= Diffy::CSS %>
+	.diff li.del {display: none;}
+</style>
+
+
 <%= render partial: "admin/manage/header" %>
 <%= render partial: "admin/manage/menu" if false %>
 
@@ -33,6 +55,8 @@ function updateSandbox() {
 		//$("#showCode").html(wrapCode(rawHtml,true))
 		$("#sandBoxCode").html(highlightJsRender(rawHtml))
 
+		//postDiffCode($("#editor").val(),'t2here changed')
+
 		//hljs.initHighlightingOnLoad();
 		//alert(highlightJsRender('<div>Testing</div>'))
 
@@ -47,6 +71,49 @@ function updateSandbox() {
 //		hljs.highlightAll(); 
 		// html = hljs.highlightAuto('<h1>Hello World!</h1>').value
 		// html = hljs.highlight('<h1>Hello World!</h1>', {language: 'xml'}).value
+}
+
+function getTextDiff(url,postData,dataType) {
+	dataType = dataType || 'json'
+	return new Promise((resolve, reject) => {
+		$.ajax({ url: url,
+		    type: 'POST',
+		    dataType: dataType,
+		    beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+		    data: postData,
+		    success: (response) => {
+		    	return resolve({response:response})
+		    },
+		    error: (response) => {
+		    	//alert(`Error fetching ${url}`)
+		    	console.log(`Error fetching ${url}`)
+		    	console.log(response)
+		    	return reject({msg:'ERROR ajaxPromise 1',error:response})
+		    }
+		});
+	})
+
+	return reject({msg:`RARE SERVER ERROR fetching {$url}`,error:'ERROR INFO'})
+}
+
+function postDiffCode(t1,t2) {
+	var url = "<%= feedbacker.admin_html_diff_url %>";
+		let postData = {t1:t1,t2:t2}
+
+		let res = getTextDiff(url,postData,'json')
+		.then((result) => {
+			console.log(result.response)
+			let responseHtml = result.response.html
+			//$("#diffedText").html('diffed result HERE')
+
+			$("#showDiff").addClass('show').removeClass('hide')
+			$("#diffedText").html(responseHtml)
+
+
+	    })
+
+
+
 }
 
 function HtmlEncode(s)
@@ -69,10 +136,7 @@ function test() {
 </pre>
 */
 
-	if(doEncode)
-		return `<pre style='background-color:black;'><code id="sandBoxCode">${HtmlEncode(html)}</code></pre>`
-	else
-		return `<pre style='background-color:black;'><code id="sandBoxCode">${html}</code></pre>`
+	return `<pre style='background-color:black;'><code id="sandBoxCode" style="white-space: pre-wrap;"">${doEncode ? HtmlEncode(html) : html}</code></pre>`
 }
 
 
@@ -203,47 +267,62 @@ $('[type="test/template"]').each(function(i, elm) {
   
 })
 
-runHtmlCheckTests(tests)
+//runHtmlCheckTests(tests)
 
 function doCheckHtml() {
 	let htmlToCheck = []
 
 	$('#editor').each(function(i, elm) {
-		switch(elm.tagName){
-	  	case "TEXTAREA":
-	    	htmlToCheck.push(elm.value);
-	    break;
-	    default:
-	    	htmlToCheck.push(elm.innerHTML);
-	    break;
-	  }
+			switch(elm.tagName){
+		  	case "TEXTAREA":
+		    	htmlToCheck.push(elm.value);
+		    break;
+		    default:
+		    	htmlToCheck.push(elm.innerHTML);
+		    break;
+		  }
 	})
-$('#testresults').html('')
-  let testResults = runHtmlCheckTests(htmlToCheck)
-  let testResult = testResults[0]
-  $("#checkHtmlStatus").html(testResult)
+	$('#testresults').html('')
+	let testResults = runHtmlCheckTests(htmlToCheck)
+	let testResult = testResults[0]
+
+	$("#checkHtmlStatus").html(testResult.result)
+	postDiffCode(testResult.html1,testResult.html2)
+
 }
 
 function runHtmlCheckTests(tests) {
 	let results = []
 
 	tests.forEach(function(htmlStr, i) {
-	  var res = simpleValidateHtmlStr(htmlStr),
-	    resStr = res === true ? "<span class='text-success fw-bold'>PASS</span>" :
-	    res === false ? "<span class='text-danger fw-bold'>FAIL</span>" :
-	    "<span class='text-warning'>NORMALIZED</span>",
-	    
-	    resStrict = simpleValidateHtmlStr(htmlStr, true),
-	    resStrictStr = resStrict === true ? "<span class='text-success fw-bold'>PASS</span>" :
-	    resStrict === false ? "<span class='text-danger fw-bold'>FAIL</span>" :
-	    "<span class='text-warning'>NORMALIZED</span>",
-	    
-	    wasNormalized = typeof resStrict !== "boolean";
-
-	    results.push(resStr)
-	  $('#testresults').append($('<li>' + resStrictStr + " (<span title='not strict'>" + resStr + "</span>)<br> &nbsp;&nbsp; " + htmlStr.replace(/</igm, "&lt;").replace(/>/igm, "&gt;") + (wasNormalized ? '<br><span class="text-muted">-></span> ' + resStrict.replace(/</igm, "&lt;").replace(/>/igm, "&gt;") : "") + '</li>'));
+	  let resultObj = runHtmlCheckTest(htmlStr)
+	  results.push(resultObj)  
 	})
 	return results
+}
+
+function runHtmlCheckTest(htmlStr) {
+	var res = simpleValidateHtmlStr(htmlStr),
+    resStr = res === true ? "<span class='text-success fw-bold'>PASS</span>" :
+    res === false ? "<span class='text-danger fw-bold'>FAIL</span>" :
+    "<span class='text-warning'>NORMALIZED</span>",
+    resStrict = simpleValidateHtmlStr(htmlStr, true),
+    resStrictStr = resStrict === true ? "<span class='text-success fw-bold'>PASS</span>" :
+    resStrict === false ? "<span class='text-danger fw-bold'>FAIL</span>" :
+    "<span class='text-warning'>NORMALIZED</span>",
+    wasNormalized = typeof resStrict !== "boolean";
+
+
+    let originalText = htmlStr.replace(/</igm, "&lt;").replace(/>/igm, "&gt;")
+    let normalizedText = originalText
+	if (typeof resStrict == "string")
+ 	{
+	    normalizedText = resStrict.replace(/</igm, "&lt;").replace(/>/igm, "&gt;")
+	}
+	 $('#testresults').append($('<li>' + resStrictStr + " (<span title='not strict'>" + resStr + "</span>)<br> &nbsp;&nbsp; <div id='textOriginal'>" + originalText + "</div>" + (wasNormalized ? ('<br><span class="text-muted">-></span> ' + "<div id='textNormalized'>" + normalizedText +"</div>") : "") + '</li>'));
+
+  return {result:resStr,original:originalText,normalized:normalizedText,html1:htmlStr,html2:resStrict}
+
 }
 </script>
 
@@ -296,8 +375,12 @@ function runHtmlCheckTests(tests) {
 </div>' %>
 
 
+
 <div id="showDiff" class="collapse">
-Diffed code here
+<% unless @diffed.nil? %>
+<a id="toggleDiff" href="#">Show removed</a>
+<%= tag.div raw(@diffed), id: "diffedText" %>
+<% end %>
 </div>
 
 <div class="row">
@@ -307,7 +390,7 @@ Diffed code here
 <div class="sandBoxMenu p-1 px-2 fs-7 d-flex">
 	<%= link_to "Edit", [feedbacker,@translate], class:"me-2", target: "_blank" if @translate %> 
 	<% if false %><a href="#" onclick="doCheckHtml();return false;">Check html</a><% end %>
-	<a href="#showDiff" class="ms-auto bg-light border me-1 my-1 fs-7 px-1" data-bs-target="#showDiff" data-bs-toggle="collapse" aria-expanded="false" id="showDiffLink">
+	<a href="#showDiff" class="ms-auto bg-light border me-1 my-1 fs-7 px-1 nodec" data-bs-target="#showDiff" data-bs-toggle="collapse" aria-expanded="false" id="showDiffLink">
 Diff code
 </a>
 
@@ -341,8 +424,8 @@ Diff code
 </div>
 <div class="col-6">
 		<div>
-		<a href="#showCode" class="ms-auto bg-light border me-1 my-1 fs-7 px-1" data-bs-target="#showCode" data-bs-toggle="collapse" aria-expanded="false" id="showCodeLink">Source code</a>
-		<a href="#sandbox" class="bg-light border me-1 my-1 fs-7 px-1" data-bs-target="#sandbox" data-bs-toggle="collapse" aria-expanded="true" id="showSandbox">Preview</a>
+		<a href="#showCode" class="ms-auto bg-light border me-1 my-1 fs-7 px-1 nodec" data-bs-target="#showCode" data-bs-toggle="collapse" aria-expanded="false" id="showCodeLink">Source code</a>
+		<a href="#sandbox" class="bg-light border me-1 my-1 fs-7 px-1 nodec" data-bs-target="#sandbox" data-bs-toggle="collapse" aria-expanded="true" id="showSandbox">Preview</a>
 	</div>
 
 	<div class="fw-bold d-flex align-items-center">Live html preview <span id="sandbox_status" class="mx-1" style="height:22px;"></span></div>

@@ -8,6 +8,8 @@ gem 'redis'
 gem 'redis-namespace'
 gem 'simple_form'
 
+gem 'diffy'
+
 group :development do
   gem 'sqlite3'
 end

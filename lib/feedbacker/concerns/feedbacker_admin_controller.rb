@@ -461,7 +461,17 @@ def cleanup
       end
 
       def html_sandbox
+        @diffed = Diffy::Diff.new("prev title OLD", "current title",:include_diff_info=>false).to_s(:html)
         @translate = Feedbacker::Translate.find_by(id:params[:translate_id])
+      end
+
+      # receives two texts via post AND returns the diff
+      def html_diff
+        
+        @diffed = Diffy::Diff.new(params[:t1], params[:t2],:include_diff_info=>false).to_s(:html)
+
+        diffed_text = @diffed
+        render json: {html:diffed_text}
       end
 
       private
