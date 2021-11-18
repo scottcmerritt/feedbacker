@@ -30,10 +30,10 @@ var loadingHtml = '<div class="spinner-border spinner-border-sm" role="status"><
 $(function() {
 	$("#editor").on("keydown keyup change",function(e) {
 		updateSandbox()
-		doCheckHtml()
+		processHtmlChange()
 	})
 initSandbox();
-doCheckHtml()
+processHtmlChange()
 })
 
 
@@ -269,7 +269,21 @@ $('[type="test/template"]').each(function(i, elm) {
 
 //runHtmlCheckTests(tests)
 
+
+function debounce(func, timeout = 300){
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => { func.apply(this, args); }, timeout);
+  };
+}
+
+const processHtmlChange = debounce(() => doCheckHtml());
+
+
+//compare the code, do a diff
 function doCheckHtml() {
+	console.log('checking HTML')
 	let htmlToCheck = []
 
 	$('#editor').each(function(i, elm) {
