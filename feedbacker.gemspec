@@ -25,4 +25,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'devise' #, '>= 3.0'
   spec.add_dependency 'acts_as_commentable_with_threading'
   spec.add_dependency 'kaminari'
+  spec.add_dependency 'diffy'
 end

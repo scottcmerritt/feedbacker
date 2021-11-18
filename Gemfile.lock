@@ -4,6 +4,7 @@ PATH
     feedbacker (0.1.0)
       acts_as_commentable_with_threading
       devise
+      diffy
       kaminari
       rails (~> 6.1.4)
 
