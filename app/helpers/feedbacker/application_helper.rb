@@ -44,7 +44,8 @@ module Feedbacker
     begin
       render(partial:"util/my_paginate", locals: {data: data, page:page,paths: {prev:prev_page,next:next_page}})
     rescue
-     render(partial:"feedbacker/util/my_paginate", locals: {data: data, paths: {prev:prev_page,next:next_page}})      
+#     render(partial:"feedbacker/util/my_paginate", locals: {data: data, paths: {prev:prev_page,next:next_page}})      
+     render(partial:"util/my_paginate", locals: {data: data, paths: {prev:prev_page,next:next_page}})      
     end
 
   end

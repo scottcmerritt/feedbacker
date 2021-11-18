@@ -12,5 +12,5 @@
 
 <div class="fw-bold bg-light p-1 px-2 mt-4 text-dark border border-dark rounded-top border-bottom-muted">Related translations</div>
 <div class="p-2 border border-dark rounded-bottom border-top-0">
-<%= render partial: "#{engine_prefix}translates/parts/list", locals: {translations:@translate.related} %>
+<%= render partial: "#{engine_prefix}translates/parts/list", locals: {translations:@translate.related.page(params[:page])} %>
 </div>

@@ -10,17 +10,72 @@ $(function() {
 		updateSandbox()
 		doCheckHtml()
 	})
-updateSandbox();
+initSandbox();
 doCheckHtml()
 })
+
+
+function initSandbox() {
+	let rawHtml = $("#editor").val()
+	$("#sandbox").html(rawHtml)
+	$("#showCode").html(wrapCode(rawHtml,true))
+	$("#sandBoxCode").html(highlightJsRender(rawHtml))
+}
 
 function updateSandbox() {
 	$("#sandbox_status").html(loadingHtml)
 		setTimeout(()=>{
 			$("#sandbox_status").html("")
 		},2000)
-		$("#sandbox").html($("#editor").val())
+
+		let rawHtml = $("#editor").val()
+		$("#sandbox").html(rawHtml)
+		//$("#showCode").html(wrapCode(rawHtml,true))
+		$("#sandBoxCode").html(highlightJsRender(rawHtml))
+
+		//hljs.initHighlightingOnLoad();
+		//alert(highlightJsRender('<div>Testing</div>'))
+
+//		let demoHtml = '<div>Testing</div>'
+//		$("#showCode").html(wrapCode(highlightJsRender(rawHtml)))
+
+//		$("#sandBoxCode").html(highlightJsRender($("#sandBoxCode").html()))
+
+		//$("#showCode").html(highlightJsRender(wrapCode(rawHtml,true)))
+
+		//updateHighlightJs()
+//		hljs.highlightAll(); 
+		// html = hljs.highlightAuto('<h1>Hello World!</h1>').value
+		// html = hljs.highlight('<h1>Hello World!</h1>', {language: 'xml'}).value
 }
+
+function HtmlEncode(s)
+{
+  var el = document.createElement("div");
+  el.innerText = el.textContent = s;
+  s = el.innerHTML;
+  return s;
+}
+
+function wrapCode(html,doEncode) {
+/*
+<pre><code>
+&lt;script&gt;
+function test() {
+	var testVar = '123';
+}
+&lt;/script&gt;
+</code>
+</pre>
+*/
+
+	if(doEncode)
+		return `<pre style='background-color:black;'><code id="sandBoxCode">${HtmlEncode(html)}</code></pre>`
+	else
+		return `<pre style='background-color:black;'><code id="sandBoxCode">${html}</code></pre>`
+}
+
+
 
 
 /**
@@ -240,6 +295,11 @@ function runHtmlCheckTests(tests) {
 <div class="col-4 border bg-white">Section 1</div>
 </div>' %>
 
+
+<div id="showDiff" class="collapse">
+Diffed code here
+</div>
+
 <div class="row">
 	<div class="col-6">
 
@@ -247,7 +307,11 @@ function runHtmlCheckTests(tests) {
 <div class="sandBoxMenu p-1 px-2 fs-7 d-flex">
 	<%= link_to "Edit", [feedbacker,@translate], class:"me-2", target: "_blank" if @translate %> 
 	<% if false %><a href="#" onclick="doCheckHtml();return false;">Check html</a><% end %>
-	<a href="#testresults" class="ms-auto bg-light border me-1 my-1 fs-7 px-1" data-bs-target="#testresults" data-bs-toggle="collapse" aria-expanded="false" id="checkHtmlStatus">
+	<a href="#showDiff" class="ms-auto bg-light border me-1 my-1 fs-7 px-1" data-bs-target="#showDiff" data-bs-toggle="collapse" aria-expanded="false" id="showDiffLink">
+Diff code
+</a>
+
+	<a href="#testresults" class="bg-light border me-1 my-1 fs-7 px-1" data-bs-target="#testresults" data-bs-toggle="collapse" aria-expanded="false" id="checkHtmlStatus">
 
 	</a>
 </div>
@@ -276,13 +340,20 @@ function runHtmlCheckTests(tests) {
 <% end %>
 </div>
 <div class="col-6">
-	<div class="fw-bold d-flex align-items-center">Live html preview <span id="sandbox_status" class="mx-1" style="height:22px;"></span></div>
-	
-<div id="testresults" class="collapse">[html check here]</div>
-<div id="sandbox" class="border-top border-2 border-dark py-3">
-HTML shows here
+		<div>
+		<a href="#showCode" class="ms-auto bg-light border me-1 my-1 fs-7 px-1" data-bs-target="#showCode" data-bs-toggle="collapse" aria-expanded="false" id="showCodeLink">Source code</a>
+		<a href="#sandbox" class="bg-light border me-1 my-1 fs-7 px-1" data-bs-target="#sandbox" data-bs-toggle="collapse" aria-expanded="true" id="showSandbox">Preview</a>
+	</div>
 
-</div>
+	<div class="fw-bold d-flex align-items-center">Live html preview <span id="sandbox_status" class="mx-1" style="height:22px;"></span></div>
+	<div id="showCode" class="collapse">
+
+	</div>
+
+	<div id="testresults" class="collapse">[html check here]</div>
+	<div id="sandbox" class="collapse show border-top border-2 border-dark py-3">
+	HTML shows here
+	</div>
 
 </div>
 
