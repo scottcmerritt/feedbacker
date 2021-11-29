@@ -1,6 +1,5 @@
 <%= render partial: "admin/manage/header" %>
 <%= render partial: "admin/manage/menu" %>
-
 <div class="row">
 	<div class="col-2">
 		<h7>Users by role</h7>
@@ -16,6 +15,8 @@
 		
 
 <%= paginate @users rescue "Error with pager" %>
+
+
 <table class="table">
 <tr><td class="col-2">Roles</td>
 	

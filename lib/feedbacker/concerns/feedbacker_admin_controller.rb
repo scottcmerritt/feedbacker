@@ -415,6 +415,13 @@ def cleanup
 
       @users = @site_roles.include?(@role) ? users.with_role(@role.to_sym) : users
 
+      if params[:q]
+        @q = params[:q]
+        q = "%#{@q}%"
+        @users = @users.where("email LIKE ? OR public_name LIKE ? OR first_name LIKE ? OR last_name LIKE ?",q,q,q,q)
+
+      end
+
       if @users.kind_of? Array
         @users = Kaminari.paginate_array(@users) #.page(params[:page])
       else
