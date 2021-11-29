@@ -38,7 +38,7 @@ module Feedbacker
         if browser.bot?
           impressionist(@app_site, "BOT: #{request.env["HTTP_USER_AGENT"]}",{:force =>true})
         else
-          impressionist @app_site unless @app_site.nil? || (controller_name == "books" && action_name == "update") 
+          impressionist @app_site unless @app_site.nil? || (controller_name == "books" && action_name == "update") || (controller_name == 'admin' && action_name == 'html_diff')
         end     
       end
    rescue ActiveRecord::StatementInvalid => e
