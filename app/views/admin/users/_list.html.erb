@@ -55,10 +55,13 @@ Demo/test accounts: <%= link_to "Include", feedbacker.admin_users_path(request.p
 
 			</div>
 			<%= tag.div user.email, class: "fs-7" if user.email != user.display_name_public %>
+		
+
 			<%= tag.div "Current sign in #{time_ago_in_words user.current_sign_in_at} ago", class: "fs-8" unless user.current_sign_in_at.nil? %>
 			<%= tag.div "Prev sign in #{time_ago_in_words user.last_sign_in_at} ago", class: "fs-8" unless user.last_sign_in_at.nil? %>
 
 			<div class="d-flex my-1">
+					<%= link_to icon(icon:"comment"), feedbacker.admin_send_user_message_path(user_id:user.id), class:"me-1 btn btn-sm btn-success" %>
 			
 			<%= link_to "Spammer", feedbacker.user_flag_spammer_path(id:user.id), method: :post, class: "btn btn-sm btn-warning me-1" if (user.is_spam.nil? || user.is_spam == false) %>
 

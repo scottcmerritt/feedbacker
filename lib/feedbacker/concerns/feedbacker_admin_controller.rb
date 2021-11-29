@@ -7,7 +7,7 @@ module Feedbacker
     included do
       # method to add to controller
 
-        before_action :authenticate_admin!, except: [:updates,:first_admin]
+        before_action :authenticate_admin!, except: [:updates,:first_admin,:contact_us]
   
       end
   
@@ -167,6 +167,60 @@ def cleanup
     end
     end
   end
+
+  # POST admin_contact_us_path
+  def contact_us
+    if params[:msg_key] == "inventory_wrong"
+
+      message = "Inventory off for book #{params[:book_id]}"
+    else
+      message = room_message_params[:message]
+      message+="\nbook #{params[:book_id]}" if params[:book_id]
+    end
+    user_id = current_user ? current_user.id : -1
+    Room.admin_messages.room_messages.create(message: message,user_id:user_id)
+     if is_admin? && !params[:msg_key]
+      redirect_to controller: "admin", action: "messages"
+    else
+      flash[:notice] = "Site admins have been notified"
+      if defined?(LibrariansController)
+        redirect_to controller: "librarians", action: "index", book_id: params[:book_id]
+      else
+        redirect_to main_app.root_path #controller: "admin", action: "messages"
+      end
+    end
+  end
+
+  def messages
+    @admin_room = Room.admin_messages
+    
+    @update_msgs = @admin_room.room_messages.where("message LIKE ?","Report:: UPDATING%").order("created_at DESC")
+    @add_msgs = @admin_room.room_messages.where("message LIKE ?","Report:: ADDING%").order("created_at DESC")
+
+    @spam_msgs = @admin_room.room_messages.where("message LIKE ?","Spam detected from registration:%").order("created_at DESC")
+
+    exclude_ids = @spam_msgs.pluck(:id) + @add_msgs.pluck(:id) + @update_msgs.pluck(:id)
+    @admin_msgs = @admin_room.room_messages.where.not(id:exclude_ids).order("created_at DESC")
+  end
+
+    def send_user_message
+      @admin_ids = User.with_role(:admin).pluck(:id)
+
+      @user = User.find_by(id:params[:user_id])
+      @room = Room.user_messages(user_id:@user.id) unless @user.nil?
+      if request.post?
+        message = room_message_params[:message]
+        Room.user_messages(user_id:@user.id).room_messages.create(message: message,user_id:current_user.id)
+        flash[:notice] ="Message sent to user: #{@user.id}"
+        redirect_to controller:"admin", action:"send_user_message"
+      else
+        @hidden_fields = @user.nil? ? {} : {"user_id":@user.id}
+        @messages = RoomMessage.recent.where(user_id:@admin_ids)
+      end
+
+      
+
+    end
 
     def tags
 =begin      
@@ -482,6 +536,10 @@ def cleanup
       end
 
       private
+
+      def room_message_params
+        params.require(:room_message).permit(:message)
+      end
 
       def set_user
         @user = User.find_by(id:params[:id])

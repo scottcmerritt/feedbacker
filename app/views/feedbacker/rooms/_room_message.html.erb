@@ -1,0 +1,23 @@
+<% unless room_message.id.nil? %>
+	<div class="bg-light mb-1">
+		<div class="p-1 px-2 border">
+		<% unless room_message.room.nil? %>
+		<% if room_message.room.user_id.nil? %>
+		<%= tag.div room_message.room.name %>
+		<% else %>
+		<div>To: <%= link_to room_message.room.user.display_name_public, [main_app,room_message.room.user] %></div>
+		<% end %>
+		<% end %>
+		<div class="d-flex align-items-top">
+
+		<%= link_to room_message.message, feedbacker.admin_messages_path(id:room_message.id), style: "white-space: pre-wrap;" %>
+
+		<%= tag.span time_ago_in_words(room_message.created_at), class: "ms-auto" unless room_message.created_at.nil? %>
+		</div>
+		<div class="text-muted fs-7">
+			<% if room_message.user.nil? %>Anonymously<% else %>by <%= room_message.user.display_name_public %><% end %>
+		</div>
+		</div>
+
+	</div>
+	<% end %>

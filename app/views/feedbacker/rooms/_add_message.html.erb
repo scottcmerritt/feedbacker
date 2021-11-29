@@ -1,0 +1,17 @@
+<% url_to_post = feedbacker.admin_contact_us_path(room.room_messages.new) if local_assigns[:url_to_post].nil? %>
+<% submit_label = "Add message" if local_assigns[:submit_label].nil? %>
+<% hidden = {} if local_assigns[:hidden].nil? %>
+<%= simple_form_for(room.room_messages.new, url: url_to_post,html: {class:"bg-light border my-1 p-1 px-2"}) do |f| %>
+<div class="d-flex align-items-center">
+	<div class="flex-fill">
+		<%= f.input :message, input_html: { class: "form-control bg-white" }  %>
+	</div>
+
+	<%= f.button :submit,submit_label, class: "btn btn-sm btn-primary m-1 ms-2" %>
+
+	<% hidden.each do |k,v| %>
+	<input type="hidden" name="<%= k %>" value="<%= v %>">
+	<% end %>
+
+</div>
+<% end %>

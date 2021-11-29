@@ -22,6 +22,9 @@ Feedbacker::Engine.routes.draw do
 	match '/admin/todo/translates' =>"translates#todo", :as => :translates_todo, :via=>[:get,:post]
 
 	
+	match '/admin/contact_us' => 'admin#contact_us', :as=> :admin_contact_us, :via=>:post
+	match '/admin/messages' => 'admin#messages', :as=> :admin_messages, :via=>:get
+	match '/admin/message/user(/:user_id)' => 'admin#send_user_message', as: :admin_send_user_message, :via=>[:get,:post]
 
 	get '/admin/db(/:q)' => 'admin#db', as: :admin_db
   	get '/admin/analytics(/:q)' => 'admin#analytics', as: :admin_analytics
@@ -30,7 +33,7 @@ Feedbacker::Engine.routes.draw do
 	get '/admin/cache(/:q)' => 'admin#cache', as: :admin_cache
 
 
-	match '/admin/users(/:role)(/:q)' => 'admin#users', as: :admin_users, :via => :get
+	match '/admin/users(/:role)' => 'admin#users', as: :admin_users, :via => :get
 	match '/admin/flag/user(/:id)' => 'admin#flag_spammer', :as => :user_flag_spammer, :via=> :post
 	match '/admin/roles/change' => 'admin#modify_role', :as => :modify_role, :via => :post
 	match '/confirm/user/:id' => 'admin#user_confirm', :as => :user_confirm, :via => :post

@@ -1,0 +1,19 @@
+<%= render partial: "admin/manage/header" %>
+<%= render partial: "admin/manage/menu" %>
+
+<div class="row">
+	<div class="col-4">
+		<h4>Sent messages</h4>
+		<% unless @messages.nil? %>
+		<% @messages.each do |room_message| %>
+		<%= render partial: "#{engine_prefix}/rooms/room_message",locals: {room_message:room_message} %>
+		<% end %>
+		<% end %>
+	</div>
+	<div class="col-8">
+<h4 class="d-flex align-items-center">Message a user <%= link_to "Select a user", feedbacker.admin_users_path, class: "mx-1 btn btn-sm btn-primary" %></h4>
+
+<%= link_to @user.email, [main_app,@user] unless @user.nil? %>
+<%= render partial: "#{engine_prefix}rooms/add_message", locals: {room:@room,hidden:@hidden_fields,url_to_post:feedbacker.admin_send_user_message_path(user_id:@user.id) } unless @room.nil? %>
+</div>
+</div>
