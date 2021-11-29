@@ -417,9 +417,8 @@ def cleanup
 
       if params[:q]
         @q = params[:q]
-        q = "%#{@q}%"
-        @users = @users.where("email LIKE ? OR public_name LIKE ? OR first_name LIKE ? OR last_name LIKE ?",q,q,q,q)
-
+        q = "%#{@q.downcase}%"
+        @users = @users.where("LOWER(email) LIKE ? OR LOWER(public_name) LIKE ? OR LOWER(first_name) LIKE ? OR LOWER(last_name) LIKE ?",q,q,q,q)
       end
 
       if @users.kind_of? Array
