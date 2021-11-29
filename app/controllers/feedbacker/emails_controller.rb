@@ -9,10 +9,8 @@ module Feedbacker
     end
 
     def show
-
       @feature_title = "Customize email"
       @filter_locals = {title:@feature_title || "Translations",show_add:false,show_sub_menu:false}
-
     end
 
     private
@@ -35,6 +33,7 @@ module Feedbacker
       @tdomain = "email::content"
       @email_keys = {
         "user.recommend_book" => "Send a book recommendation to someone",
+        "user.send_message" => "Send a message to someone",
         "user.inactive_reminder" => "Sent to remind someone to use the site",
         "user.confirmation_instructions" => "Sent after someone signs up",
         "user.email_changed" => "Sent when an email is changed",

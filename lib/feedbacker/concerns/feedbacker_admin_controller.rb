@@ -210,8 +210,21 @@ def cleanup
       @room = Room.user_messages(user_id:@user.id) unless @user.nil?
       if request.post?
         message = room_message_params[:message]
-        Room.user_messages(user_id:@user.id).room_messages.create(message: message,user_id:current_user.id)
-        flash[:notice] ="Message sent to user: #{@user.id}"
+        
+        if @user.nil?
+          flash[:notice] = "You need to select a user"
+        else
+          Room.user_messages(user_id:@user.id).room_messages.create(message: message,user_id:current_user.id)
+          current_user.favorite(@user, scope: :messaged)
+
+          begin
+            UserMailer.send_message(user:@user,sender:current_user,message: message).deliver
+            flash[:notice] ="Message sent to user: #{@user.id}"
+          rescue Exception => ex
+            flash[:notice] ="Error delivering message to user: #{@user.id}"
+          end
+        end
+        
         redirect_to controller:"admin", action:"send_user_message"
       else
         @hidden_fields = @user.nil? ? {} : {"user_id":@user.id}
