@@ -1,0 +1,28 @@
+<% user = current_user if local_assigns[:user].nil? %>
+<% link_only = true if local_assigns[:link_only].nil? %>
+
+<% unless user.nil? %>
+<% if link_only %>
+<div class="bg-white border px-2 d-flex" style="line-height: 50px;">
+	<a href="<%= main_app.user_path(user) %>" class="nodec d-flex align-items-center" style="line-height: 45px;">
+		<%= render partial: "shared/best_image", locals: {target:user,img_css: "user me-1 img-fluid rounded-circle",default_icon:"user",wrap_css:"",size:"nano"} %>
+		<div class="d-inline-block ps-1">
+			<div class="fs-7 text-muted" style="line-height:20px;"><%= user.display_name_public %></div>
+			<div class="fs-8 text-muted text-center" style="line-height:15px;"><%= user.email %></div>
+		</div>
+	</a>
+</div>
+
+<% else %>
+<div class="bg-white border rounded-end p-2 d-inline-block">
+<a class="nodec" data-bs-toggle="collapse" data-bs-target="#myProfile" href="#myProfile"><%= icon(icon:"user") %> <%= user.email %></a>
+<div id="myProfile" class="collapse">
+[profile]
+	<div class="">
+		<%= tag.div raw(safe_join([icon(icon:"user-circle"),link_to(user.email, [main_app,user], class: "px-1 fs-8 text-dark")])) unless Rails.env.production? %>
+		<%= render partial: "users/user_roles",locals: {user:user} unless Rails.env.production? %>
+	</div>
+</div>
+</div>
+<% end %>
+<% end %>

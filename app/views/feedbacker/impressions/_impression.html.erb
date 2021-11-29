@@ -1,0 +1,40 @@
+<div class="border bg-light p-1">
+	
+	<% user = User.find_by(id:impression.user_id) %>
+	<% loc = user.nil? ? Site.location_cached(ip:impression.ip_address) : user.location_cached %>
+	
+
+	<div class="d-flex justify-content-between align-items-center">
+	<div class="fw-bold fs-8 mx-1 d-flex">
+		<div>
+		<%= num_comma impression.respond_to?(:view_count) ? impression.view_count : Site.my_impressions(ip:impression.ip_address).count %> views
+		</div>
+		<div class="mx-1">
+		<%= user.nil? ? "User: #{impression.user_id}" : link_to(user.display_name_public, user) %> 
+		</div>
+		<%= tag.span impression.ip_address, class: "me-2 text-muted" %>
+	</div>
+
+	<% if impression.respond_to?(:referrer) %>
+	<div class="text-start text-success"><%= impression.referrer %></div>
+	<% end %>
+	
+	<div class="fs-8 text-muted mx-1">
+		<% begin %>
+		<%= time_ago_in_words impression.respond_to?(:last_visit) ? impression.last_visit : Site.last_view(ip:impression.ip_address) %> ago 
+		<% rescue Exception => ex %>
+		<%= ex %>
+		<% end %>
+	</div>
+</div>
+<div class="text-muted text-end fs-8">
+<% unless loc.nil? %>
+	<%= loc.city %>, <%= loc.state %>
+	
+	<% end %>
+
+	<%= tag.span loc.country_code, class: "text-dark fw-bold" unless loc.nil? %>
+
+</div>
+	
+</div>

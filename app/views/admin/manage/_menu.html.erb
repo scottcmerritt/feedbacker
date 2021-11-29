@@ -20,6 +20,8 @@
 			<%= link_to icon_text(dbt('translations').capitalize,"language",false,icon_css), feedbacker.translate_keys_path, class:link_css %>
 			<%= link_to icon_text(dbt('sites').capitalize,"sitemap",false,icon_css), sites_path, class:link_css %>
 			<%= link_to icon_text(dbt('cleanup').capitalize,"shower",false,icon_css), feedbacker.admin_cleanup_path, class:link_css %>
+			<%= link_to icon_text(dbt('visitors').capitalize,"flag-usa",false,icon_css), feedbacker.admin_visits_path, class:link_css %>
+
 		</div>
 	</div>
 
@@ -39,7 +41,8 @@
 	<%= link_to icon_text(dbt('translations').capitalize,"language",false,icon_css), feedbacker.translate_keys_path, class:link_css %>
 
 	<%= link_to icon_text(dbt('sites').capitalize,"sitemap",false,icon_css), sites_path, class:link_css %>
-		<%= link_to icon_text(dbt('cleanup').capitalize,"shower",false,icon_css), feedbacker.admin_cleanup_path, class:link_css %>
+	<%= link_to icon_text(dbt('cleanup').capitalize,"shower",false,icon_css), feedbacker.admin_cleanup_path, class:link_css %>
+	<%= link_to icon_text(dbt('visitors').capitalize,"flag-usa",false,icon_css), feedbacker.admin_visits_path, class:link_css %>
 
 
 	</nav>

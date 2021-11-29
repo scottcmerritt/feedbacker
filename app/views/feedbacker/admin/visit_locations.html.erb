@@ -1,0 +1,162 @@
+<%= render partial: "admin/manage/header" %>
+<%= render partial: "admin/manage/menu" %>
+<%= render partial: "#{engine_prefix}admin/parts/visits_menu" %>
+
+<%= @percentages if params[:debug] %>
+<% chart_title = "Visitors by country" %>
+<%= params[:pie] ? pie_chart(@percentages, title: chart_title) : bar_chart(@percentages, title: chart_title) %>
+
+
+<h4 class="bg-dark text-light p-1 px-2 rounded-top d-flex align-items-center mb-0">Locations of recent visitors <div class="ms-auto bg-light text-dark p-1 rounded fs-7 mx-1"><%= @unique_ip_addresses.count %> unique IP addresses, <%= @unique_user_ids.count %> users</div></h4>
+<div class="bg-light fs-8 px-2 d-flex justify-content-between align-items-center mb-2">
+<div><%= num_comma Impression.count %> logged clicks</div>
+<div>
+	<%= link_to "Pie chart", feedbacker.url_for({pie:1}), class: "me-1" %>
+	<%= link_to "Bar chart", feedbacker.url_for({pie:1}), class: "me-1" %>
+	</div>
+</div>
+
+<div class="d-flex align-items-center mb-1 fs-7"><span class="me-1">Sort by</span>
+<% @sort_bys.each_with_index do |sort_by,index| %>
+<%= link_to sort_by, feedbacker.url_for(request.parameters.merge({sb:index})), class: "me-1 #{index == params[:sb].to_i ? "border bg-dark text-light p-1 rounded nodec" : ""}" %>
+<% end %>
+
+<div class="mx-2">Increase the limit by adding limit=200, like <a href="/admin/visits/locations?limit=100&sb=1">https://www.maktaba.org/admin/visits/locations?limit=100&sb=1</a></div>
+</div>
+
+<div class="d-flex align-items-center">
+	
+	<div class="d-flex align-items-center me-1">
+		<%= link_to "Users", feedbacker.url_for(request.parameters.except(:anons,:page).merge({users:1})), class: "me-3 #{"bg-white border px-1 nodec" if params[:users]}" %>
+		<%= link_to "Anonymous", feedbacker.url_for(request.parameters.except(:users,:page).merge({anons:1})), class: "me-2 #{"bg-white border px-1 nodec" if params[:anons]}" %>
+	</div>
+	<%= feedbacker_paginate @visitors,page: params[:page] %>
+
+</div>
+<table class="table bg-light">
+<tr class="fw-bold bg-primary text-light">
+
+<td>Last visit</td>
+<td>User</td>
+<td>Views</td>
+<td>IP address</td>
+<% if false %><td>Location</td><% end %>
+<td>City, state</td>
+<td>Country</td>
+
+<td>First visit (of filter)</td>
+</tr>
+<% @visitors.each_with_index do |visitor,index| %>
+<% user = User.find_by(id:visitor.user_id) %>
+
+<% loc = user.nil? ? Site.location_cached(ip:visitor.ip_address) : user.location_cached %>
+<tr class="text-dark border-top border-dark">
+	<td class="fs-8 text-muted">
+<%= time_ago_in_words visitor.last_visit %> ago
+</td>
+<td><%= user.nil? ? tag.span(visitor.user_id.nil? ? "Anonymous" : "User: #{visitor.user_id}", class: "text-danger border border-danger rounded p-1 bg-white") : render(partial: "users/profile_mini",locals: {user:user}) %>
+	
+	<%= tag.span icon(icon:"star",lbl:"Confirmed!"), class: "fs-7 mx-1" if !user.nil? && user.confirmed? %>
+</td>
+<td><%= num_comma visitor.view_count %></td>
+<td><%= visitor.ip_address %></td>
+<% if false %>
+<td>
+	<%# Geokit::Geocoders::MultiGeocoder.geocode(visitor.ip_address) unless visitor.ip_address.blank? %>
+</td>
+<% end %>
+<td>
+	<% unless loc.nil? %>
+	<%= loc.city %>, <%= loc.state %>
+	<div class="text-muted fs-8">(Lat: <%= loc.lat %>, Lng: <%= loc.lng %>)</div>
+	<% end %>
+</td>
+<td><%= loc.country_code unless loc.nil? %></td>
+<td class="fs-8 text-muted">
+	<div class="d-flex flex-column flex-fill">
+<%= time_ago_in_words visitor.first_visit %> ago
+
+
+<a class="mt-auto border bg-white p-1" href="#visitor<%= index %>" data-bs-target="#visitor<%= index %>" data-bs-toggle="collapse"><%= "Last click: #{time_ago_in_words (user.nil? ? Site.last_view(ip:visitor.ip_address) : user.last_view)} ago" %></a>
+
+	<a class="mt-auto border bg-white p-1 ms-1" href="#visitorReferrers<%= index %>" data-bs-target="#visitorReferrers<%= index %>" data-bs-toggle="collapse"><%= "Referrers" %></a>
+</div>
+
+</td>
+</tr>
+<% if user.nil? %>
+	
+	<% begin %>
+	<% books_viewed = Site.unique_books_viewed(wrapped:true,per_page:10,ip:visitor.ip_address) %>
+	<% books_downloaded = Site.unique_books_downloaded(wrapped:true,per_page:10,ip:visitor.ip_address) %>
+	<% unique_books_viewed_count = Site.unique_books_viewed(ip:visitor.ip_address).count %>
+	<% unique_books_downloaded_count = Site.unique_books_downloaded(ip:visitor.ip_address).count %>
+	<% rescue %>
+
+	<% end %>
+	<% my_impressions = Site.my_impressions(ip:visitor.ip_address) %>
+	<% my_referrers = Site.my_referrers(ip:visitor.ip_address) %>
+<% else %>
+
+	<% begin %>
+	<% books_viewed = user.unique_books_viewed(wrapped:true,per_page:10) %>
+	<% books_downloaded = user.unique_books_downloaded(wrapped:true,per_page:10) %>
+	<% unique_books_viewed_count = user.unique_books_viewed.count %>
+	<% unique_books_downloaded_count = user.unique_books_downloaded.count %>
+	<% rescue %>
+
+	<% end %>
+	<% my_impressions = user.my_impressions %>
+	<% my_referrers = user.my_referrers %>
+<% end %>
+
+
+<tr class="border-bottom border-top-0 border-4 border-dark border-start-0 border-end-0">
+	<td colspan="7" class="ps-4">
+	<% if user %>
+	<% if user.is_spam == true %><span class="text-danger fw-bold me-1">SPAMMER</span><% end %>
+	<% if user.is_bot? %><span class="text-danger fw-bold me-1">BOT ABOVE</span><% end %>
+	<% end %>
+
+	<div class="text-muted fs-8 collapse" id="visitorReferrers<%= index %>">
+		<% my_referrers.limit(10).order("created_at DESC").each_with_index do |row,index| %>
+		<div class="fs-8 text-muted ms-3 d-flex justify-content-between">
+			<div><%= tag.span (index + 1), class: "fw-bold" %>) <%= row.referrer %></div> <div class="text-dark"><%= time_ago_in_words row.created_at %> ago</div>
+		</div>
+		<% end %>
+	</div>
+	<div class="text-muted fs-8 collapse" id="visitor<%= index %>">
+
+		<% my_impressions.limit(10).order("created_at DESC").each_with_index do |row,index| %>
+		<div class="fs-8 text-muted ms-3 d-flex justify-content-between">
+			<div><%= tag.span (index + 1), class: "fw-bold" %>) [<%= row.impressionable_type %>] <%= row.controller_name %> -> <%= row.action_name %>:</div> <%= tag.div row.params %> <div class="text-dark"><%= time_ago_in_words row.created_at %> ago</div>
+		</div>
+		<% end %>
+
+		
+		<% unless !defined?(Book) || books_viewed.empty? %>
+		<div class="d-flex flex-wrap my-1">
+			<div class="fs-8 fw-bold text-dark me-1">Viewed <%= tag.span "#{unique_books_viewed_count} books", class: "badge badge-sm bg-info mx-1"  rescue nil %></div>
+		<% books_viewed.each do |row| %>
+		<%= link_to row.name, row, class: "bg-white border mx-1 mb-1 px-1 nodec text-dark" unless row.nil? %>
+		<% end %>
+		</div>
+		<% end %>
+
+		<% unless !defined?(Book) || books_downloaded.empty? %>
+		<div class="d-flex flex-wrap my-1">
+			<div class="fs-8 fw-bold text-dark me-1">Downloaded <%= tag.span "#{unique_books_downloaded_count} books", class: "badge badge-sm bg-info mx-1" rescue nil %></div>
+		<% books_downloaded.each do |row| %>
+		<%= link_to row.name, row, class: "bg-white border mx-1 mb-1 px-1 nodec text-dark" unless row.nil? %>
+		<% end %>
+		</div>
+		<% end %>
+
+	</div>
+
+	</td>
+</tr>
+
+<% end %>
+</table>
+<%= feedbacker_paginate @visitors,page: params[:page] %>

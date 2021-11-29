@@ -1,0 +1,7 @@
+<% links = {"Visits": :admin_visits,"Referrers": :admin_visit_referrers, "Locations": :admin_visit_locations} %>
+
+<div class="d-flex align-items-center">
+<% links.each do |k,v| %>
+<%= link_to k, [feedbacker,v], class: "me-1 btn btn-sm bg-light text-dark" %> 
+<% end %>
+</div>

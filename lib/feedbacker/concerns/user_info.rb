@@ -44,6 +44,11 @@ module Feedbacker
       self.online_via_impression?
     end
 
+    def is_bot?
+      bot_q = "#{"bot:"}%"
+      bot2_q = "%#{"bot:"}%"
+      self.my_impressions.where("LOWER(message) LIKE ? OR LOWER(message) LIKE ?",bot_q, bot2_q).exists?
+    end
 
 
 # impression based data
@@ -64,6 +69,40 @@ module Feedbacker
 
     end
 
+  def my_impressions
+    Impression.select("*").where("user_id = ?",self.id)
+  end
+  def my_referrers
+    Impression.select("referrer,MAX(created_at) as created_at").group("referrer").where("user_id = ?",self.id)
+  end
+
+
+
+  def default_ip_address
+    if Rails.env.production?
+      self.current_sign_in_ip
+    else
+       "45.49.250.55" # pacific palisades, CA self.current_sign_in_ip
+    end
+  end
+
+  # caches the ip address geocoded, saves unknwon if it doesn't work
+  def location_cache! ip: default_ip_address, cache_duration: 10000
+    val = Site.geocode(ip: ip)
+    val = "unknown" if val.nil?
+    Feedbacker::Cache.set_obj(Site.location_cache_key(ip:ip),val,nil,cache_duration)
+    val
+  end
+
+  def location_cached ip: default_ip_address
+    val = Feedbacker::Cache.get_obj(Site.location_cache_key(ip:ip))
+    return location_cache!(ip: ip) if val.nil?
+    val
+  end
+
+  def location_guess
+    Geokit::Geocoders::MultiGeocoder.geocode(self.current_sign_in_ip) unless self.current_sign_in_ip.blank?
+  end
     
   
   # for including static methods

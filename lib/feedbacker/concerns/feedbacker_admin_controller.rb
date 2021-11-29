@@ -8,7 +8,7 @@ module Feedbacker
       # method to add to controller
 
         before_action :authenticate_admin!, except: [:updates,:first_admin,:contact_us]
-  
+        before_action :visitor_shared, only: [:visits, :visit_locations]
       end
   
       def first_admin
@@ -217,9 +217,57 @@ def cleanup
         @hidden_fields = @user.nil? ? {} : {"user_id":@user.id}
         @messages = RoomMessage.recent.where(user_id:@admin_ids)
       end
+    end
 
+
+    def visits
+      @visitors = Impression.select("ip_address,COUNT(id) as view_count,MAX(user_id) as user_id,MAX(created_at) as last_visit")
+      .where("(user_id is NULL OR user_id > 0) OR ip_address is null")
+      .group("ip_address")
+      .order("#{@sort_by} #{@sort_dir}")
+
+      @visitors = @visitors.page(params[:page]).per(@limit)
+    end
+
+    def visit_referrers
+      @ignore = params[:ignore]
+      @include = params[:include]
+
+      @visitors = Impression.where("NOT (referrer is NULL OR referrer = ?)", "")
+      .order("created_at DESC")
+
+      ignore_q = "%#{@ignore}%" unless @ignore.blank?
+      include_q = "%#{@include}%" unless @include.blank?
+
+      @visitors = @visitors.where("NOT referrer LIKE ?",ignore_q) unless ignore_q.blank?
+      @visitors = @visitors.where("referrer LIKE ?",include_q) unless include_q.blank?
+
+      @visitors = @visitors.page(params[:page]).per(@limit)
+    end
+
+
+    def visit_locations
+      @unique_ip_addresses = Impression.select("DISTINCT(ip_address)")
+      @unique_user_ids = Impression.select("DISTINCT(user_id)")
       
+    
+      group_by = params[:groupby] == "ip" ? "ip_address" : "user_id" 
 
+      @visitors = Impression.select("MAX(ip_address) as ip_address,COUNT(id) as view_count,MAX(user_id) as user_id,MAX(created_at) as last_visit,MIN(created_at) as first_visit,MAX(message) as msg,MAX(controller_name) as contr,MAX(action_name) as act")
+      .group(group_by) #{}"ip_address,user_id")
+      .order("#{@sort_by} #{@sort_dir}")
+      .where("(user_id > 0 OR user_id is null)")
+
+
+      @visitors = @visitors.where.not(user_id:nil) if params[:users]
+      @visitors = @visitors.where(user_id:nil) if params[:anons]
+
+      @visitors = @visitors.page(params[:page]).per(@limit)
+
+
+      @chart_thresh = params[:chart_thresh] ? params[:chart_thresh].to_i : 10
+      @percentages = Site.visitor_countries logger: logger
+      @percentages = @percentages.delete_if{|k,v| !Site.country_code_whitelist.include?(k) && v < @chart_thresh} unless params[:all]
     end
 
     def tags
@@ -536,6 +584,16 @@ def cleanup
       end
 
       private
+
+      def visitor_shared
+        @limit = params[:limit] ? params[:limit].to_i : 10
+        @limit = 100 if @limit < 1
+        @limit = 2000 if @limit > 2000
+
+        @sort_bys = ["last_visit","view_count"]
+        @sort_dir = "DESC"
+        @sort_by = @sort_bys[params[:sb].to_i]
+      end
 
       def room_message_params
         params.require(:room_message).permit(:message)

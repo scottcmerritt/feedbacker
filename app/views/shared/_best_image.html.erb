@@ -1,0 +1,36 @@
+<% target = book if local_assigns[:target].nil? %>
+<% img_css = "#{target.class.name} me-1 img-fluid" if local_assigns[:img_css].nil? %>
+<% size = 'sm' if local_assigns[:size].nil? %>
+<% default_icon = "book" if local_assigns[:default_icon].nil? %>
+<% wrap_css = "border-end" if local_assigns[:wrap_css].nil? %>
+
+<% if size == 'nano' %>
+<%= tag.div(image_tag(target.best_image, class: img_css,style:"min-width:25px;"), style:"width:25px;text-align:center;", class: wrap_css) rescue tag.div(icon(icon:default_icon,icon_css:"fs-6 text-muted"),class:"m-0 p-0 rounded-circle border text-center", style:"width:25px;") %>
+<% elsif size == 'micro' %>
+<%= tag.div(image_tag(target.best_image, class: img_css,style:"min-width:35px;"), style:"width:35px;text-align:center;", class: wrap_css) rescue tag.div(icon(icon:default_icon,icon_css:"fs-4 text-muted"),class:"m-2 my-0 p-1 rounded-circle border text-center", style:"width:35px;") %>
+<% elsif size == 'tiny' %>
+<%= tag.div(image_tag(target.best_image, class: img_css,style:"min-width:65px;"), style:"width:65px;text-align:center;", class: wrap_css) rescue tag.div(icon(icon:default_icon,icon_css:"fs-3 text-muted"),class:"p-3", style:"width:65px;") %>
+<% elsif size == 'sm' %>
+<% if target.kind_of?(Book) %>
+<%= tag.div(image_tag(books_cover_path(id:target.id), class: img_css,style:"min-width:105px;"), style:"width:105px;text-align:center;", class: wrap_css) rescue tag.div(icon(icon:default_icon,icon_css:"fs-2 text-muted"),class:"p-3", style:"width:105px;") %>
+<% else %>
+<%= tag.div(image_tag(target.best_image, class: img_css,style:"min-width:105px;"), style:"width:105px;text-align:center;", class: wrap_css) rescue tag.div(icon(icon:default_icon,icon_css:"fs-2 text-muted"),class:"p-3", style:"width:105px;") %>
+<% end %>
+
+
+
+
+<% elsif size == 'lg' %>
+<%= tag.div(image_tag(target.best_image(original:true), class: img_css,style:""), class: "#{wrap_css} col-5") rescue tag.div(icon(icon:default_icon,icon_css:"fs-1 text-muted"),class:"p-3") %>
+<% elsif size == 'mobile_lg' %>
+<%= tag.div(image_tag(target.best_image(original:true), class: img_css,style:""), class: "#{wrap_css} col-6") rescue tag.div(icon(icon:default_icon,icon_css:"fs-1 text-muted"),class:"p-3") %>
+<% elsif size == "full" %>
+<% img_css = "d-block w-100" %>
+<%= image_tag(target.best_image(original:false), class: img_css,style:"") rescue tag.div(icon(icon:default_icon,icon_css:"fs-1 text-muted"),class:"p-3") %>
+
+<% else %>
+<%= tag.div(image_tag(target.best_image, class: img_css,style:""), style:"width:220px;text-align:center;", class: wrap_css) rescue tag.div(icon(icon:default_icon,icon_css:"fs-1 text-muted"),class:"p-3", style:"width:220px;") %>
+<% end %>
+<% if false %>
+<%= tag.div image_tag(target.thumb_guess_sm, class: img_css), style:"width:85px;text-align:center;", class: "me-3 border-end" if !params[:fast2] && target.thumb_guess_sm? %>
+<% end %>

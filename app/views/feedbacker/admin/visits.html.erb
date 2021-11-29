@@ -1,0 +1,13 @@
+<%= render partial: "admin/manage/header" %>
+<%= render partial: "admin/manage/menu" %>
+<%= render partial: "#{engine_prefix}admin/parts/visits_menu" %>
+
+<div><%= Impression.count %> total impressions</div>
+<div class="d-flex align-items-center">
+<%= @visitors.total_count %> rows
+<%= feedbacker_paginate @visitors,page: params[:page] %>
+</div>
+<% @visitors.each do |visitor| %>
+<%= render visitor %>
+<% end %>
+<%= feedbacker_paginate @visitors,page: params[:page] %>

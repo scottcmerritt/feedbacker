@@ -1,0 +1,26 @@
+<%= render partial: "admin/manage/header" %>
+<%= render partial: "admin/manage/menu" %>
+<%= render partial: "#{engine_prefix}admin/parts/visits_menu" %>
+
+<div><%= num_comma Impression.count %> total impressions</div>
+<div class="d-flex align-items-center justify-content-between">
+<%= tag.div "#{num_comma(@visitors.total_count)} rows", class: "me-2" %> 
+<%= feedbacker_paginate @visitors,page: params[:page] %>
+</div>
+<h3 class="bg-dark text-light p-1 px-2 d-flex">Referrers 
+
+<form method="get" action="" class="ms-auto mx-1 fs-6 badge d-flex">
+	<div class="me-1">
+Include: <input type="text" name="include" value="<%= @include %>" placeholder="q=">
+</div>
+Ignoring: <input type="text" name="ignore" value="<%= @ignore %>" placeholder="<%= @app_site ? @app_site.domain : request.host %>">
+
+<input type="submit" value="Update" class="ms-1">
+
+</form>
+</h3>
+
+<% @visitors.each do |visitor| %>
+<%= render visitor %>
+<% end %>
+<%= feedbacker_paginate @visitors,page: params[:page] %>

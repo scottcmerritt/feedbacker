@@ -17,6 +17,8 @@ module Feedbacker
   
   private
 
+
+
   def load_site
     require "browser/aliases"
     Browser::Base.include(Browser::Aliases)
@@ -24,10 +26,21 @@ module Feedbacker
 
 #   <%= request.host %>: <%= request.domain %>
    
-   @app_site = Site.where(domain:request.host).first if defined?(Site)
+   #@app_site = Site.where(domain:request.host).first if defined?(Site)
+    @app_site = Site.where(domain:request.host).first
+    @app_site = Site.first if @app_site.nil?
+
+
+
    # ActiveRecord::StatementInvalid (PG::InsufficientPrivilege: (occurs if heroku blocks the permission)
    begin
-     impressionist @app_site unless @app_site.nil? || !defined?(Impression)
+      if defined?(Impression)
+        if browser.bot?
+          impressionist(@app_site, "BOT: #{request.env["HTTP_USER_AGENT"]}",{:force =>true})
+        else
+          impressionist @app_site unless @app_site.nil? || (controller_name == "books" && action_name == "update") 
+        end     
+      end
    rescue ActiveRecord::StatementInvalid => e
 
    end

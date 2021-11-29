@@ -26,6 +26,12 @@ Feedbacker::Engine.routes.draw do
 	match '/admin/messages' => 'admin#messages', :as=> :admin_messages, :via=>:get
 	match '/admin/message/user(/:user_id)' => 'admin#send_user_message', as: :admin_send_user_message, :via=>[:get,:post]
 
+	match '/admin/visits/referrers' => 'admin#visit_referrers', :as=> :admin_visit_referrers, :via=>:get
+	match '/admin/visits/locations' => 'admin#visit_locations', :as=> :admin_visit_locations, :via=>:get
+
+	match '/admin/visits' => 'admin#visits', :as=> :admin_visits, :via=>:get
+
+
 	get '/admin/db(/:q)' => 'admin#db', as: :admin_db
   	get '/admin/analytics(/:q)' => 'admin#analytics', as: :admin_analytics
   	get '/admin/cleanup(/:query_id)' => 'admin#cleanup', as: :admin_cleanup
