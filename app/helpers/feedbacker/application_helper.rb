@@ -55,6 +55,7 @@ module Feedbacker
     search_part = url.split(param)[1] rescue nil
     search_part = search_part.split("&")[0] unless search_part.nil?
     search_part = search_part.gsub("+"," ") unless search_part.nil?
+    search_part = search_part.gsub("%20"," ") unless search_part.nil?
     search_part.nil? ? "" : "<div class='mx-1'><span class='text-muted'>Searched for:</span> <span class='fw-bold text-dark'>#{search_part}</span></div>"
   end
     
