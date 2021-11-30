@@ -1,10 +1,24 @@
-<div class="border bg-light p-1">
+<div class="border bg-light">
 	
 	<% user = User.find_by(id:impression.user_id) %>
 	<% loc = user.nil? ? Site.location_cached(ip:impression.ip_address) : user.location_cached %>
 	
 
-	<div class="d-flex justify-content-between align-items-center">
+	<div class="d-flex align-items-top border-bottom bg-white">
+	<%= raw isolate_param impression.referrer if impression.respond_to?(:referrer) %>
+		<% if impression.respond_to?(:params) %>
+		<div class="fs-8 py-1 mx-2">
+			<%= impression.params %>: <%= impression.message %>
+		</div>
+		<% end %>
+		<div class="ms-auto">
+			<% if impression.respond_to?(:controller_name) %>
+			<%= impression.controller_name %>: <%= impression.action_name %>
+			<% end %>
+		</div>
+	</div>
+
+	<div class="d-flex justify-content-between align-items-center p-1">
 	<div class="fw-bold fs-8 mx-1 d-flex">
 		<div>
 		<%= num_comma impression.respond_to?(:view_count) ? impression.view_count : Site.my_impressions(ip:impression.ip_address).count %> views
@@ -16,7 +30,8 @@
 	</div>
 
 	<% if impression.respond_to?(:referrer) %>
-	<div class="text-start text-success"><%= impression.referrer %></div>
+
+	<div class="text-start text-success fs-7"><%= impression.referrer %></div>
 	<% end %>
 	
 	<div class="fs-8 text-muted mx-1">

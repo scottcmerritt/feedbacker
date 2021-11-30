@@ -2,6 +2,9 @@
 <% icon_size = "fs-6" if local_assigns[:icon_size].nil? %>
 <% link_css = "nav-link bg-white border rounded mb-1 d-flex align-items-center #{vertical ? '' : 'me-1 p-1'}" %>
 <% icon_css = "text-dark #{icon_size} me-2 p-0 px-1" %>
+<style>
+.active {background-color: orange !important;}
+</style>
 
 <% if browser.mobile? %>
 
@@ -42,7 +45,7 @@
 
 	<%= link_to icon_text(dbt('sites').capitalize,"sitemap",false,icon_css), sites_path, class:link_css %>
 	<%= link_to icon_text(dbt('cleanup').capitalize,"shower",false,icon_css), feedbacker.admin_cleanup_path, class:link_css %>
-	<%= link_to icon_text(dbt('visitors').capitalize,"flag-usa",false,icon_css), feedbacker.admin_visits_path, class:link_css %>
+	<%= link_to icon_text(dbt('visitors').capitalize,"flag-usa",false,icon_css), feedbacker.admin_visits_path, class: class_names(link_css, {active: ["visits","visit_referrers","visit_locations"].include?(action_name) }) %>
 
 
 	</nav>

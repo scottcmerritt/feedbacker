@@ -50,6 +50,10 @@ module Feedbacker
 
   end
 
+  def isolate_param url, param: "q="
+    search_part = url.split(param)[1] rescue nil
+    search_part.nil? ? "" : "<div class='mx-1'><span class='text-muted'>Searched for:</span> <span class='fw-bold text-dark'>#{search_part}</span></div>"
+  end
     
 
 

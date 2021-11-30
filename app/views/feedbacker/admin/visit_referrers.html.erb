@@ -13,7 +13,7 @@
 	<div class="me-1">
 Include: <input type="text" name="include" value="<%= @include %>" placeholder="q=">
 </div>
-Ignoring: <input type="text" name="ignore" value="<%= @ignore %>" placeholder="<%= @app_site ? @app_site.domain : request.host %>">
+Ignoring: <input type="text" name="ignore" value="<%= @ignore %>" placeholder="<%= @app_site ? @app_site.domain : request.domain %>">
 
 <input type="submit" value="Update" class="ms-1">
 
@@ -21,6 +21,6 @@ Ignoring: <input type="text" name="ignore" value="<%= @ignore %>" placeholder="<
 </h3>
 
 <% @visitors.each do |visitor| %>
-<%= render visitor %>
+<%= tag.div render(visitor), class: "mb-2" %>
 <% end %>
 <%= feedbacker_paginate @visitors,page: params[:page] %>
