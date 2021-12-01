@@ -24,9 +24,9 @@
 		<%= num_comma impression.respond_to?(:view_count) ? impression.view_count : Site.my_impressions(ip:impression.ip_address).count %> views
 		</div>
 		<div class="mx-1">
-		<%= user.nil? ? "User: #{impression.user_id}" : link_to(user.display_name_public, user) %>: <%= impression.ip_address %>
+		<%= user.nil? ? tag.span("User: #{impression.user_id}", class: "me-2 text-muted") : link_to(user.display_name_public, user) %>: <%= impression.ip_address %>
 		</div>
-		<%= tag.span impression.ip_address, class: "me-2 text-muted" %>
+		
 	</div>
 
 	<% if impression.respond_to?(:referrer) %>

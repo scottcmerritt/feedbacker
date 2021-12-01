@@ -2,11 +2,18 @@
 <%= render partial: "admin/manage/menu" %>
 <%= render partial: "#{engine_prefix}admin/parts/visits_menu" %>
 
+<% if @user %>
+<% visitor = @user.my_impressions.first %>
+<div class="border p-1 my-1 bg-white">
+<%= render partial: "#{engine_prefix}admin/parts/visitor", locals: {visitor:visitor,index:1} %>
+</div>
+<% end %>
+
 <div class="bg-light" style="overflow-x: scroll;">
 <div class="d-flex p-1 align-items-center">
 <% @users.each do |user| %>
 <div class="p-1 mb-1 me-1 border text-center" style="min-width:140px;">
-<%= link_to user.display_name_public,feedbacker.url_for({user_id:user.id}), class: "fs-8 d-flex" %> <%= tag.span "#{time_ago_in_words(user.last_view)} ago", class: "fs-8 d-flex text-muted" unless user.last_view.nil? %>
+<%= link_to user.display_name_public,feedbacker.url_for({user_id:user.id}), class: class_names("fs-8 d-flex", {active: user.id == params[:user_id]}) %> <%= tag.span "#{time_ago_in_words(user.last_view)} ago", class: "fs-8 d-flex text-muted" unless user.last_view.nil? %>
 </div>
 <% end %>
 
