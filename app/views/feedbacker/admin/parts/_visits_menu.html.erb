@@ -1,5 +1,5 @@
 <style>
-.active {background-color: orange !important;}
+.admin_active {background-color: orange !important;}
 </style>
 
 <% links = {"Visits": :admin_visits,"Referrers": :admin_visit_referrers, "Locations": :admin_visit_locations} %>
@@ -8,6 +8,6 @@
 <% links.each do |k,v| %>
 <% path_to_page = feedbacker.send("#{v}_path") %>
 <%= link_to k, [feedbacker,v], class: 
-class_names(link_css, { active: current_page?(path_to_page) }) %> 
+class_names(link_css, { admin_active: current_page?(path_to_page) }) %> 
 <% end %>
 </div>
