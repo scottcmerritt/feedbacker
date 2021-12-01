@@ -70,10 +70,10 @@ module Feedbacker
     end
 
   def my_impressions
-    Impression.select("*").where("user_id = ?",self.id).order("created_at DESC")
+    Impression.select("*").where("user_id = ?",self.id).order("created_at DESC").order("created_at DESC")
   end
   def my_referrers
-    Impression.select("referrer,MAX(created_at) as created_at").group("referrer").where("user_id = ?",self.id)
+    Impression.select("referrer,MAX(created_at) as created_at").group("referrer").where("user_id = ?",self.id).order("created_at DESC")
   end
 
 
