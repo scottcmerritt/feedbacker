@@ -2,11 +2,11 @@
 <%= render partial: "admin/manage/menu" %>
 <%= render partial: "#{engine_prefix}admin/parts/visits_menu" %>
 
-<div class="col-9" style="overflow-x: scroll;">
+<div class="" style="overflow-x: scroll;">
 <div class="d-flex bg-light p-1 align-items-center">
 <% @users.each do |user| %>
-<div class="p-1 mb-1 me-1 border">
-<%= link_to user.display_name_public,feedbacker.url_for({user_id:user.id}) %> <%= tag.span "#{time_ago_in_words(user.last_view)} ago", class: "fs-7 text-muted" unless user.last_view.nil? %>
+<div class="p-1 mb-1 me-1 border text-center" style="min-width:120px;">
+<%= link_to user.display_name_public,feedbacker.url_for({user_id:user.id}) %> <%= tag.span "#{time_ago_in_words(user.last_view)} ago", class: "fs-8 d-flex text-muted" unless user.last_view.nil? %>
 </div>
 <% end %>
 
