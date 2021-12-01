@@ -3,11 +3,26 @@
 <%= render partial: "#{engine_prefix}admin/parts/visits_menu" %>
 
 <div><%= Impression.count %> total impressions</div>
-<div class="d-flex align-items-center bg-white border-top border-bottom">
+<div class="d-flex align-items-center bg-white border-top border-bottom mb-2">
 <%= "#{@visitors.total_count} rows" if false %>
 <%= feedbacker_paginate @visitors,page: params[:page], wrap_css: "" %>
 </div>
 <% @visitors.each do |visitor| %>
-<%= render visitor %>
+<div class="mb-2 bg-white border p-1 rounded">
+	<%= render visitor %>
+	<div class="px-2 fs-7 d-flex flex-wrap p-1">
+		
+		<% Site.last_actions(ip:visitor.ip_address).each do |row| %>
+		<div class="d-flex align-items-center border me-1 mb-1">
+			<%= tag.span row.row_count, class: "badge badge-sm bg-info mx-1" %>
+			<div class="px-1">
+				<%= row.controller_name %>: <%= row.action_name %>
+			</div>
+		</div>
+		
+		<% end %>
+	</div>
+
+</div>
 <% end %>
 <%= feedbacker_paginate @visitors,page: params[:page], wrap_css: "" %>
