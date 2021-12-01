@@ -3,11 +3,11 @@
 <%= render partial: "#{engine_prefix}admin/parts/visits_menu" %>
 
 <div><%= Impression.count %> total impressions</div>
-<div class="d-flex align-items-center">
-<%= @visitors.total_count %> rows
-<%= feedbacker_paginate @visitors,page: params[:page] %>
+<div class="d-flex align-items-center bg-white border-top border-bottom">
+<%= "#{@visitors.total_count} rows" if false %>
+<%= feedbacker_paginate @visitors,page: params[:page], wrap_css: "" %>
 </div>
 <% @visitors.each do |visitor| %>
 <%= render visitor %>
 <% end %>
-<%= feedbacker_paginate @visitors,page: params[:page] %>
+<%= feedbacker_paginate @visitors,page: params[:page], wrap_css: "" %>

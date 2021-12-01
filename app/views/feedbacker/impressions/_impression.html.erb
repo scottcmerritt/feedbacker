@@ -11,7 +11,7 @@
 			<%= impression.params %>: <%= impression.message %>
 		</div>
 		<% end %>
-		<div class="ms-auto">
+		<div class="ms-auto px-1">
 			<% if impression.respond_to?(:controller_name) %>
 			<%= impression.controller_name %>: <%= impression.action_name %>
 			<% end %>
@@ -24,7 +24,7 @@
 		<%= num_comma impression.respond_to?(:view_count) ? impression.view_count : Site.my_impressions(ip:impression.ip_address).count %> views
 		</div>
 		<div class="mx-1">
-		<%= user.nil? ? "User: #{impression.user_id}" : link_to(user.display_name_public, user) %> 
+		<%= user.nil? ? "User: #{impression.user_id}" : link_to(user.display_name_public, user) %>: <%= impression.ip_address %>
 		</div>
 		<%= tag.span impression.ip_address, class: "me-2 text-muted" %>
 	</div>
@@ -42,7 +42,7 @@
 		<% end %>
 	</div>
 </div>
-<div class="text-muted text-end fs-8">
+<div class="text-muted text-end fs-8 px-1">
 <% unless loc.nil? %>
 	<%= loc.city %>, <%= loc.state %>
 	

@@ -74,13 +74,12 @@
 <td><%= loc.country_code unless loc.nil? %></td>
 <td class="fs-8 text-muted">
 	<div class="d-flex flex-column flex-fill">
-<%= time_ago_in_words visitor.first_visit %> ago
+	<%= time_ago_in_words visitor.first_visit %> ago
 
-
-<a class="mt-auto border bg-white p-1" href="#visitor<%= index %>" data-bs-target="#visitor<%= index %>" data-bs-toggle="collapse"><%= "Last click: #{time_ago_in_words (user.nil? ? Site.last_view(ip:visitor.ip_address) : user.last_view)} ago" %></a>
+	<a class="mt-auto border bg-white p-1" href="#visitor<%= index %>" data-bs-target="#visitor<%= index %>" data-bs-toggle="collapse"><%= "Last click: #{time_ago_in_words (user.nil? ? Site.last_view(ip:visitor.ip_address) : user.last_view)} ago" %></a>
 
 	<a class="mt-auto border bg-white p-1 ms-1" href="#visitorReferrers<%= index %>" data-bs-target="#visitorReferrers<%= index %>" data-bs-toggle="collapse"><%= "Referrers" %></a>
-</div>
+	</div>
 
 </td>
 </tr>

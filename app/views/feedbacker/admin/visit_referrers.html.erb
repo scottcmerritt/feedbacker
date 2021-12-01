@@ -4,8 +4,8 @@
 
 <div><%= num_comma Impression.count %> total impressions</div>
 <div class="d-flex align-items-center justify-content-between">
-<%= tag.div "#{num_comma(@visitors.total_count)} rows", class: "me-2" %> 
-<%= feedbacker_paginate @visitors,page: params[:page] %>
+<%= tag.div "#{num_comma(@visitors.total_count)} rows", class: "me-2" if false %> 
+<%= feedbacker_paginate @visitors,page: params[:page], wrap_css: "" %>
 </div>
 <h3 class="bg-dark text-light p-1 px-2 d-flex">Referrers 
 
@@ -20,7 +20,25 @@ Ignoring: <input type="text" name="ignore" value="<%= @ignore %>" placeholder="<
 </form>
 </h3>
 
-<% @visitors.each do |visitor| %>
-<%= tag.div render(visitor), class: "mb-2" %>
+<% @visitors.each_with_index do |visitor,index| %>
+<div class="mb-2">
+	<%= render(visitor) %>
+	<% my_impressions = Site.my_impressions(ip:visitor.ip_address) %>
+	<% user = User.find_by(id:visitor.user_id) %>
+
+	<div>
+		<a class="mt-auto border bg-white p-1" href="#visitor<%= index %>" data-bs-target="#visitor<%= index %>" data-bs-toggle="collapse"><%= "Last click: #{time_ago_in_words (user.nil? ? Site.last_view(ip:visitor.ip_address) : user.last_view)} ago" %>: (<%= my_impressions.count %> total clicks)</a>
+
+		<div class="text-muted fs-8 collapse" id="visitor<%= index %>">
+		<% my_impressions.limit(10).order("created_at DESC").each_with_index do |row,index| %>
+		<div class="fs-8 text-muted ms-3 d-flex justify-content-between">
+			<div><%= tag.span (index + 1), class: "fw-bold" %>) [<%= row.impressionable_type %>] <%= row.controller_name %> -> <%= row.action_name %>:</div> <%= tag.div row.params %> <div class="text-dark"><%= time_ago_in_words row.created_at %> ago</div>
+		</div>
+		<% end %>
+		</div>
+
+	</div>
+
+</div>
 <% end %>
-<%= feedbacker_paginate @visitors,page: params[:page] %>
+<%= feedbacker_paginate @visitors,page: params[:page], wrap_css: "" %>

@@ -2,8 +2,9 @@
 <% paths = local_assigns[:paths] %>
 <% page = @page if local_assigns[:page].nil? %>
 <% link_css = "btn btn-sm font-weight-bold fw-bold border rounded my-1 bg-light" %>
+<% wrap_css = "bg-white border-bottom border-top" if local_assigns[:wrap_css].nil? %>
 
-<div class="d-flex align-items-center justify-content-between bg-white border-bottom border-top my-1">
+<div class="d-flex align-items-center justify-content-between my-1 <%= wrap_css %>">
 	<div>
 	<%= link_to "#{page > 2 ? "First" : "Page 1"}", paths[:prev]+"&page=1", class: link_css if page.to_i > 1 %>
 	<%= link_to "Page #{page-1}", paths[:prev]+"&page=#{page-1}", class: link_css if page.to_i > 2 %>
