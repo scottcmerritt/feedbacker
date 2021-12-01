@@ -10,7 +10,7 @@ module Feedbacker
       end
     end
   
-    def tag_with_remove tag_lbl:nil, lbl:, remove_keys:nil, wrap_css: "d-flex align-items-center border p-1 me-1",link_css: "text-danger mx-1"
+    def tag_with_remove tag_lbl:nil, lbl:, remove_keys:nil, wrap_css: "d-flex align-items-center bg-plain border p-1 me-1",link_css: "text-danger mx-1"
       
       tag_full_label = tag.div safe_join([tag.span(tag_lbl,class:"text-muted"),tag.span(lbl,class:"fw-bold")])
 
