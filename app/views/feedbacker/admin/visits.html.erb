@@ -2,6 +2,9 @@
 <%= render partial: "admin/manage/menu" %>
 <%= render partial: "#{engine_prefix}admin/parts/visits_menu" %>
 
+<%= tag.div "Filtered by controller: #{params[:controller_name]}", class: "fw-bold m-1" if params[:controller_name] %>
+<%= tag.div "Filtered by action: #{params[:action_name]}", class: "fw-bold m-1" if params[:action_name] %>
+
 <% if @user %>
 <% visitor = @user.my_impressions.first %>
 <div class="border border-dark border-2 p-1 my-1 bg-white">
