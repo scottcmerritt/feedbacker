@@ -11,7 +11,7 @@
 <% elsif size == 'tiny' %>
 <%= tag.div(image_tag(target.best_image, class: img_css,style:"min-width:65px;"), style:"width:65px;text-align:center;", class: wrap_css) rescue tag.div(icon(icon:default_icon,icon_css:"fs-3 text-muted"),class:"p-3", style:"width:65px;") %>
 <% elsif size == 'sm' %>
-<% if target.kind_of?(Book) %>
+<% if defined?(Book) && target.kind_of?(Book) %>
 <%= tag.div(image_tag(books_cover_path(id:target.id), class: img_css,style:"min-width:105px;"), style:"width:105px;text-align:center;", class: wrap_css) rescue tag.div(icon(icon:default_icon,icon_css:"fs-2 text-muted"),class:"p-3", style:"width:105px;") %>
 <% else %>
 <%= tag.div(image_tag(target.best_image, class: img_css,style:"min-width:105px;"), style:"width:105px;text-align:center;", class: wrap_css) rescue tag.div(icon(icon:default_icon,icon_css:"fs-2 text-muted"),class:"p-3", style:"width:105px;") %>
