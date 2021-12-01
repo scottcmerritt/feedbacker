@@ -21,7 +21,7 @@
 </div>
 
 <div><%= Impression.count %> total impressions</div>
-<div class="d-flex align-items-center bg-white border-top border-bottom mb-2">
+<div class="d-flex align-items-center bg-white border-top border-bottom mb-2 px-1">
 <%= "#{@visitors.total_count} rows" if false %>
 <%= feedbacker_paginate @visitors,page: params[:page], wrap_css: "" %>
 </div>
