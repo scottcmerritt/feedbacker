@@ -234,6 +234,7 @@ def cleanup
 
 
     def visits
+      @users = User.all.sort_by{|user| (user.last_view ? user.last_view : 100.days.ago)}.reverse
 
       wh_sql = params[:users] ? "user_id > 0" : "(user_id is NULL OR user_id > 0) OR ip_address is null" 
       @visitors = Impression.select("ip_address,COUNT(id) as view_count,MAX(user_id) as user_id,MAX(created_at) as last_visit")
