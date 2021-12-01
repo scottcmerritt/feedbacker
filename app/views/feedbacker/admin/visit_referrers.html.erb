@@ -21,8 +21,35 @@ Ignoring: <input type="text" name="ignore" value="<%= @ignore %>" placeholder="<
 </h3>
 
 <% @visitors.each_with_index do |visitor,index| %>
-<div class="mb-2">
+<div class="mb-2 bg-white border">
 	<%= render(visitor) %>
+
+	<div class="px-2 fs-7 d-flex flex-wrap p-1">
+	<% Site.views_per_user(ip:visitor.ip_address).each do |user_row| %>
+	<div class="d-flex align-items-center border rounded mb-1 me-1">
+		<span class="badge bg-info text-dark mx-1"><%= user_row.impressions_count %></span>
+	<%= render partial: "users/parts/list_row", locals: {user:user_row,show_extra:false,size:"micro",wrap_css: "p-1 fs-7",is_admin:false} %>
+
+	</div>
+
+
+	<% end %>
+	</div>
+
+	<div class="px-2 fs-7 d-flex flex-wrap p-1">
+
+		<% Site.last_actions(ip:visitor.ip_address).each do |row| %>
+		<div class="d-flex align-items-center border me-1 mb-1">
+			<%= tag.span row.row_count, class: "badge badge-sm bg-info mx-1" %>
+			<div class="px-1">
+				<%= row.controller_name %>: <%= row.action_name %>
+			</div>
+		</div>
+		
+		<% end %>
+	</div>
+
+
 	<% my_impressions = Site.my_impressions(ip:visitor.ip_address) %>
 	<% user = User.find_by(id:visitor.user_id) %>
 
