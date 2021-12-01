@@ -237,11 +237,15 @@ def cleanup
       @users = User.all.sort_by{|user| (user.last_view ? user.last_view : 100.days.ago)}.reverse
       @user = User.find_by(id:params[:user_id])
 
-      wh_sql = params[:users] ? "user_id > 0" : "(user_id is NULL OR user_id > 0) OR ip_address is null" 
+      wh_sql = params[:users] ? "(user_id > 0)" : "((user_id is NULL OR user_id > 0) OR ip_address is null)"
+      
       @visitors = Impression.select("ip_address,COUNT(id) as view_count,MAX(user_id) as user_id,MAX(created_at) as last_visit")
       .where(wh_sql)
       .group("ip_address")
       .order("#{@sort_by} #{@sort_dir}")
+
+      @visitors = @visitors.where("controller_name = ?",params[:controller_name]) if params[:controller_name]
+      @visitors = @visitors.where("action_name = ?",params[:action_name]) if params[:action_name]
 
       @visitors = @visitors.page(params[:page]).per(@limit)
     end
