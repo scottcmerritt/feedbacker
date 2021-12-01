@@ -1,4 +1,6 @@
-<% unless visitor.nil? %>
+<% if visitor.nil? %>
+VISITOR NULL
+<% else %>
 <div class="mb-2 bg-white border">
 
 <%= render(visitor) %>

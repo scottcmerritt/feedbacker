@@ -4,7 +4,7 @@
 
 <% if @user %>
 <% visitor = @user.my_impressions.first %>
-<div class="border p-1 my-1 bg-white">
+<div class="border border-dark border-2 p-1 my-1 bg-white">
 <%= render partial: "#{engine_prefix}admin/parts/visitor", locals: {visitor:visitor,index:1} %>
 </div>
 <% end %>
