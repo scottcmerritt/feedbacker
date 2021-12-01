@@ -2,9 +2,14 @@
 <%= render partial: "admin/manage/menu" %>
 <%= render partial: "#{engine_prefix}admin/parts/visits_menu" %>
 
-<%= tag.div "Filtered by controller: #{params[:controller_name]}", class: "fw-bold m-1" if params[:controller_name] %>
-<%= tag.div "Filtered by action: #{params[:action_name]}", class: "fw-bold m-1" if params[:action_name] %>
+<% if params[:controller_name] || params[:action_name] %>
+<div class="d-flex align-items-center">
+	<div class="me-1">Filtered by:</div>
 
+	<%= tag_with_remove tag_lbl:"controller: ", lbl: "#{params[:controller_name]}",remove_keys: :controller_name if params[:controller_name] %>
+	<%= tag_with_remove tag_lbl: "action: ",lbl: "#{params[:action_name]}",remove_keys: :action_name if params[:action_name] %>
+</div>
+<% end %>
 <% if @user %>
 <% visitor = @user.my_impressions.first %>
 <div class="border border-dark border-2 p-1 my-1 bg-white">

@@ -9,6 +9,13 @@ module Feedbacker
         return true if feature == "translate"
       end
     end
+  
+    def tag_with_remove tag_lbl:nil, lbl:, remove_keys:nil, wrap_css: "d-flex align-items-center border p-1 me-1",link_css: "text-danger mx-1"
+      
+      tag_full_label = tag.div safe_join([tag.span(tag_lbl,class:"text-muted"),tag.span(lbl,class:"fw-bold")])
+
+      tag.div safe_join([tag_full_label, link_to("X",feedbacker.url_for(request.parameters.except(remove_keys)), class: link_css)]), class: wrap_css
+    end
 
     def feedbacker_marketing_link
       tag.div "Automatically created by Feedbacker", class: "p-2 fs-7 text-center"
