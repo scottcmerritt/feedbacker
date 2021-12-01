@@ -210,7 +210,7 @@ def cleanup
       @room = Room.user_messages(user_id:@user.id) unless @user.nil?
       if request.post?
         message = room_message_params[:message]
-        
+
         if @user.nil?
           flash[:notice] = "You need to select a user"
         else
@@ -234,8 +234,10 @@ def cleanup
 
 
     def visits
+
+      wh_sql = params[:users] ? "user_id > 0" : "(user_id is NULL OR user_id > 0) OR ip_address is null" 
       @visitors = Impression.select("ip_address,COUNT(id) as view_count,MAX(user_id) as user_id,MAX(created_at) as last_visit")
-      .where("(user_id is NULL OR user_id > 0) OR ip_address is null")
+      .where(wh_sql)
       .group("ip_address")
       .order("#{@sort_by} #{@sort_dir}")
 
