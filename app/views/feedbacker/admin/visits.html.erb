@@ -4,7 +4,8 @@
 
 <% user_filter_html = render(partial: "users/parts/list_row", locals: {user:@user,show_extra:false,size:"micro",wrap_css: "bg-plain p-0 m-0 fs-7",is_admin:false}) if @user %>
 
-<% if params[:controller_name] || params[:action_name] || user_filter_html %>
+<% is_filtered_by_view_type = params[:controller_name] || params[:action_name] %>
+<% if is_filtered_by_view_type || user_filter_html %>
 <div class="d-flex align-items-center">
 	<div class="me-1">Filtered by:</div>
 
@@ -25,7 +26,7 @@
 </div>
 <% end %>
 
-<%= render partial: "#{engine_prefix}admin/parts/recent_viewers" %>
+<%= render partial: "#{engine_prefix}admin/parts/recent_viewers", locals: {title: is_filtered_by_view_type ? "users who viewed" : "users"} %>
 
 
 <div><%= Impression.count %> total impressions</div>

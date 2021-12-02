@@ -247,7 +247,13 @@ def cleanup
       @visitors = @visitors.where("controller_name = ?",params[:controller_name]) if params[:controller_name]
       @visitors = @visitors.where("action_name = ?",params[:action_name]) if params[:action_name]
 
+      @visitor_users = User.joins("LEFT JOIN impressions ON impressions.user_id = users.id").group("users.id")
+      @visitor_users = @visitor_users.where("controller_name = ?",params[:controller_name]) if params[:controller_name]
+      @visitor_users = @visitor_users.where("action_name = ?",params[:action_name]) if params[:action_name]
+
       @visitors = @visitors.page(params[:page]).per(@limit)
+
+
     end
 
     def visit_referrers
