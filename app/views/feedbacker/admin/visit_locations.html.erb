@@ -52,7 +52,7 @@
 <% loc = user.nil? ? Site.location_cached(ip:visitor.ip_address) : user.location_cached %>
 <tr class="text-dark border-top border-dark">
 	<td class="fs-8 text-muted">
-<%= time_ago_in_words visitor.last_visit %> ago
+<%= date_fmt visitor.last_visit, fmt:"ago" %> ago
 </td>
 <td><%= user.nil? ? tag.span(visitor.user_id.nil? ? "Anonymous" : "User: #{visitor.user_id}", class: "text-danger border border-danger rounded p-1 bg-white") : render(partial: "users/profile_mini",locals: {user:user}) %>
 	
@@ -74,9 +74,9 @@
 <td><%= loc.country_code unless loc.nil? %></td>
 <td class="fs-8 text-muted">
 	<div class="d-flex flex-column flex-fill">
-	<%= time_ago_in_words visitor.first_visit %> ago
+	<%= date_fmt visitor.first_visit,fmt:"ago" %> ago
 
-	<a class="mt-auto border bg-white p-1" href="#visitor<%= index %>" data-bs-target="#visitor<%= index %>" data-bs-toggle="collapse"><%= "Last click: #{time_ago_in_words (user.nil? ? Site.last_view(ip:visitor.ip_address) : user.last_view)} ago" %></a>
+	<a class="mt-auto border bg-white p-1" href="#visitor<%= index %>" data-bs-target="#visitor<%= index %>" data-bs-toggle="collapse"><%= "Last click: #{date_fmt(user.nil? ? Site.last_view(ip:visitor.ip_address) : user.last_view,fmt: "ago")} ago" %></a>
 
 	<a class="mt-auto border bg-white p-1 ms-1" href="#visitorReferrers<%= index %>" data-bs-target="#visitorReferrers<%= index %>" data-bs-toggle="collapse"><%= "Referrers" %></a>
 	</div>
@@ -120,7 +120,7 @@
 	<div class="text-muted fs-8 collapse" id="visitorReferrers<%= index %>">
 		<% my_referrers.limit(10).order("created_at DESC").each_with_index do |row,index| %>
 		<div class="fs-8 text-muted ms-3 d-flex justify-content-between">
-			<div><%= tag.span (index + 1), class: "fw-bold" %>) <%= row.referrer %></div> <div class="text-dark"><%= time_ago_in_words row.created_at %> ago</div>
+			<div><%= tag.span (index + 1), class: "fw-bold" %>) <%= row.referrer %></div> <div class="text-dark"><%= date_fmt row.created_at,fmt:"ago" %> ago</div>
 		</div>
 		<% end %>
 	</div>
@@ -128,7 +128,7 @@
 
 		<% my_impressions.limit(10).order("created_at DESC").each_with_index do |row,index| %>
 		<div class="fs-8 text-muted ms-3 d-flex justify-content-between">
-			<div><%= tag.span (index + 1), class: "fw-bold" %>) [<%= row.impressionable_type %>] <%= row.controller_name %> -> <%= row.action_name %>:</div> <%= tag.div row.params %> <div class="text-dark"><%= time_ago_in_words row.created_at %> ago</div>
+			<div><%= tag.span (index + 1), class: "fw-bold" %>) [<%= row.impressionable_type %>] <%= row.controller_name %> -> <%= row.action_name %>:</div> <%= tag.div row.params %> <div class="text-dark"><%= date_fmt row.created_at,fmt:"ago" %> ago</div>
 		</div>
 		<% end %>
 

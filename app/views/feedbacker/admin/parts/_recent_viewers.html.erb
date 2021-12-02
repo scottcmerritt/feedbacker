@@ -1,0 +1,24 @@
+<div class="border">
+
+	<div class="fs-8 mt-1 px-2"><%= @users.count %> users</div>
+	<div class="bg-light" style="overflow-x: scroll;">
+	<div class="d-flex p-1 align-items-center">
+	<% @users.each do |user| %>
+	<div class="p-1 mb-1 me-1 border text-center" style="min-width:140px;">
+				
+
+	<%= link_to user.display_name_public,feedbacker.url_for({user_id:user.id}), class: class_names("fs-8 d-flex", {active: user.id == params[:user_id]}) %> 
+
+	<div class="d-flex justify-content-between">
+
+		<span class="badge bg-info text-dark mx-1"><%= user.my_impressions.count %></span>
+		<%= tag.span "#{date_fmt(user.last_view,fmt:"ago")}", class: "ms-auto fs-8 d-flex text-muted" unless user.last_view.nil? %>
+	</div>
+
+
+	</div>
+	<% end %>
+
+	</div>
+	</div>
+</div>

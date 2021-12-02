@@ -1,3 +1,4 @@
+<% impression_limit = 20 if local_assigns[:impression_limit].nil? %>
 <% if visitor.nil? %>
 VISITOR NULL
 <% else %>
@@ -5,40 +6,44 @@ VISITOR NULL
 
 <%= render(visitor) %>
 
-<div class="px-2 fs-7 d-flex flex-wrap p-1">
+<div class="row g-0">
+	<div class="col-3 border-end border-2">
+		<div class="fw-bold text-dark bg-plain p-1 px-2">
+			Users with this IP
+		</div>
+		<div class="px-2 fs-7 d-flex flex-wrap p-1">
 
-<% Site.views_per_user(ip:visitor.ip_address).each do |user_row| %>
-<div class="d-flex align-items-center border rounded mb-1 me-1">
-	<span class="badge bg-info text-dark mx-1"><%= user_row.impressions_count %></span>
-<%= render partial: "users/parts/list_row", locals: {user:user_row,show_extra:false,size:"micro",wrap_css: "p-1 fs-7",is_admin:false} %>
-
-</div>
-
-<% end %>
-</div>
-
-<div class="px-2 fs-7 d-flex flex-wrap p-1">
-
-	<% Site.last_actions(ip:visitor.ip_address).each do |row| %>
-	<div class="d-flex align-items-center border me-1 mb-1">
-		<%= tag.span row.row_count, class: "badge badge-sm bg-info mx-1" %>
-		<div class="px-1">
-			<%= row.controller_name %>: <%= row.action_name %>
+		<% Site.views_per_user(ip:visitor.ip_address).each do |user_row| %>
+		<div class="d-flex align-items-center border rounded mb-1 me-1">
+			<span class="badge bg-info text-dark mx-1"><%= user_row.impressions_count %></span>
+		<%= render partial: "users/parts/list_row", locals: {user:user_row,show_extra:false,size:"micro",wrap_css: "bg-plain p-1 fs-7",is_admin:false} %>
+		</div>
+		<% end %>
 		</div>
 	</div>
-	
-	<% end %>
+	<div class="col-9">
+		<div class="px-2 fs-7 d-flex flex-wrap p-1">
+			<% Site.last_actions(ip:visitor.ip_address).each do |row| %>
+			<div class="d-flex align-items-center border me-1 mb-1">
+				<%= tag.span row.row_count, class: "badge badge-sm bg-info mx-1" %>
+				<div class="px-1">
+					<a href="<%= feedbacker.admin_visits_path(controller_name: row.controller_name,action_name:row.action_name,user_id:visitor.user_id) %>"><%= row.controller_name %>: <%= row.action_name %></a>
+				</div>
+			</div>
+			<% end %>
+		</div>
+	</div>
 </div>
 
 <% user = User.find_by(id:visitor.user_id) %>
-<% my_impressions = user.nil? ? user.my_impressions : Site.my_impressions(ip:visitor.ip_address) %>
+<% my_impressions = user.nil? ? user.my_impressions.per : Site.my_impressions(ip:visitor.ip_address) %>
 <div>
-	<a class="mt-auto border bg-white p-1" href="#visitor<%= index %>" data-bs-target="#visitor<%= index %>" data-bs-toggle="collapse"><%= "Last click: #{time_ago_in_words (user.nil? ? Site.last_view(ip:visitor.ip_address) : user.last_view)} ago" %>: (<%= my_impressions.count %> total clicks)</a>
+	<a class="mt-auto border p-1 btn btn-sm btn-success" href="#visitor<%= index %>" data-bs-target="#visitor<%= index %>" data-bs-toggle="collapse"><%= "Last click: #{date_fmt(user.nil? ? Site.last_view(ip:visitor.ip_address) : user.last_view,fmt:"ago")} ago" %>: (<%= my_impressions.count %> total clicks)</a>
 
 	<div class="text-muted fs-8 collapse" id="visitor<%= index %>">
-	<% my_impressions.limit(10).order("created_at DESC").each_with_index do |row,index| %>
+	<% my_impressions.limit(impression_limit).order("created_at DESC").each_with_index do |row,index| %>
 	<div class="fs-8 text-muted ms-3 d-flex justify-content-between">
-		<div><%= tag.span (index + 1), class: "fw-bold" %>) [<%= row.impressionable_type %>] <a href="<%= feedbacker.admin_visits_path(controller_name: row.controller_name,action_name:row.action_name,user_id:user.nil? ? nil : user.id) %>"><%= row.controller_name %> -> <%= row.action_name %></a> :</div> <%= tag.div row.params %> <div class="text-dark"><%= time_ago_in_words row.created_at %> ago</div>
+		<div><%= tag.span (index + 1), class: "fw-bold" %>) [<%= row.impressionable_type %>] <a href="<%= feedbacker.admin_visits_path(controller_name: row.controller_name,action_name:row.action_name,user_id:user.nil? ? nil : user.id) %>"><%= row.controller_name %> -> <%= row.action_name %></a> :</div> <%= tag.div row.params %> <div class="text-dark"><%= date_fmt row.created_at,fmt:"ago" %> ago</div>
 	</div>
 	<% end %>
 	</div>

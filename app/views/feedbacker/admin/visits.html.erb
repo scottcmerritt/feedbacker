@@ -2,31 +2,31 @@
 <%= render partial: "admin/manage/menu" %>
 <%= render partial: "#{engine_prefix}admin/parts/visits_menu" %>
 
-<% if params[:controller_name] || params[:action_name] %>
+<% user_filter_html = render(partial: "users/parts/list_row", locals: {user:@user,show_extra:false,size:"micro",wrap_css: "bg-plain p-0 m-0 fs-7",is_admin:false}) if @user %>
+
+<% if params[:controller_name] || params[:action_name] || user_filter_html %>
 <div class="d-flex align-items-center">
 	<div class="me-1">Filtered by:</div>
 
+	<%= tag_with_remove lbl: user_filter_html,remove_keys: :user_id if user_filter_html %>
+
 	<%= tag_with_remove tag_lbl:"controller: ", lbl: "#{params[:controller_name]}",remove_keys: :controller_name if params[:controller_name] %>
 	<%= tag_with_remove tag_lbl: "action: ",lbl: "#{params[:action_name]}",remove_keys: :action_name if params[:action_name] %>
+
+	
 </div>
 <% end %>
 <% if @user %>
+
+
 <% visitor = @user.my_impressions.first %>
 <div class="border border-dark border-2 p-1 my-1 bg-white">
 <%= render partial: "#{engine_prefix}admin/parts/visitor", locals: {visitor:visitor,index:1} %>
 </div>
 <% end %>
 
-<div class="bg-light" style="overflow-x: scroll;">
-<div class="d-flex p-1 align-items-center">
-<% @users.each do |user| %>
-<div class="p-1 mb-1 me-1 border text-center" style="min-width:140px;">
-<%= link_to user.display_name_public,feedbacker.url_for({user_id:user.id}), class: class_names("fs-8 d-flex", {active: user.id == params[:user_id]}) %> <%= tag.span "#{time_ago_in_words(user.last_view)} ago", class: "fs-8 d-flex text-muted" unless user.last_view.nil? %>
-</div>
-<% end %>
+<%= render partial: "#{engine_prefix}admin/parts/recent_viewers" %>
 
-</div>
-</div>
 
 <div><%= Impression.count %> total impressions</div>
 <div class="d-flex align-items-center bg-white border-top border-bottom mb-2 px-1">
@@ -42,21 +42,18 @@
 	<div class="d-flex align-items-center border rounded mb-1 me-1">
 		<span class="badge bg-info text-dark mx-1"><%= user_row.impressions_count %></span>
 	<%= render partial: "users/parts/list_row", locals: {user:user_row,show_extra:false,size:"micro",wrap_css: "p-1 fs-7",is_admin:false} %>
-
 	</div>
-
-
 	<% end %>
 	</div>
 
 	<div class="px-2 fs-7 d-flex flex-wrap p-1">
-
 		<% Site.last_actions(ip:visitor.ip_address).each do |row| %>
-		<div class="d-flex align-items-center border me-1 mb-1">
+		<% is_selected = params[:controller_name] == row.controller_name && params[:action_name] == row.action_name %>
+
+		<div class="d-flex align-items-center border me-1 mb-1 <%= "alert-success border-success border-2" if is_selected %>" >
 			<%= tag.span row.row_count, class: "badge badge-sm bg-info mx-1" %>
-			<div class="px-1">
-				<%= row.controller_name %>: <%= row.action_name %>
-			</div>
+			<a href="<%= feedbacker.admin_visits_path(controller_name: row.controller_name,action_name:row.action_name,user_id:@user.nil? ? nil : @user.id) %>" class="px-1 <%= "nodec fw-bold" if is_selected %>">
+				<%= row.controller_name %>: <%= row.action_name %></a>
 		</div>
 		
 		<% end %>
