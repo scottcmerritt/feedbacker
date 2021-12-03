@@ -27,7 +27,7 @@
   <% if commentable.root_comments.length == 0 %>
   <div class="alert alert-info">Be the first to comment</div>
   <% else %>
-  <%= render partial: "comments/reply", locals: {comments: commentable.root_comments.reverse,new_comment: new_comment} %>
+  <%= render partial: "comments/reply", locals: {comments: commentable.root_comments.sort_by{|row| row.created_at}.reverse,new_comment: new_comment} %>
   <% end %>
 </div>
 <% if with_wrap %></div><% end %>

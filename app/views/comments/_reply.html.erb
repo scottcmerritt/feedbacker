@@ -4,7 +4,6 @@
 <% profile_css = "d-flex align-items-center m-0" %>
 <% is_admin = false if local_assigns[:is_admin].nil? %>
 
-
 <% paging = false if local_assigns[:paging].nil? %>
 <% comments = Kaminari.paginate_array(comments).page(params[:page]).per(2) if paging %>
 <%= paginate comments if paging %>

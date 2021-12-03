@@ -34,7 +34,7 @@ module Feedbacker
       current_user.nil? ? tag.span("Guest") : icon(icon:"user",lbl:"User #{current_user.id}",with_span:true,icon_css:"fs-5") #, [main_app,current_user])
     end
 
-     def feedbacker_comments target:, new_comment: nil
+    def feedbacker_comments target:, new_comment: nil
       render partial: "comments/template", locals: {commentable: target, new_comment: new_comment} 
     end
 
