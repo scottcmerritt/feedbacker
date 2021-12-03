@@ -1,0 +1,8 @@
+var updatedCommentsHtml = '<%= escape_javascript(render(partial:"comments/template", locals: {commentable: @target, new_comment: @new_comment,with_wrap:false})) %>'
+var recentFormEl = $("#<%= @form_id %>")
+var allCommentsEl = null;
+<%# recent reply section = recentFormEl.closest('.comments-show') if @parent_comment %>
+
+allCommentsEl = recentFormEl.closest('.feedbacker_comments')
+allCommentsEl.html(updatedCommentsHtml)
+bindCommentReply()

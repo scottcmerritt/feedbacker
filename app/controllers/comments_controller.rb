@@ -5,13 +5,21 @@ class CommentsController < ApplicationController
     commentable = commentable_type.constantize.find(commentable_id)
     @comment = Comment.build_from(commentable, current_user.id, body)
 
+    @form_id = comment_params[:form_id]
+
     respond_to do |format|
       if @comment.save
         make_child_comment
         #format.html  { redirect_to(:back, :notice => 'Comment was successfully added.') }
         format.html { redirect_back notice: 'Comment was successfully added.', fallback_location: root_path }
+        format.js do
+          @target = commentable
+          @new_comment = Comment.build_from(commentable, current_user.id, "")
+          render "comments/show_added"  #redirect_back notice: 'Comment was successfully added.', fallback_location: root_path }
+        end
       else
         format.html  { render :action => "new" }
+        format.js  { render :action => "new" }
       end
     end
   end
@@ -19,7 +27,7 @@ class CommentsController < ApplicationController
   private
 
   def comment_params
-    params.require(:comment).permit(:body, :commentable_id, :commentable_type, :comment_id)
+    params.require(:comment).permit(:body, :commentable_id, :commentable_type, :comment_id,:form_id)
   end
 
   def commentable_type
@@ -41,8 +49,8 @@ class CommentsController < ApplicationController
   def make_child_comment
     return "" if comment_id.blank?
 
-    parent_comment = Comment.find comment_id
-    @comment.move_to_child_of(parent_comment)
+    @parent_comment = Comment.find comment_id
+    @comment.move_to_child_of(@parent_comment)
   end
 
 end

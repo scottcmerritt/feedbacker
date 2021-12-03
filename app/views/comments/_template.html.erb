@@ -1,7 +1,26 @@
+<% with_wrap = true if local_assigns[:with_wrap].nil? %>
+<% if with_wrap %><div class="feedbacker_comments"><% end %>
+
+<% if false %>
+<% word_no = respond_to?(:dbt) ? dbt("comments.no",d:"no") : "no" %>
+<% word_comments = respond_to?(:dbt) ? dbt("comments.comments",d:"comments") : "comments" %>
+<% word_comment = respond_to?(:dbt) ? dbt("comments.comment",d:"comment") : "comment" %>
+<% word_comment = respond_to?(:dbt) ? dbt("comments.yet",d:"yet") : "yet" %>
+<% end %>
+
 <div class="comments-header">
+  <% if false %>
   <h6 class="mt-1">
+    <% if commentable.comment_threads.count == 0 %>
+
+    <% elsif commentable.comment_threads.count == 1 %>
+
+    <% elsif commentable.comment_threads.count > 1 %>
+
+    <% end %>
     <%= commentable.comment_threads.count == 0 ? "no" : commentable.comment_threads.count %> <%= "comment".pluralize(commentable.comment_threads.count) %>
   </h6>
+  <% end %>
 </div>
 <%= render partial: "comments/form", locals: {new_comment: new_comment} %>
 <div class="comments-container rounded">
@@ -11,3 +30,4 @@
   <%= render partial: "comments/reply", locals: {comments: commentable.root_comments.reverse,new_comment: new_comment} %>
   <% end %>
 </div>
+<% if with_wrap %></div><% end %>

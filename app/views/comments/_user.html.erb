@@ -1,0 +1,1 @@
+<%= comment.user.respond_to?(:display_name_public) ? link_to(comment.user.display_name_public, main_app.user_path(comment.user_id)) : comment.user_id %>
