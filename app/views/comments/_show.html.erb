@@ -3,6 +3,7 @@
       <div class="body">
             <div class="date_ago"><%= tag.span "#{date_fmt(comment.created_at, fmt:"ago")} ago", class:"fs-8" %></div>
       <p class="d-flex align-items-top px-2"><%= comment.body %></p>
+      <%= tag.div comment.subject || "[]", class:"fs-8 fw-bold text-end mx-1" if is_admin? %>
       </div>
       <div class="border-top border-1 px-2 fs-7 text-secondary">
             Commented on <%= comment.commentable.is_a?(Newsify::Source) ? link_to(comment.commentable.title, newsify.source_path(comment.commentable)) : (comment.commentable.is_a?(Newsify::Item) ? link_to(comment.commentable.title, newsify.item_path(comment.commentable)) : link_to(comment.commentable.title, comment.commentable)) %>

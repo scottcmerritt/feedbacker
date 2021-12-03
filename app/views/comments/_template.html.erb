@@ -1,5 +1,12 @@
+<% comments = commentable.root_comments.sort_by{|row| row.created_at}.reverse if local_assigns[:comments].nil? %>
 <% with_wrap = true if local_assigns[:with_wrap].nil? %>
+
 <% if with_wrap %><div class="feedbacker_comments"><% end %>
+
+<% form_locals = {new_comment: new_comment} %>
+<% form_locals = form_locals.merge(local_assigns[:values]) unless local_assigns[:values].nil? %>
+
+
 
 <% if false %>
 <% word_no = respond_to?(:dbt) ? dbt("comments.no",d:"no") : "no" %>
@@ -22,12 +29,12 @@
   </h6>
   <% end %>
 </div>
-<%= render partial: "comments/form", locals: {new_comment: new_comment} %>
+<%= render partial: "comments/form", locals: form_locals %>
 <div class="comments-container rounded">
   <% if commentable.root_comments.length == 0 %>
   <div class="alert alert-info">Be the first to comment</div>
   <% else %>
-  <%= render partial: "comments/reply", locals: {comments: commentable.root_comments.sort_by{|row| row.created_at}.reverse,new_comment: new_comment} %>
+  <%= render partial: "comments/reply", locals: {comments: comments,new_comment: new_comment} %>
   <% end %>
 </div>
 <% if with_wrap %></div><% end %>

@@ -34,8 +34,21 @@ module Feedbacker
       current_user.nil? ? tag.span("Guest") : icon(icon:"user",lbl:"User #{current_user.id}",with_span:true,icon_css:"fs-5") #, [main_app,current_user])
     end
 
-    def feedbacker_comments target:, new_comment: nil
-      render partial: "comments/template", locals: {commentable: target, new_comment: new_comment} 
+    # TODO: implement search filters, or tag filters??
+    # TODO: maybe add tag params: for adding page::10 and filtering by page=10
+    # fields: [which fields to permit, default just :body]
+    # values: what values to set in new fields
+    # hidden: which fields to visually hide? (despite being in page/form)
+    def feedbacker_comments target:, new_comment: nil, filters: nil, fields: [:body], values: nil, hidden: nil, with_wrap: true
+      locals = {commentable: target, new_comment: new_comment,with_wrap:with_wrap}
+      locals = locals.merge({comments: filter_comments(target.root_comments,filters:filters)}) unless filters.nil?
+      locals = locals.merge({fields:fields,values:values})
+      render partial: "comments/template", locals: locals
+    end
+
+    def filter_comments filtered_comments,filters:nil
+      filtered_comments = filtered_comments.where("subject = ?",filters[:subject]) unless filters.nil?
+      filtered_comments.sort_by{|row| row.created_at}.reverse
     end
 
 

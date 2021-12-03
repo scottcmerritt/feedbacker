@@ -1,4 +1,8 @@
-var updatedCommentsHtml = '<%= escape_javascript(render(partial:"comments/template", locals: {commentable: @target, new_comment: @new_comment,with_wrap:false})) %>'
+<% if false %>
+//var updatedCommentsHtml = '<%= escape_javascript(render(partial:"comments/template", locals: {commentable: @target, new_comment: @new_comment,with_wrap:false})) %>'
+<% end %>
+var updatedCommentsHtml = '<%= escape_javascript(feedbacker_comments(target: @target, new_comment: @new_comment, filters:@comment_filters, fields: [:body,:subject], hidden: [:subject], values: @comment_values,with_wrap:false)) %>'
+
 var recentFormEl = $("#<%= @form_id %>")
 var allCommentsEl = null;
 <%# recent reply section = recentFormEl.closest('.comments-show') if @parent_comment %>
