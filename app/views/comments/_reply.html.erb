@@ -14,7 +14,7 @@
         <div class="d-flex">
           <%= render partial: "users/parts/list_row", locals: {user:comment.user,show_extra:false,size:"micro",wrap_css: user_css,profile_css:profile_css,is_admin:is_admin} rescue render(partial: "comments/user",locals: {comment:comment}) %>
 
-          <span class="ms-auto"><%= tag.span "#{time_ago_in_words(comment.created_at)} ago", class:"fs-7" %></span>
+          <span class="ms-auto fs-7"><%= tag.span("#{date_fmt(comment.created_at,fmt: "ago")}") rescue tag.span("#{time_ago_in_words(comment.created_at)} ago") %></span>
         </div>
 
       <p class="d-flex align-items-top"><%= comment.body %>
