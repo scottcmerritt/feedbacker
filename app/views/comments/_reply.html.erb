@@ -20,7 +20,7 @@
       <p class="d-flex align-items-top"><%= comment.body %>
         <br>
       </p>
-      <%= tag.div comment.subject || "[]", class:"fs-8 fw-bold text-end mx-1" if is_admin? %>
+      <%= tag.div comment.subject, class:"fs-8 fw-bold text-end mx-1" if is_admin? %>
 
     </div>
 
