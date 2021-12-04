@@ -17,6 +17,14 @@ module Feedbacker
 	  	ids.uniq.compact
 	  end
 
+	  def announce_comment! sender:nil
+        self.commenter_ids.each do |user_id|
+          if user = User.find_by(id:user_id)
+            UserMailer.announce_comment(user:user,resource:self,sender:sender).deliver
+          end
+        end
+	  end
+
 	  module ClassMethods
 	    # accesed by Post.flags, Post.flagged_spam, etc...
 

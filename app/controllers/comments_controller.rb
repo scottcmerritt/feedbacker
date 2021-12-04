@@ -10,11 +10,15 @@ class CommentsController < ApplicationController
 
     respond_to do |format|
       if @comment.save
+        @target = commentable
+
+        @target.announce_comment! sender:current_user
+
         make_child_comment
         #format.html  { redirect_to(:back, :notice => 'Comment was successfully added.') }
         format.html { redirect_back notice: 'Comment was successfully added.', fallback_location: root_path }
         format.js do
-          @target = commentable
+          
           @new_comment = Comment.build_from(commentable, current_user.id, "",extra:@extra_fields)
           @comment_filters = {subject: @comment.subject} unless @comment.subject.blank?
           @comment_values = @comment_filters if @comment_filters
