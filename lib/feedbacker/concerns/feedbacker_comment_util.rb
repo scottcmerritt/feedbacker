@@ -1,5 +1,5 @@
 module Feedbacker
-	module FeedbackerUtil
+	module FeedbackerCommentUtil
 
 	extend ActiveSupport::Concern
 
@@ -8,20 +8,14 @@ module Feedbacker
 	    base.extend ClassMethods
 	  end
 
-	  # https://stackoverflow.com/questions/4099409/ruby-how-to-chain-multiple-method-calls-together-with-send
-	  # for sending a dynamic list of commands
-	  #def send_chain(arr)
-	  #  arr.inject(self) {|o, a| o.send(a) }
-	  #end
-
-	  # more robust approach (with args)
-	  # arr = [:to_i, [:+, 4], :to_s, [:*, 3]]
-	  # '1'.send_chain(arr) # => "555"
-	def send_chain(arr)
-		Array(arr).inject(self) { |o, a| o.send(*a) }
-	end
-
-
+	  def commenter_ids
+	  	ids = []
+	  	self.root_comments.each do |comment|
+	  		ids.push comment.user_id
+	  		ids = ids + comment.children.collect{|reply| reply.user_id}
+	  	end
+	  	ids.uniq.compact
+	  end
 
 	  module ClassMethods
 	    # accesed by Post.flags, Post.flagged_spam, etc...

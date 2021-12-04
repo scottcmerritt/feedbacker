@@ -27,6 +27,7 @@ module Feedbacker
 end
 
 require "feedbacker/concerns/feedbacker_util"
+require "feedbacker/concerns/feedbacker_comment_util"
 require "feedbacker/concerns/feedbacker_main_controller"
 require "feedbacker/concerns/feedbacker_users_controller"
 require "feedbacker/concerns/feedbacker_posts_controller"

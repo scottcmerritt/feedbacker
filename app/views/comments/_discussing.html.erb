@@ -1,0 +1,16 @@
+<% size = "micro" if local_assigns[:size].nil? %>
+<% user_css = "m-0 p-0 rounded bg-none" %>
+<% profile_css = "d-flex align-items-center m-0" %>
+<% is_admin = false if local_assigns[:is_admin].nil? %>
+
+<% if target.commenter_ids.empty? %>
+Nobody has discussed this yet! <a href="#" class="mx-1"><%= icon(icon:"comment",lbl:"Discuss") %></a>
+<% else %>
+<div class="d-flex align-items-center">
+	<div class="mx-1 fs-7 text-muted"><%= icon(icon:"comments",lbl:"Discussed by") %></div>
+<% target.commenter_ids.each do |user_id| %>
+<% user = User.find_by(id:user_id) %>
+<%= render partial: "users/parts/list_row", locals: {user:user,show_extra:false,size:"micro",wrap_css: user_css,profile_css:profile_css,is_admin:is_admin} rescue render(partial: "comments/user",locals: {comment:comment}) %>
+<% end %>
+</div>
+<% end %>
