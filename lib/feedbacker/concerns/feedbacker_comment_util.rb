@@ -19,9 +19,8 @@ module Feedbacker
 
 	  def announce_comment! sender:nil
         self.commenter_ids.each do |user_id|
-          if user = User.find_by(id:user_id)
-            UserMailer.announce_comment(user:user,resource:self,sender:sender).deliver
-          end
+          user = User.find_by(id:user_id)
+          user.announce_comment!(resource:self,sender:sender) unless user.nil?
         end
 	  end
 
