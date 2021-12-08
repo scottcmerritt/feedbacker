@@ -184,7 +184,8 @@ def cleanup
     else
       flash[:notice] = "Site admins have been notified"
       if defined?(LibrariansController)
-        redirect_to controller: "librarians", action: "index", book_id: params[:book_id]
+        #redirect_to controller: "librarians", action: "index", book_id: params[:book_id]
+        redirect_to main_app.librarians_path(book_id:params[:book_id])
       else
         redirect_to main_app.root_path #controller: "admin", action: "messages"
       end
