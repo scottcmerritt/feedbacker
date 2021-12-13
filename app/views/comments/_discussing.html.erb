@@ -2,9 +2,13 @@
 <% user_css = "m-0 p-0 rounded bg-none" %>
 <% profile_css = "d-flex align-items-center m-0" %>
 <% is_admin = false if local_assigns[:is_admin].nil? %>
+<% discuss_link = "#" if local_assigns[:discuss_link].nil? %>
+<% show_discuss_link = user_signed_in? if local_assigns[:show_discuss_link].nil? %>
 
 <% if target.commenter_ids.empty? %>
-Nobody has discussed this yet! <a href="#" class="mx-1"><%= icon(icon:"comment",lbl:"Discuss") %></a>
+<% if show_discuss_link %>
+Nobody has discussed this yet! <a href="<%= discuss_link %>" class="mx-1"><%= icon(icon:"comment",lbl:"Discuss") %></a>
+<% end %>
 <% else %>
 <div class="d-flex align-items-center">
 	<div class="mx-1 fs-7 text-muted"><%= icon(icon:"comments",lbl:"Discussed by") %></div>
