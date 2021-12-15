@@ -1,6 +1,7 @@
 module Feedbacker
 class CommentsController < ::ApplicationController
   before_action :authenticate_user!
+  before_action :authenticate_admin!, only: :destroy
 
   def create
     commentable = commentable_type.constantize.find(commentable_id)
@@ -15,6 +16,16 @@ class CommentsController < ::ApplicationController
         format.html  { render :action => "new" }
       end
     end
+  end
+
+
+
+  def destroy
+    @comment = Comment.find_by(id:params[:id])
+    @commentable = @comment.commentable
+    @comment.destroy
+    flash[:notice] = "Comment removed"
+    redirect_to @commentable rescue redirect_to(main_app.root_path)
   end
 
   private
