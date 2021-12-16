@@ -1,5 +1,6 @@
+<% show_key = true if local_assigns[:show_key].nil? %>
 <div class="p-2 py-1 bg-light border my-1">
-      <%= render partial: "feedbacker/translate_keys/parts/key", locals: {translate_key: @translate_key} %>
+      <%= render partial: "feedbacker/translate_keys/parts/key", locals: {translate_key: @translate_key} if show_key %>
     <div class="my-2 mx-2">
       <% if false %>
       <div class="bg-primary text-light p-1 px-3 fs-5 d-flex align-items-center justify-content-between">
