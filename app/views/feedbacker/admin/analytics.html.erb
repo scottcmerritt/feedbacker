@@ -92,9 +92,12 @@
 
 					<%= pie_chart @controller_usage.count, title: "Features" %>
 
-					<%= column_chart Impression.where(impressionable_type:"Site",user_id:nil).group_by_hour(:created_at).count, title: "Views/hr (public)" %>
+					<%= column_chart Impression.where(impressionable_type:"Site",user_id:nil).group_by_hour(:created_at,range: 48.hours.ago..Time.now).count, title: "Views/hr (public) (logged in, past 48hrs)" %>
 
-					<%= column_chart Impression.where("impressionable_type = ? AND user_id > 0","Site").group_by_hour(:created_at).count, title: "Views/hr (logged in)" %>
+					<%= column_chart Impression.where("impressionable_type = ? AND user_id > 0","Site").group_by_hour(:created_at,range: 48.hours.ago..Time.now).count, title: "Views/hr (logged in, past 48hrs)" %>
+
+					<%= column_chart Impression.where(impressionable_type:"Site").where("created_at >= ?",30.minutes.ago).group_by_minute(:created_at,range: 30.minutes.ago..Time.now).count, title: "Views/min (past 30 m)"  %>
+
 					</div>
 
 
