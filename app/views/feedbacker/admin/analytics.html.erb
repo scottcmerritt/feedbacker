@@ -96,7 +96,9 @@
 
 					<%= column_chart Impression.where("impressionable_type = ? AND user_id > 0","Site").group_by_hour(:created_at,range: 48.hours.ago..Time.now).count, title: "Views/hr (logged in, past 48hrs)" %>
 
-					<%= column_chart Impression.where(impressionable_type:"Site").where("created_at >= ?",30.minutes.ago).group_by_minute(:created_at,range: 30.minutes.ago..Time.now).count, title: "Views/min (past 30 m)"  %>
+					<%= column_chart Impression.where("impressionable_type = ? AND user_id > 0","Site").where("created_at >= ?",60.minutes.ago).group_by_minute(:created_at,range: 60.minutes.ago..Time.now).count, title: "Views/min (logged in, past 60 m)"  %>
+
+					<%= column_chart Impression.where(impressionable_type:"Site",user_id:nil).where("created_at >= ?",60.minutes.ago).group_by_minute(:created_at,range: 60.minutes.ago..Time.now).count, title: "Views/min (Public, past 60 m)"  %>
 
 					</div>
 
