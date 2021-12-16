@@ -27,6 +27,8 @@ module Feedbacker
 			end			
 			unless @translate.has_translate_key?
 				redirect_to controller: "translate_keys", action: "index"
+			else
+				@translate_key = @translate.translate_key #TranslateKey.find_by(id:params[:key_id])
 			end
 		end
 		def edit
