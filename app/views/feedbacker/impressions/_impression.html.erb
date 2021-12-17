@@ -1,9 +1,6 @@
 <% is_bot = Site.is_bot?(ip: impression.ip_address) %>
 
 
-
-
-
 <div class="border <%= is_bot ? "border-danger alert-danger" : "bg-light" %>">
 	
 	<% if is_bot %>
@@ -13,7 +10,6 @@
 		<div><%= row.message %>: <%= row.params %></div>
 		<div><%= row.controller_name %>: <%= row.action_name %></div>
 	</div>
-
 	<% end %>
 	<% end %>
 
