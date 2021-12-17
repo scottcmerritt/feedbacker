@@ -36,7 +36,7 @@
 <% @visitors.each_with_index do |visitor,index| %>
 
 <% if visitor.session_hash == last_visitor_session %>
-<%= tag.div safe_join([tag.div(last_visitor_created_at.nil? ? nil : (last_visitor_created_at-visitor.created_at).to_s,class: 'text-success mx-1'),tag.div("Same session: #{date_fmt(visitor.created_at,fmt:"ago")} ago"),tag.div("#{visitor.controller_name}: #{visitor.action_name}")]), class: "border fs-8 bg-plain px-4 fw-bold ms-4 d-flex justify-content-between" %>
+<%= tag.div safe_join([tag.div(last_visitor_created_at.nil? ? nil : num_comma((last_visitor_created_at-visitor.created_at),2),class: 'text-success mx-1'),tag.div("Same session: #{date_fmt(visitor.created_at,fmt:"ago")} ago"),tag.div("#{visitor.controller_name}: #{visitor.action_name}")]), class: "border fs-8 bg-plain px-4 fw-bold ms-4 d-flex justify-content-between" %>
 <% else %>
 <div class="mt-1 border-top border-2 border-dark">
 <% begin %>
