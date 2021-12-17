@@ -264,8 +264,8 @@ def cleanup
 
       @imessage = params[:imessage]
 
-      @iaction = params[:iaction]
-      @icontroller = params[:icontroller]
+      @iaction = params[:action_name]
+      @icontroller = params[:controller_name]
 
       @itype = params[:itype]
       @iid = params[:iid]
