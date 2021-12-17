@@ -264,6 +264,9 @@ def cleanup
     end
 
     def visit_referrers
+      # note, this is already set in the shared private method
+      @limit = 200 if !params[:limit]
+
       @ignore = params[:ignore]
       @include = params[:include]
 
