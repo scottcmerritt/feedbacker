@@ -64,8 +64,11 @@
 
 	<% if is_bot %>
 	<div class="ms-4 border">
-	<div class="p-1">Bot row examples...</div>
-	<div class="bg-plain p-1">
+	<div class="p-1">
+		<% row_id = "botRows#{SecureRandom.hex(6)}" %>
+		<a href="#<%= row_id %>" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="<%= row_id %>">
+	Bot row examples...</a></div>
+	<div class="bg-plain p-1 collapse" id="<%= row_id %>">
 	<% Site.bot_rows(ip: impression.ip_address).first(10).each do |row| %>
 	<div class="d-flex justify-content-between">
 		<div><%= tag.span date_fmt(row.created_at,fmt:"ago"), class: "fs-8 me-1 text-muted" %>
