@@ -1,5 +1,9 @@
 <% is_bot = Site.is_bot?(ip: impression.ip_address) %>
 <div class="border <%= is_bot ? "border-danger alert-danger" : "bg-light" %>">
+	<div class="d-flex justify-content-between px-1 fs-8">
+		<div><%= impression.session_hash %></div>
+		<div><%= impression.request_hash %></div>
+	</div>
 	<% user = User.find_by(id:impression.user_id) %>
 	<% loc = user.nil? ? Site.location_cached(ip:impression.ip_address) : user.location_cached %>
 	<div class="d-flex align-items-top border-bottom bg-white">
