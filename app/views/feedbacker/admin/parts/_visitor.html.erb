@@ -7,29 +7,23 @@ VISITOR NULL
 <div class="mb-2 bg-white border">
 
 <%= render(visitor) %>
-
+<% users = Site.views_per_user(ip:visitor.ip_address) %>
+<% frame_id = "last_actions#{SecureRandom.hex(6)}" %>
 <div class="row g-0">
 	<div class="col-3 border-end border-2">
 		<div class="fw-bold text-dark bg-plain p-1 px-2">
+			<span class="fw-bold p-1 fs-8 mb-1 me-1 bg-info"><%= users.length %></span>
 			Users with the SAME IP
 		</div>
-		<div class="px-2 fs-7 d-flex flex-wrap p-1">
-
-			<% users = Site.views_per_user(ip:visitor.ip_address) %>
+		<div class="px-2 fs-7 d-flex flex-wrap p-1" id="<%= frame_id %>Users">
 		<% if collapse %>
-			<div class="fw-bold p-1 fs-8 mb-1"><%= users.length %> total users</div>
-
 			<% unless users[0].nil? %>
 			<%= render partial: "users/parts/list_row", locals: {user:users[0],show_extra:false,size:"micro",wrap_css: "bg-plain p-1 fs-7",is_admin:false} %>
 			<span class="badge bg-info text-dark mx-1"><%= users[0].impressions_count %></span>
 			<% end %>
+			
 		<% else %>
-		<% users.each_with_index do |user_row,index| %>
-		<div class="d-flex align-items-center border rounded mb-1 me-1">
-			<span class="badge bg-info text-dark mx-1"><%= user_row.impressions_count %></span>
-		<%= render partial: "users/parts/list_row", locals: {user:user_row,show_extra:false,size:"micro",wrap_css: "bg-plain px-1 fs-7",is_admin:false} %>
-		</div>
-		<% end %>
+		<%= render partial: "#{engine_prefix}admin/parts/views_per_user", locals: {users:users} %>
 
 		<% end %>
 		</div>
@@ -37,7 +31,7 @@ VISITOR NULL
 	<div class="col-9">
 		<div class="px-2 fs-7 d-flex flex-wrap p-1">
 			<% if collapse %>
-			<% frame_id = "last_actions#{SecureRandom.hex(6)}" %>
+			
 			<%= link_to "Load activity", feedbacker.admin_visitor_actions_path(ip:visitor.ip_address,is_public:@is_public,frame: frame_id), remote: true, method: :post %>
 			<div id="<%= frame_id %>" class="d-flex flex-wrap px-1">
 
