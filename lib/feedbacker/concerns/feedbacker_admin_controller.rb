@@ -259,6 +259,9 @@ def cleanup
       @ignore = params[:ignore]
       @include = params[:include]
 
+      ignore_q = "%#{@ignore}%" unless @ignore.blank?
+      include_q = "%#{@include}%" unless @include.blank?
+
       @imessage = params[:imessage]
 
       @iaction = params[:iaction]
@@ -271,22 +274,20 @@ def cleanup
 
 
       @visitors = Impression.order("created_at DESC")
+      @visitors = @visitors.where("NOT (referrer is NULL OR referrer = ?)", "") if @all_visits.blank?
 
-      @visitors = @visitors.where("NOT (referrer is NULL OR referrer = ?)", "") unless @all_visits
 
-      ignore_q = "%#{@ignore}%" unless @ignore.blank?
-      include_q = "%#{@include}%" unless @include.blank?
 
       @visitors = @visitors.where("NOT referrer LIKE ?",ignore_q) unless ignore_q.blank?
       @visitors = @visitors.where("referrer LIKE ?",include_q) unless include_q.blank?
 
-      @visitors = @visitors.where(action_name:@iaction.downcase) unless @iaction.nil?
-      @visitors = @visitors.where("LOWER(controller_name) = ?", @icontroller.downcase) unless @icontroller.nil?
+      @visitors = @visitors.where(action_name:@iaction.downcase) unless @iaction.blank?
+      @visitors = @visitors.where("LOWER(controller_name) = ?", @icontroller.downcase) unless @icontroller.blank?
 
-      @visitors = @visitors.where("LOWER(impressionable_type) = ?",@itype.downcase) unless @itype.nil?
-      @visitors = @visitors.where(impressionable_id: @iid) unless @iid.nil?
+      @visitors = @visitors.where("LOWER(impressionable_type) = ?",@itype.downcase) unless @itype.blank?
+      @visitors = @visitors.where(impressionable_id: @iid) unless @iid.blank?
 
-      @visitors = @visitors.where(message: @imessage) unless @imessage.nil?
+      @visitors = @visitors.where(message: @imessage) unless @imessage.blank?
 
       @visitors = @visitors.page(params[:page]).per(@limit)
     end
