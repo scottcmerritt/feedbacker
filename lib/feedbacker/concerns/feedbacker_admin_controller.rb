@@ -267,9 +267,12 @@ def cleanup
       @itype = params[:itype]
       @iid = params[:iid]
 
+      @all_visits = params[:all_visits]
 
-      @visitors = Impression.where("NOT (referrer is NULL OR referrer = ?)", "")
-      .order("created_at DESC")
+
+      @visitors = Impression.order("created_at DESC")
+
+      @visitors = @visitors.where("NOT (referrer is NULL OR referrer = ?)", "") unless @all_visits
 
       ignore_q = "%#{@ignore}%" unless @ignore.blank?
       include_q = "%#{@include}%" unless @include.blank?
