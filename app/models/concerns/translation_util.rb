@@ -230,7 +230,7 @@ module TranslationUtil
         idx = []
         data.each do |full_row|
           row = full_row[:obj]
-          idx.push(full_row) if (!row.tdomain.nil? && row.tdomain.include?(tdomain_filter))
+          idx.push(full_row) if tdomain_filter.nil? || (!row.tdomain.nil? && row.tdomain.include?(tdomain_filter))
         end
         data = idx
       end
