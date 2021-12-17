@@ -31,8 +31,6 @@
 
 </form>
 
-<div class="fs-8 p-1 text-muted"><%= @visitors.to_sql %></div>
-
 <% @visitors.each_with_index do |visitor,index| %>
 <%= render partial: "#{engine_prefix}admin/parts/visitor", locals: {visitor:visitor,index:index,collapse:true} %>
 <% end %>
