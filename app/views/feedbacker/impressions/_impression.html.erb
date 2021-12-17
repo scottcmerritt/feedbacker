@@ -7,7 +7,7 @@
 <div class="border <%= is_bot ? "border-danger alert-danger" : "bg-light" %>">
 	
 	<% if is_bot %>
-	<% Site.bot_rows(ip: impression.ip_address).first(10.each do |row|) %>
+	<% Site.bot_rows(ip: impression.ip_address).first(10).each do |row| %>
 	<%= render row %>
 	<% end %>
 	<% end %>
