@@ -18,10 +18,11 @@ VISITOR NULL
 		<div class="px-2 fs-7 d-flex flex-wrap p-1" id="<%= frame_id %>Users">
 		<% if collapse %>
 			<% unless users[0].nil? %>
+			<div class="d-flex align-items-center border rounded mb-1 me-1 bg-plain">
+				<span class="badge bg-info text-dark mx-1"><%= users[0].impressions_count %></span>
 			<%= render partial: "users/parts/list_row", locals: {user:users[0],show_extra:false,size:"micro",wrap_css: "bg-plain p-1 fs-7",is_admin:false} %>
-			<span class="badge bg-info text-dark mx-1"><%= users[0].impressions_count %></span>
-			<% end %>
-			
+			</div>
+			<% end %>			
 		<% else %>
 		<%= render partial: "#{engine_prefix}admin/parts/views_per_user", locals: {users:users} %>
 

@@ -1,5 +1,5 @@
 <% users.each_with_index do |user_row,index| %>
-	<div class="d-flex align-items-center border rounded mb-1 me-1">
+	<div class="d-flex align-items-center border rounded mb-1 me-1 bg-plain">
 		<span class="badge bg-info text-dark mx-1"><%= user_row.impressions_count %></span>
 	<%= render partial: "users/parts/list_row", locals: {user:user_row,show_extra:false,size:"micro",wrap_css: "bg-plain px-1 fs-7",is_admin:false} %>
 	</div>
