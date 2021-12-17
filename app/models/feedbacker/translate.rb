@@ -17,7 +17,7 @@ module Feedbacker
 		end
 
 		def use_cms?
-			!self.tdomain.nil? && (self.tdomain.include?('::content')
+			!self.tdomain.nil? && self.tdomain.include?('::content')
 		end
 
 		def related
