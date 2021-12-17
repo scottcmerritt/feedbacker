@@ -12,7 +12,7 @@
 	<div class="bg-dark text-light p-1 px-2 d-flex align-items-center">
 		Referrers
 		<div class="ms-auto d-flex align-items-center mx-1">
-		All rows: <input type="text" name="all_visits" value="<%= @all_visits %>" placeholder="leave blank for referrers ONLY" class="me-1">
+		All rows: <input type="text" name="all_visits" value="<%= @all_visits %>" placeholder="leave blank for referrers ONLY" class="me-1"  style="width:60px;">
 		Include: <input type="text" name="include" value="<%= @include %>" placeholder="q=" class="me-1">
 		Ignore: <input type="text" name="ignore" value="<%= @ignore %>" placeholder="<%= @app_site ? @app_site.domain : request.domain %>"  class="me-1">
 		<input type="submit" value="Update" class="ms-1">
@@ -20,12 +20,9 @@
 	</div>
 
 	<div class="d-flex align-items-center">
-	Type: <input type="text" name="itype" value="<%= @itype %>" placeholder="Book, Post, User, etc..." class="me-1">
+	Type: <input type="text" name="itype" value="<%= @itype %>" placeholder="Book, Post, User, etc..." style="width:130px;" class="me-1">
 	ID: <input type="text" name="iid" value="<%= @iid %>" placeholder="1, 2, 3, etc..." style="width:80px;" class="me-1">
 	Message: <input type="text" name="imessage" value="<%= @imessage %>" placeholder="download, listen" class="me-1">
-	</div>
-
-	<div class="d-flex align-items-center">	
 	Controller: <input type="text" name="icontroller" value="<%= @icontroller %>" placeholder="welcome, admin, books, etc..." class="me-1">
 	Action: <input type="text" name="iaction" value="<%= @iaction %>" placeholder="index, show, etc..." class="me-1">
 	</div>
