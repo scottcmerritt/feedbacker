@@ -8,7 +8,7 @@ module Feedbacker
       # method to add to controller
 
         before_action :authenticate_admin!, except: [:updates,:first_admin,:contact_us]
-        before_action :visitor_shared, only: [:visits, :visit_locations]
+        before_action :visitor_shared, only: [:visits, :visit_locations, :visit_referrers]
       end
   
       def first_admin
