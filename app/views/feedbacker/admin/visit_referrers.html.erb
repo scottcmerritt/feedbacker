@@ -1,3 +1,7 @@
+<style>
+form#visit_referrers input {font-weight: bold!important;}
+</style>
+
 <%= render partial: "admin/manage/header" %>
 <%= render partial: "admin/manage/menu" %>
 <%= render partial: "#{engine_prefix}admin/parts/visits_menu" %>
@@ -8,7 +12,7 @@
 <%= feedbacker_paginate @visitors,page: params[:page], wrap_css: "" %>
 </div>
 
-<form method="get" action="" class="">
+<form method="get" action="" class="" id="visit_referrers">
 	<div class="bg-dark text-light p-1 px-2 d-flex align-items-center">
 		Referrers
 		<div class="ms-auto d-flex align-items-center mx-1 fs-7">
@@ -27,6 +31,8 @@
 	Message <input type="text" name="imessage" value="<%= @imessage %>" placeholder="download, listen" class="mx-1">
 	Controller <input type="text" name="controller_name" value="<%= @icontroller %>" placeholder="welcome, admin, books, etc..." class="me-1">
 	Action <input type="text" name="action_name" value="<%= @iaction %>" placeholder="index, show, etc..." class="mx-1">
+
+	Per page <input type="text" name="action_name" value="<%= @limit %>" class="mx-1">
 	</div>
 
 </form>
