@@ -12,9 +12,9 @@
 	<div class="bg-dark text-light p-1 px-2 d-flex align-items-center">
 		Referrers
 		<div class="ms-auto d-flex align-items-center mx-1 fs-7">
-		All rows <input type="text" name="all_visits" value="<%= @all_visits %>" placeholder="leave blank for referrers ONLY" class="me-1"  style="width:60px;">
-		Include <input type="text" name="include" value="<%= @include %>" placeholder="q=" class="me-1">
-		Ignore <input type="text" name="ignore" value="<%= @ignore %>" placeholder="<%= @app_site ? @app_site.domain : request.domain %>"  class="me-1">
+		All rows <input type="text" name="all_visits" value="<%= @all_visits %>" placeholder="leave blank for referrers ONLY" class="mx-1"  style="width:60px;">
+		Include <input type="text" name="include" value="<%= @include %>" placeholder="q=" class="mx-1">
+		Ignore <input type="text" name="ignore" value="<%= @ignore %>" placeholder="<%= @app_site ? @app_site.domain : request.domain %>"  class="mx-1">
 		<input type="submit" value="Update" class="ms-1">
 		</div>
 	</div>
