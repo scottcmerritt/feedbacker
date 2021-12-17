@@ -38,16 +38,9 @@ VISITOR NULL
 		<div class="px-2 fs-7 d-flex flex-wrap p-1">
 			<% if collapse %>
 			[Click here to load actions]
+			<%= link_to "Load activity", feedbacker.admin_visitor_actions_path(ip:visitor.ip_address,is_public:@is_public), remote: true, method: :post %>
 			<% else %>
-
-			<% Site.last_actions(ip:visitor.ip_address,user_id: @is_public.blank? ? nil : "").each do |row| %>
-			<div class="d-flex align-items-center border me-1 mb-1">
-				<%= tag.span row.row_count, class: "badge badge-sm bg-info mx-1" %>
-				<div class="px-1">
-					<a href="<%= feedbacker.admin_visits_path(controller_name: row.controller_name,action_name:row.action_name,user_id:visitor.user_id) %>"><%= row.controller_name %>: <%= row.action_name %></a>
-				</div>
-			</div>
-			<% end %>
+			<%= render partial: "#{engine_prefix}admin/parts/last_actions", locals: {visitor:visitor} %>
 			<% end %>
 		</div>
 	</div>

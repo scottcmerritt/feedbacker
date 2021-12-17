@@ -234,6 +234,14 @@ def cleanup
     end
 
 
+    def visitor_actions
+      @frame = params[:frame]
+      
+      @ip_address = params[:ip]
+      @is_public = params[:is_public].blank? ? nil : ""
+      @last_actions = Site.last_actions(ip:@ip_address,user_id: @is_public.blank? ? nil : "")
+    end
+
     def visits
       @users = User.all.sort_by{|user| (user.last_view ? user.last_view : 100.days.ago)}.reverse
       @user = User.find_by(id:params[:user_id])
