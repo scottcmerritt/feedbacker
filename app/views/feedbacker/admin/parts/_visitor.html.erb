@@ -48,7 +48,7 @@ VISITOR NULL
 		</div>
 
 		<div class="fs-8 px-1 text-muted ps-3 d-flex">
-			Referrer: <%= tag.div(row.respond_to?(:referrer) && !row.referrer.blank? ? row.referrer : "No referrer",class:'fw-bold mx-1') %>
+			Referrer: <%= tag.div(row.respond_to?(:referrer) && !row.referrer.blank? ? row.referrer : "No referrer",class:'fw-bold mx-1') %> <%= tag.div row.message, class: "mx-1 border px-1" if row.respond_to?(:message) && !row.message.blank? %>
 		</div>
 	</div>
 	<% end %>
