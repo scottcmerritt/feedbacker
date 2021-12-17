@@ -36,7 +36,7 @@ VISITOR NULL
 </div>
 
 <% user = User.find_by(id:visitor.user_id) %>
-<% my_impressions = user.nil? ? user.my_impressions.per : Site.my_impressions(ip:visitor.ip_address) %>
+<% my_impressions = !user.nil? ? user.my_impressions : Site.my_impressions(ip:visitor.ip_address) %>
 <div>
 	<a class="mt-auto border p-1 btn btn-sm btn-success" href="#visitor<%= index %>" data-bs-target="#visitor<%= index %>" data-bs-toggle="collapse"><%= "Last click: #{date_fmt(user.nil? ? Site.last_view(ip:visitor.ip_address) : user.last_view,fmt:"ago")} ago" %>: (<%= my_impressions.count %> total clicks)</a>
 
