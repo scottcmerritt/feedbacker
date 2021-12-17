@@ -253,13 +253,20 @@ def cleanup
       @visitor_users = @visitor_users.where("action_name = ?",params[:action_name]) if params[:action_name]
 
       @visitors = @visitors.page(params[:page]).per(@limit)
-
-
     end
 
     def visit_referrers
       @ignore = params[:ignore]
       @include = params[:include]
+
+      @imessage = params[:imessage]
+
+      @iaction = params[:iaction]
+      @icontroller = params[:icontroller]
+
+      @itype = params[:itype]
+      @iid = params[:iid]
+
 
       @visitors = Impression.where("NOT (referrer is NULL OR referrer = ?)", "")
       .order("created_at DESC")
@@ -270,9 +277,16 @@ def cleanup
       @visitors = @visitors.where("NOT referrer LIKE ?",ignore_q) unless ignore_q.blank?
       @visitors = @visitors.where("referrer LIKE ?",include_q) unless include_q.blank?
 
+      @visitors = @visitors.where(action_name:@iaction.downcase) unless @iaction.nil?
+      @visitors = @visitors.where("LOWER(controller_name) = ?", @icontroller.downcase) unless @icontroller.nil?
+
+      @visitors = @visitors.where("LOWER(impressionable_type) = ?",@itype.downcase) unless @itype.nil?
+      @visitors = @visitors.where(impressionable_id: @iid) unless @iid.nil?
+
+      @visitors = @visitors.where(message: @imessage) unless @imessage.nil?
+
       @visitors = @visitors.page(params[:page]).per(@limit)
     end
-
 
     def visit_locations
       @unique_ip_addresses = Impression.select("DISTINCT(ip_address)")

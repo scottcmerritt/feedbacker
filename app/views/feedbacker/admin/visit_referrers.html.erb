@@ -9,14 +9,23 @@
 </div>
 <h3 class="bg-dark text-light p-1 px-2 d-flex">Referrers 
 
-<form method="get" action="" class="ms-auto mx-1 fs-6 badge d-flex">
+<form method="get" action="" class="ms-auto mx-1 fs-6 badge">
+	<div class="d-flex">
 	<div class="me-1">
 Include: <input type="text" name="include" value="<%= @include %>" placeholder="q=">
 </div>
 Ignoring: <input type="text" name="ignore" value="<%= @ignore %>" placeholder="<%= @app_site ? @app_site.domain : request.domain %>">
-
 <input type="submit" value="Update" class="ms-1">
+</div>
 
+<div>
+Type: <input type="text" name="itype" value="<%= @itype %>" placeholder="Book, Post, User, etc...">
+ID: <input type="text" name="iid" value="<%= @iid %>" placeholder="1, 2, 3, etc...">
+ID: <input type="text" name="imessage" value="<%= @imessage %>" placeholder="downlaod, listen">
+Controller: <input type="text" name="icontroller" value="<%= @icontroller %>" placeholder="welcome, admin, books, etc...">
+Action: <input type="text" name="iaction" value="<%= @iaction %>" placeholder="index, show, etc...">
+
+	</div>
 </form>
 </h3>
 
