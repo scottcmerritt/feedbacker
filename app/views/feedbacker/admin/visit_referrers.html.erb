@@ -13,6 +13,8 @@
 		Referrers
 		<div class="ms-auto d-flex align-items-center mx-1 fs-7">
 		All rows <input type="text" name="all_visits" value="<%= @all_visits %>" placeholder="leave blank for referrers ONLY" class="mx-1"  style="width:60px;">
+		Public <input type="text" name="is_public" value="<%= @is_public %>" placeholder="leave blank for ALL" class="mx-1"  style="width:60px;">
+		User <input type="text" name="user_id" value="<%= @user_id %>" placeholder="leave blank for ANY" class="mx-1"  style="width:60px;">
 		Include <input type="text" name="include" value="<%= @include %>" placeholder="q=" class="mx-1">
 		Ignore <input type="text" name="ignore" value="<%= @ignore %>" placeholder="<%= @app_site ? @app_site.domain : request.domain %>"  class="mx-1">
 		<input type="submit" value="Update" class="ms-1">

@@ -272,10 +272,18 @@ def cleanup
 
       @all_visits = params[:all_visits]
 
+      @is_public = params[:is_public]
+      @user_id = params[:user_id]
+
 
       @visitors = Impression.order("created_at DESC")
       @visitors = @visitors.where("NOT (referrer is NULL OR referrer = ?)", "") if @all_visits.blank?
 
+      if @user_id.blank?
+        @visitors = @visitors.where(user_id:nil) unless @is_public.blank?
+      else
+        @visitors = @visitors.where(user_id:@user_id)
+      end
 
 
       @visitors = @visitors.where("NOT referrer LIKE ?",ignore_q) unless ignore_q.blank?
