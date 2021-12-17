@@ -42,10 +42,10 @@ VISITOR NULL
 
 	<div class="text-muted fs-8 collapse" id="visitor<%= index %>">
 	<% my_impressions.limit(impression_limit).order("created_at DESC").each_with_index do |row,index| %>
-	<div class="fs-8 text-muted ms-3 d-flex justify-content-between">
-		<div><%= tag.span (index + 1), class: "fw-bold" %>) [<%= row.impressionable_type %>] <a href="<%= feedbacker.admin_visits_path(controller_name: row.controller_name,action_name:row.action_name,user_id:user.nil? ? nil : user.id) %>"><%= row.controller_name %> -> <%= row.action_name %></a> :</div> <%= tag.div row.params %> <div class="text-dark mx-1"><%= date_fmt row.created_at,fmt:"ago" %> ago
+	<div class="fs-8 text-muted ms-3 d-flex justify-content-between border-bottom mb-2">
+		<div><%= tag.span (index + 1), class: "fw-bold" %>) [<%= row.impressionable_type %>] <a href="<%= feedbacker.admin_visits_path(controller_name: row.controller_name,action_name:row.action_name,user_id:user.nil? ? nil : user.id) %>"><%= row.controller_name %> -> <%= row.action_name %></a> :</div> <%= tag.div row.params %> <div class="text-dark mx-1 text-end"><%= date_fmt row.created_at,fmt:"ago" %> ago
 			<div class="fs-8 px-1 text-muted">
-				Referrer: <%= row.respond_to?(:referrer) && !row.referrer.blank? ? row.referrer : "No referrer" %>
+				Referrer: <%= tag.div (row.respond_to?(:referrer) && !row.referrer.blank? ? row.referrer : "No referrer",class:'fw-bold') %>
 			</div>
 
 		</div>
