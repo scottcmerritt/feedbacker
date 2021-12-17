@@ -70,6 +70,7 @@
 	<div class="d-flex justify-content-between">
 		<div><%= tag.span date_fmt(row.created_at,fmt:"ago"), class: "fs-8 me-1 text-muted" %>
 			<%= row.message %>: <%= row.params %></div>
+			<div>User: <%= row.user_id %></div>
 		<div><%= row.controller_name %>: <%= row.action_name %></div>
 	</div>
 	<% end %>
