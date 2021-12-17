@@ -7,8 +7,13 @@
 <div class="border <%= is_bot ? "border-danger alert-danger" : "bg-light" %>">
 	
 	<% if is_bot %>
+	<div>Bot row examples...</div>
 	<% Site.bot_rows(ip: impression.ip_address).first(10).each do |row| %>
-	<%= render row %>
+	<div class="d-flex justify-content-between">
+		<div><%= row.message %>: <%= row.params %></div>
+		<div><%= row.controller_name %>: <%= row.action_name %></div>
+	</div>
+
 	<% end %>
 	<% end %>
 
