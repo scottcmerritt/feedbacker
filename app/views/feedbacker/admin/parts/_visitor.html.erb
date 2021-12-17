@@ -1,3 +1,5 @@
+<% collapse = false if local_assigns[:collapse].nil? %>
+
 <% impression_limit = 20 if local_assigns[:impression_limit].nil? %>
 <% if visitor.nil? %>
 VISITOR NULL
@@ -13,16 +15,31 @@ VISITOR NULL
 		</div>
 		<div class="px-2 fs-7 d-flex flex-wrap p-1">
 
-		<% Site.views_per_user(ip:visitor.ip_address).each do |user_row| %>
+			<% users = Site.views_per_user(ip:visitor.ip_address) %>
+		<% if collapse %>
+			<div class="fw-bold p-1 fs-8 mb-1"><%= users.length %> total users</div>
+
+			<% unless users[0].nil? %>
+			<%= render partial: "users/parts/list_row", locals: {user:users[0],show_extra:false,size:"micro",wrap_css: "bg-plain p-1 fs-7",is_admin:false} %>
+			<span class="badge bg-info text-dark mx-1"><%= users[0].impressions_count %></span>
+			<% end %>
+		<% else %>
+		<% users.each_with_index do |user_row,index| %>
 		<div class="d-flex align-items-center border rounded mb-1 me-1">
 			<span class="badge bg-info text-dark mx-1"><%= user_row.impressions_count %></span>
-		<%= render partial: "users/parts/list_row", locals: {user:user_row,show_extra:false,size:"micro",wrap_css: "bg-plain p-1 fs-7",is_admin:false} %>
+		<%= render partial: "users/parts/list_row", locals: {user:user_row,show_extra:false,size:"micro",wrap_css: "bg-plain px-1 fs-7",is_admin:false} %>
 		</div>
+		<% end %>
+
 		<% end %>
 		</div>
 	</div>
 	<div class="col-9">
 		<div class="px-2 fs-7 d-flex flex-wrap p-1">
+			<% if collapse %>
+			[Click here to load actions]
+			<% else %>
+
 			<% Site.last_actions(ip:visitor.ip_address,user_id: @is_public.blank? ? nil : "").each do |row| %>
 			<div class="d-flex align-items-center border me-1 mb-1">
 				<%= tag.span row.row_count, class: "badge badge-sm bg-info mx-1" %>
@@ -30,6 +47,7 @@ VISITOR NULL
 					<a href="<%= feedbacker.admin_visits_path(controller_name: row.controller_name,action_name:row.action_name,user_id:visitor.user_id) %>"><%= row.controller_name %>: <%= row.action_name %></a>
 				</div>
 			</div>
+			<% end %>
 			<% end %>
 		</div>
 	</div>
