@@ -43,7 +43,7 @@ VISITOR NULL
 
 			</div>
 			<% else %>
-			<%= render partial: "#{engine_prefix}admin/parts/last_actions", locals: {visitor:visitor} %>
+			<%= render partial: "#{engine_prefix}admin/parts/last_actions", locals: {ip_address:visitor.ip_address} %>
 			<% end %>
 		</div>
 	</div>

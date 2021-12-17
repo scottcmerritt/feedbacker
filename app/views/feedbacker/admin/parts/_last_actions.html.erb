@@ -1,7 +1,6 @@
-<% ip_address = visitor.ip_address unless local_assigns[:visitor].nil? %>
-<% ip_address = local_assigns[:ip_address] unless local_assigns[:ip_address].nil? %>
+<% ip_address = nil if local_assigns[:ip_address].nil? %>
 <% is_public = @is_public if local_assigns[:is_public].nil? %>
-<% user_id = is_public.blank? ? nil : "" if local_assigns[:user_id].nil? %>
+<% user_id = (is_public.blank? ? nil : "") if local_assigns[:user_id].nil? %>
 <% Site.last_actions(ip:ip_address,user_id: user_id).each do |row| %>
 <div class="d-flex align-items-center border me-1 mb-1">
 	<%= tag.span row.row_count, class: "badge badge-sm bg-info mx-1" %>
