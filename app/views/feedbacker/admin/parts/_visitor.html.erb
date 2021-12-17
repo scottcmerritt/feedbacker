@@ -38,7 +38,7 @@ VISITOR NULL
 		<div class="px-2 fs-7 d-flex flex-wrap p-1">
 			<% if collapse %>
 			[Click here to load actions]
-			<%= link_to "Load activity", feedbacker.admin_visitor_actions_path(ip:visitor.ip_address,is_public:@is_public), remote: true, method: :post %>
+			<%= link_to "Load activity", feedbacker.admin_visitor_actions_path(ip:visitor.ip_address,is_public:@is_public,frame: "last_actions#{SecureRandom.hex(6)}"), remote: true, method: :post %>
 			<% else %>
 			<%= render partial: "#{engine_prefix}admin/parts/last_actions", locals: {visitor:visitor} %>
 			<% end %>
