@@ -32,6 +32,11 @@
 </form>
 
 <% @visitors.each_with_index do |visitor,index| %>
-<%= render partial: "#{engine_prefix}admin/parts/visitor", locals: {visitor:visitor,index:index,collapse:true} %>
+<% begin %>
+	<%= render partial: "#{engine_prefix}admin/parts/visitor", locals: {visitor:visitor,index:index,collapse:true} %>
+<% rescue Exception => ex %>
+<%= tag.div ex, class: "alert alert-danger" %>
+<% end %>
+
 <% end %>
 <%= feedbacker_paginate @visitors,page: params[:page], wrap_css: "" %>

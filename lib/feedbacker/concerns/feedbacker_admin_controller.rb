@@ -236,7 +236,7 @@ def cleanup
 
     def visitor_actions
       @frame = params[:frame]
-      
+
       @ip_address = params[:ip]
       @is_public = params[:is_public].blank? ? nil : ""
       @last_actions = Site.last_actions(ip:@ip_address,user_id: @is_public.blank? ? nil : "")
@@ -304,6 +304,8 @@ def cleanup
       @visitors = @visitors.where(impressionable_id: @iid) unless @iid.blank?
 
       @visitors = @visitors.where(message: @imessage) unless @imessage.blank?
+
+      @visitors = @visitors.group("session_hash") if params[:gb] == "session"
 
       @visitors = @visitors.page(params[:page]).per(@limit)
     end
