@@ -42,10 +42,11 @@ form#visit_referrers input {font-weight: bold!important;}
 <% @visitors.each_with_index do |visitor,index| %>
 
 <% if visitor.session_hash == last_visitor_session %>
-<% since_prev = (last_visitor_created_at.nil? ? nil : num_comma((last_visitor_created_at-visitor.created_at),2) %>
+<% since_prev = last_visitor_created_at.nil? ? nil : num_comma((last_visitor_created_at-visitor.created_at),2) %>
 <% col1 = safe_join([tag.div("#{date_fmt(visitor.created_at,fmt:"ago")} ago ",class:"text-muted"),tag.div(since_prev,class: "text-success mx-1")]) %>
 <% col2 = tag.div("#{visitor.controller_name}: #{visitor.action_name}") %>
 <%= tag.div safe_join([col1,col2]), class: "border fs-8 bg-plain px-4 fw-bold ms-4 d-flex justify-content-between" %>
+
 <% else %>
 <div class="mt-1 border-top border-2 border-dark">
 <% begin %>
