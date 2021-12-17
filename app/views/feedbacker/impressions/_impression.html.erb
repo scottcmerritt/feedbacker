@@ -1,5 +1,4 @@
 <div class="border bg-light">
-	[impression fb]
 	<% user = User.find_by(id:impression.user_id) %>
 	<% loc = user.nil? ? Site.location_cached(ip:impression.ip_address) : user.location_cached %>
 	
