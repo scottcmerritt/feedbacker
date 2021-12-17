@@ -3,19 +3,7 @@
 
 <div class="border <%= is_bot ? "border-danger alert-danger" : "bg-light" %>">
 	
-	<% if is_bot %>
-	<div class="p-1">
-	<div>Bot row examples...</div>
-	<% Site.bot_rows(ip: impression.ip_address).first(10).each do |row| %>
-	<div class="d-flex justify-content-between">
-		<div><%= tag.span date_fmt(row.created_at,fmt:"ago"), class: "fs-8 me-1 text-muted" %>
-			<%= row.message %>: <%= row.params %></div>
-		<div><%= row.controller_name %>: <%= row.action_name %></div>
-	</div>
-	<% end %>
-	</div>
 
-	<% end %>
 
 
 	<% if impression.respond_to?(:session_hash) && impression.respond_to?(:request_hash) %>
@@ -73,5 +61,19 @@
 	<%= tag.span loc.country_code, class: "text-dark fw-bold" unless loc.nil? %>
 
 </div>
+
+	<% if is_bot %>
+	<div class="p-1 ms-4">
+	<div>Bot row examples...</div>
+	<% Site.bot_rows(ip: impression.ip_address).first(10).each do |row| %>
+	<div class="d-flex justify-content-between">
+		<div><%= tag.span date_fmt(row.created_at,fmt:"ago"), class: "fs-8 me-1 text-muted" %>
+			<%= row.message %>: <%= row.params %></div>
+		<div><%= row.controller_name %>: <%= row.action_name %></div>
+	</div>
+	<% end %>
+	</div>
+
+	<% end %>
 	
 </div>
