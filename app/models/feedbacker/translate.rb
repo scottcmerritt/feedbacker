@@ -17,7 +17,7 @@ module Feedbacker
 		end
 
 		def use_cms?
-			!self.tdomain.nil? && self.tdomain.include?('::content')
+			!self.tdomain.nil? && (self.tdomain.include?('::content')
 		end
 
 		def related
@@ -105,17 +105,14 @@ module Feedbacker
 
 		def self.from_cache tdomain,tkey,locale
 			Feedbacker::Cache.get_obj Translate.build_cache_key tdomain,tkey,locale
-		end
-=end		
-
-
-		
+		end		
 
 		def build_translate_key! tdomain:, tkey:, createdby: nil
 			params = {tdomain:tdomain,tkey:tkey}
 			tk = Feedbacker::TranslateKey.exists?(params) ? Feedbacker::TranslateKey.find_by(params) : Feedbacker::TranslateKey.create(params.merge({createdby:createdby}))
 			self.translate_key_id = tk.id
 		end
+=end		
 
 
 		def tdomain

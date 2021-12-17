@@ -19,8 +19,8 @@ module TranslationUtil
 
   def build_translate_key! tdomain:, tkey:, createdby: nil
     params = {tdomain:tdomain,tkey:tkey}
-    tk = TranslateKey.exists?(params) ? TranslateKey.find_by(params) : TranslateKey.create(params.merge({createdby:createdby}))
-    self.translate_key_id = tk.id
+    tk = Feedbacker::TranslateKey.exists?(params) ? Feedbacker::TranslateKey.find_by(params) : Feedbacker::TranslateKey.create(params.merge({createdby:createdby}))
+    self.translate_key_id = tk.id if self.respond_to?(:translate_key_id) && !tk.nil?
   end
 
   def cache! cache_duration: nil, logger: nil
