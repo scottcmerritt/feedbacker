@@ -1,5 +1,3 @@
-$("#<%= @frame %>").html('load visitor ACTIVITY demand for ip: <%= @ip_address %>')
-alert('about to reload')
 $("#<%= @frame %>").html('<%= escape_javascript(render(partial: "#{engine_prefix}admin/parts/last_actions", locals: {is_public:@is_public,ip_address:@ip_address})) %>')
 <% users = Site.views_per_user(ip:@ip_address) %>
 $("#<%= @frame %>Users").html('<%= escape_javascript(render(partial: "#{engine_prefix}admin/parts/views_per_user", locals: {users:users})) %>')
