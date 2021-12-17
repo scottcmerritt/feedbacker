@@ -305,8 +305,6 @@ def cleanup
 
       @visitors = @visitors.where(message: @imessage) unless @imessage.blank?
 
-      @visitors = @visitors.group("session_hash") if params[:gb] == "session"
-
       @visitors = @visitors.page(params[:page]).per(@limit)
     end
 

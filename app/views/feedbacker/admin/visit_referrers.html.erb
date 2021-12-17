@@ -31,12 +31,20 @@
 
 </form>
 
+<% last_visitor_session = nil %>
 <% @visitors.each_with_index do |visitor,index| %>
+
+<% if visitor.session_hash == last_visitor_session %>
+<%= tag.div "Same session: #{date_fmt(visitor.created_at,fmt:"ago")} ago", class: "border fs-8 p-1 px-4 fw-bold mb-1" %>
+<% else %>
+<div>
 <% begin %>
 	<%= render partial: "#{engine_prefix}admin/parts/visitor", locals: {visitor:visitor,index:index,collapse:true} %>
 <% rescue Exception => ex %>
 <%= tag.div ex, class: "alert alert-danger" %>
 <% end %>
-
+</div>
+<% end %>
+<% last_visitor_session = visitor.session_hash %>
 <% end %>
 <%= feedbacker_paginate @visitors,page: params[:page], wrap_css: "" %>
