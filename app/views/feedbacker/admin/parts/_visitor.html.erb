@@ -23,7 +23,7 @@ VISITOR NULL
 	</div>
 	<div class="col-9">
 		<div class="px-2 fs-7 d-flex flex-wrap p-1">
-			<% Site.last_actions(ip:visitor.ip_address).each do |row| %>
+			<% Site.last_actions(ip:visitor.ip_address,user_id: @is_public.blank? ? nil : "").each do |row| %>
 			<div class="d-flex align-items-center border me-1 mb-1">
 				<%= tag.span row.row_count, class: "badge badge-sm bg-info mx-1" %>
 				<div class="px-1">
