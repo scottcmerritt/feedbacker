@@ -1,2 +1,3 @@
+$("#<%= @frame %>").html('load visitor ACTIVITY demand for ip: <%= @ip_address %>')
 alert('about to reload')
-$("#<%= @frame %>").html('load on demand: <%= @ip_address %>')
+$("#<%= @frame %>").html('<%= escape_javascript(render(partial: "#{engine_prefix}admin/parts/last_actions", locals: {is_public:@is_public,ip_address:@ip_address})) %>')
