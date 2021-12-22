@@ -1,0 +1,61 @@
+<% otype = "Book" if local_assigns[:otype].nil? %>
+<% extra_tags = [] if local_assigns[:extra_tags].nil? %>
+
+<% selected_tag = local_assigns[:selected_tag] ? local_assigns[:selected_tag] : (@selected_tag.nil? ? params[:tag] : @selected_tag) %>
+<% selected_tag = selected_tag.nil? ? dbt("filter.all",d:"all") : dbt_tag(selected_tag,d:selected_tag).downcase %>
+
+<% tag_css = default_tag_css(font_size:"fs-6",extra_css:"d-flex align-items-center") if local_assigns[:tag_css].nil? %>
+<% tag_selected_css = "rounded py-tiny bg-primary bg-dark text-light" if local_assigns[:tag_selected_css].nil? %>
+<% show_title = true if local_assigns[:show_title].nil? %>
+<% show_all_filter = true if local_assigns[:show_all_filter].nil? %>
+
+<% tags = ActsAsTaggableOn::Tag.most_used(ENV["tag_filter_limit"] || 20).where(id:ActsAsTaggableOn::Tagging.where(taggable_type:otype).group(:tag_id).pluck(:tag_id)) if local_assigns[:tags].nil? %>
+
+
+<% path_to_tag = :books_by_tag_path if local_assigns[:path_to_tag].nil? %>
+<div class="d-flex align-items-center">
+
+    <% if show_all_filter %>
+    <div class="mb-2">
+    <%= link_to dbt("filter.all",d:"all").capitalize, public_send(path_to_tag), style:"padding: 3px 10px !important;", class:"#{tag_css} #{tag_selected_css if !selected_tag || (selected_tag && selected_tag.downcase == "all")}" %>
+    </div>
+    <% end %>
+
+ 
+<div class="d-flex align-items-center flex-fill pb-0 mb-1" style="<% if tags.length > 4 %>overflow-x:scroll;scrollbar-width:thin;<% end %>">
+<%= tag.span dbt("tagged").capitalize, class: "fw-bold me-1 fs-7" if false && show_title %>
+
+
+<%= render partial: "shared/tags/list", locals: local_assigns.merge({tags:extra_tags,tag_css:tag_css}) %>
+<%= render partial: "shared/tags/list", locals: local_assigns.merge({tags:tags,exclude_ids:extra_tags.pluck(:id),tag_css:tag_css}) %>
+
+</div>
+
+<% if false %>
+<div class="input-group">
+<% if false %>  <input type="text" class="form-control form-control-sm" aria-label="Text input with segmented dropdown button"><% end %>
+  
+  <button type="button" class="btn btn-outline-secondary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+    <span class="visually-hidden">Toggle Dropdown</span>
+  </button>
+    <ul class="dropdown-menu dropdown-menu-end">
+    <li><a class="dropdown-item" href="#">Action</a></li>
+    <li><a class="dropdown-item" href="#">Another action</a></li>
+    <li><a class="dropdown-item" href="#">Something else here</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><a class="dropdown-item" href="#">Separated link</a></li>
+  </ul>
+
+  <button type="button" class="btn btn-outline-secondary">Action</button>
+</div>
+
+<%= render partial: "books/parts/tags_dropdown" %>
+
+<% if otype == "Book" %>
+<%= link_to dbt("books.browse_all_tags",d:"more"),tagged_books_path, class:"btn btn-sm btn-success mx-1 mb-2 fs-7 py-0 fw-bold text-light mb-3 mt-1" %>
+<% elsif otype == "Post" %>
+
+<% end %>
+<% end %>
+
+</div>

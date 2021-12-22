@@ -78,6 +78,28 @@ module Feedbacker
     search_part = search_part.gsub("%20"," ") unless search_part.nil?
     search_part.nil? ? "" : "<div class='mx-1'><span class='text-muted'>Searched for:</span> <span class='fw-bold text-dark'>#{search_part}</span></div>"
   end
+
+  
+  def default_tag_css font_size: "fs-7", is_mobile: (respond_to?(:browser) ? browser.mobile? : true), extra_css: ""
+    # "mt-0 m-1 p-1 fs-8 #{browser.mobile? ? "rounded p-1 py-tiny" : "rounded-pill px-2 mb-1" } bg-light border text-decoration-none" if local_assigns[:tag_css].nil?
+    #{}"badge m-0 me-1 p-1 #{is_mobile ? "rounded py-tiny" : "rounded-pill px-2 mb-1" } border text-decoration-none bg-primary #{font_size} #{extra_css}" 
+    "badge m-0 me-1 px-1 #{is_mobile ? "rounded py-tiny" : "rounded py-tiny mb-0" } border text-decoration-none bg-primary #{font_size} #{extra_css}" 
+  end
+
+  def default_tab_frame_css
+    "d-flex align-items-center my-1 border-bottom border-2 border-dark"
+  end
+  def default_tab_css_off margin: "me-1"
+    "bg-plain text-secondary btn btn-sm border rounded-0 rounded-top #{margin}"
+  end
+  def default_tab_css_on margin: "me-1"
+    "bg-dark text-light btn btn-sm rounded-0 rounded-top #{margin}"
+  end
+
+
+  def default_h_css padding: "p-1 px-2", margin: "",font:""
+    "d-flex align-items-center bg-dark text-light #{padding} #{margin} #{font}"
+  end
     
 
 
