@@ -14,13 +14,17 @@
         <div class="d-flex">
           <%= render partial: "users/parts/list_row", locals: {user:comment.user,show_extra:false,size:"micro",wrap_css: user_css,profile_css:profile_css,is_admin:is_admin} rescue render(partial: "comments/user",locals: {comment:comment}) %>
 
-          <span class="ms-auto fs-7"><%= tag.span("#{date_fmt(comment.created_at,fmt: "ago")}") rescue tag.span("#{time_ago_in_words(comment.created_at)} ago") %></span>
+          <div class="ms-auto fs-7"><%= tag.span("#{date_fmt(comment.created_at,fmt: "ago")}") rescue tag.span("#{time_ago_in_words(comment.created_at)} ago") %>
+            
+            <a href="#cmtMenu<%= comment.id %>" data-bs-target="cmtMenu<%= comment.id %>" data-bs-toggle="collapse mx-1"><%= icon(icon:"bars") %></a>
+          </div>
         </div>
 
       <p class="d-flex align-items-top"><%= comment.body %>
         <br>
       </p>
-      <%= tag.div comment.subject, class:"fs-8 fw-bold text-end mx-1" if is_admin? %>
+      
+      <%= tag.div comment.subject, class:"collapse fs-8 fw-bold text-end mx-1", id: "cmtMenu#{ comment.id }" if is_admin? %>
 
     </div>
 
