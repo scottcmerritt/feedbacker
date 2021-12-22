@@ -1,5 +1,6 @@
 <% form_id = "commentForm#{SecureRandom.hex(10)}" if local_assigns[:form_id].nil? %>
 <% values = nil if local_assigns[:values].nil? %>
+
 <%= simple_form_for(new_comment, url: main_app.comments_path(new_comment),remote: true,html: {id:form_id}) do |f| %>
   <%= f.hidden_field :commentable_id, value: new_comment.commentable_id %>
   <%= f.hidden_field :commentable_type, value: new_comment.commentable_type %>
@@ -9,9 +10,11 @@
     <%= f.text_area :body, class: 'form-control' %>
   </div>
 
+  <% if false %>
   <div class="field form-group">
     <%= f.input :subject, class: 'form-control', value: values.nil? ? nil : values[:subject] %>
   </div>
+  <% end %>
   <div class="field form-group my-1">
     <%= submit_tag "Post comment", class: 'btn btn-primary' %>
   </div>

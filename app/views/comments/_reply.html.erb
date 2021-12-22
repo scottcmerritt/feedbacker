@@ -18,6 +18,17 @@
             
             <a href="#cmtMenu<%= comment.id %>" role="button" aria-expanded="false" aria-controls="cmtMenu<%= comment.id %>" data-bs-toggle="collapse" class="mx-1"><%= icon(icon:"bars") %></a>
 
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="cmtDropdown<%= comment.id %>" data-bs-toggle="dropdown" aria-expanded="false">
+                <%= icon(icon:"bars") %>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="cmtDropdown<%= comment.id %>">
+                <li><a class="dropdown-item" href="#">Flag</a></li>
+                <li><a class="dropdown-item" href="#">Add photo</a></li>
+                <li><a class="dropdown-item" href="#">Remove</a></li>                
+              </ul>
+            </div>
+
           </div>
         </div>
 
@@ -25,7 +36,7 @@
         <br>
       </p>
       
-      <%= tag.div comment.subject, class:"collapse fs-8 fw-bold text-end mx-1", id: "cmtMenu#{ comment.id }" if is_admin? %>
+      <%= tag.div comment.subject, class:"fs-8 fw-bold text-end mx-1" if is_admin? %>
 
     </div>
 
