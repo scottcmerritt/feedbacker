@@ -15,11 +15,9 @@
           <%= render partial: "users/parts/list_row", locals: {user:comment.user,show_extra:false,size:"micro",wrap_css: user_css,profile_css:profile_css,is_admin:is_admin} rescue render(partial: "comments/user",locals: {comment:comment}) %>
 
           <div class="ms-auto fs-7"><%= tag.span("#{date_fmt(comment.created_at,fmt: "ago")}") rescue tag.span("#{time_ago_in_words(comment.created_at)} ago") %>
-            
-            <a href="#cmtMenu<%= comment.id %>" role="button" aria-expanded="false" aria-controls="cmtMenu<%= comment.id %>" data-bs-toggle="collapse" class="mx-1"><%= icon(icon:"bars") %></a>
 
             <div class="dropdown">
-              <button class="btn btn-secondary dropdown-toggle" type="button" id="cmtDropdown<%= comment.id %>" data-bs-toggle="dropdown" aria-expanded="false">
+              <button class="bg-transparent border-0" type="button" id="cmtDropdown<%= comment.id %>" data-bs-toggle="dropdown" aria-expanded="false">
                 <%= icon(icon:"bars") %>
               </button>
               <ul class="dropdown-menu" aria-labelledby="cmtDropdown<%= comment.id %>">
