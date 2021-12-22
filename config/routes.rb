@@ -6,9 +6,9 @@ Feedbacker::Engine.routes.draw do
 
 
 
-	#match '/tag/search' => 'tags#search', :as => :search_tag, :via=> :post
-	#match '/tag/add' => 'tags#add', :as => :add_tag, :via=> [:post,:get]
-	#match '/tag/remove' => 'tags#remove', :as => :remove_tag, :via=> :delete
+	match '/tag/search' => 'tags#search', :as => :search_tag, :via=> :post
+	match '/tag/add' => 'tags#add', :as => :add_tag, :via=> [:post,:get]
+	match '/tag/remove' => 'tags#remove', :as => :remove_tag, :via=> :delete
 	match '/tag/update(/:id)' => 'tags#update', :as => :update_tag, :via=> :patch
 	match '/tag/delete(/:id)' => 'tags#destroy', :as => :destroy_tag, :via=> :delete
 	

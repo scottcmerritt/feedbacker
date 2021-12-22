@@ -13,7 +13,7 @@ class CommentsController < ApplicationController
       if @comment.save
         @target = commentable
 
-        @target.announce_comment! sender:current_user
+        @target.announce_comment! sender:current_user if @target.respond_to?(:announce_comment!)
 
         make_child_comment
         #format.html  { redirect_to(:back, :notice => 'Comment was successfully added.') }

@@ -31,7 +31,7 @@
     </div>
     <% end %>
     
-    <%= tag.p post.details, class: "fs-6" %>
+    <%= tag.p post.details, class: "fs-6" if post.respond_to?(:details) %>
     
     <div class="d-flex justify-content-between align-items-center">
       <%= render partial: "posts/parts/contributors", locals: {post:post,is_admin:false} %>            

@@ -1,0 +1,79 @@
+<% js = true if local_assigns[:js].nil? %>
+<% tags = false if local_assigns[:tags].nil? %>
+<% unless local_assigns[:target].nil? %>
+<% oid = target.id %>
+<% otype = target.class.name #{}"Book" if local_assigns[:otype].nil? %>
+<% end %>
+<% if js %>
+<script type="text/javascript">
+
+function doLookup(url,postData,dataType) {
+	dataType = dataType || 'json'
+	return new Promise((resolve, reject) => {
+		$.ajax({ url: url,
+		    type: 'POST',
+		    dataType: dataType,
+		    beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+		    data: postData,
+		    success: (response) => {
+		    	return resolve({response:response})
+		    },
+		    error: (response) => {
+		    	//alert(`Error fetching ${url}`)
+		    	console.log(`Error fetching ${url}`)
+		    	console.log(response)
+		    	return reject({msg:'ERROR ajaxPromise 1',error:response})
+		    }
+		});
+
+	})
+
+	return reject({msg:`RARE SERVER ERROR fetching {$url}`,error:'ERROR INFO'})
+}
+function loadTags(url,el) {
+	let postData = {q: el.val()}
+		let res = doLookup(url,postData,'json')
+		.then((result) => {
+	          el.closest('.tagAdder').find('.result').html(result.response.html)
+
+	    })
+}
+(function() {
+   // your page initialization code here
+   // the DOM will be available here
+
+const tagSearchUrl = '<%= url_to_search %>';
+
+var options = {
+    data: ["John", "Paul", "George", "Ringo"]
+  };
+  $('*[data-behavior="autocomplete"]').easyAutocomplete(options);
+  const inputEl = $("#<%= input_id %>")
+
+  loadTags(tagSearchUrl,inputEl)
+  inputEl.on('keyup change',function(e) {
+		loadTags(tagSearchUrl,$(this))
+	})
+})();
+</script>
+<script type="text/javascript">
+/*
+	const input = document.querySelector('#<%= input_id %>');
+
+	input.addEventListener('input', (e)=> {
+		alert(e.target.value)
+	});
+*/
+</script>
+<% end %>
+<% if tags %>
+<div class="px-1">
+	<% tag_css = default_tag_css if local_assigns[:tag_css].nil? %>
+	
+
+	<% tags.each do |tn| %>	
+	<% path_to_tag = add_tag_path({oid:target.id, otype:target.class.name, tag: tn.to_s}) %>
+    <%= link_to tn, path_to_tag, class: "#{tag_css}", method: :post %>
+<% end %>
+</div>
+<% end %>

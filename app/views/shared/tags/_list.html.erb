@@ -1,0 +1,15 @@
+<% tag_css = default_tag_css(font_size:"fs-6",extra_css:"d-flex align-items-center") if local_assigns[:tag_css].nil? %>
+<% exclude_ids = [] if local_assigns[:exclude_ids].nil? %>
+
+<% selected_tag = local_assigns[:selected_tag] ? local_assigns[:selected_tag] : (@selected_tag.nil? ? params[:tag] : @selected_tag) %>
+<% selected_tag = selected_tag.nil? ? dbt("filter.all",d:"all") : dbt_tag(selected_tag,d:selected_tag).downcase %>
+
+<% tag_css = default_tag_css(font_size:"fs-6",extra_css:"d-flex align-items-center") if local_assigns[:tag_css].nil? %>
+<% tag_selected_css = "rounded py-tiny bg-primary bg-dark text-light" if local_assigns[:tag_selected_css].nil? %>
+
+<% tags.each do |tn| %>
+  <% unless exclude_ids.include?(tn.id) %>
+    <% actual_tn = dbt_tag(tn, d:tn.name) %>
+    <%= link_to tag_w_icon(tn), public_send(path_to_tag, {tag: tn.name}), style:"padding: 3px 10px !important;", class: "#{tag_css} #{tag_selected_css if selected_tag == actual_tn.to_s.downcase}" %>
+    <% end %>
+<% end %>

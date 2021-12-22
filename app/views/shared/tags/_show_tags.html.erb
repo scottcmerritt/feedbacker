@@ -1,0 +1,20 @@
+<% stacked = false if local_assigns[:stacked].nil? %>
+<% tags = target.tag_list if local_assigns[:tags].nil? %>
+<% otype = target.class.name %>
+
+<% tag_css = default_tag_css %>
+
+<% path_to_tag = :books_path if local_assigns[:path_to_tag].nil? %>
+<% if stacked %>
+<h6><%= local_assigns[:title].nil? ? "Tags": local_assigns[:title] %></h6>
+<% end %>
+<div class="mb-1 px-1">
+<% tags.each do |tag_row| %>
+<% tag_el = link_to(tag_w_icon(tag_row), public_send(path_to_tag,{tag:tag_row.name}),class:"text-light text-decoration-none py-0 fs-6") %>
+
+<% remove_params = {otype:target.class.name,oid:target.id,tag:tag_row.name} %>
+
+<% remove_el = link_to(icon_text("","trash",false,"mx-1 fs-8 text-muted"),remove_tag_path(remove_params),method: :delete, class: "text-light") if can?(:update, target) %>
+<%= tag.span safe_join([tag_el,remove_el]),class: tag_css %>
+<% end %>
+</div>

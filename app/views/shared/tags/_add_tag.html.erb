@@ -1,0 +1,15 @@
+<% input_id = "tag#{SecureRandom.hex(6)}" %>
+<% wrap_css = "bg-white border rounded #{browser.mobile? ? "p-0 pb-1" : "p-2"}" if local_assigns[:wrap_css].nil? %>
+<%= simple_form_for(target, :url=>url_to_post,:method => :post, :html=> { class: wrap_css }) do |form| %>
+<div class="tagAdder" style="overflow: hidden;">
+<div class="d-flex align-items-center"> 
+  <input id="<%= input_id %>" type="text" name="tag" value=""  data-bs-toggle="tooltip" title="Add new tag OR select one" class="form-control-sm p-0 px-1 m-1 <%= browser.mobile? ? "fs-8" : "" %>"/>
+
+  <%= form.button :submit,"Add tag", class: "btn-sm btn-primary mx-1" unless browser.mobile? %>
+  </div>
+  <div class="result"></div>
+</div>
+<% end %>
+<% if false %><input type="text" data-behavior="autocomplete" /><% end %>
+
+<%= render partial: "shared/tags/results", locals: {target:target,url_to_search: url_to_search,input_id: input_id} if true %>
