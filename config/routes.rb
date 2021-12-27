@@ -5,7 +5,8 @@ Feedbacker::Engine.routes.draw do
 	resources :translate_keys, path: "translations"
 
 
-
+	match '/engage/comment/:id/:scope' => 'comments#engage', :as => :engage_comment, :via=> [:get,:post]
+	
 	match '/tag/search' => 'tags#search', :as => :search_tag, :via=> :post
 	match '/tag/add' => 'tags#add', :as => :add_tag, :via=> [:post,:get]
 	match '/tag/remove' => 'tags#remove', :as => :remove_tag, :via=> :delete

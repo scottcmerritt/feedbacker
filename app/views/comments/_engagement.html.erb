@@ -1,0 +1,20 @@
+<% engagement_frame_id = local_assigns[:frame] %>
+
+<% if current_user.favorited?(resource,scope:'flagged') %>
+<%= link_to feedbacker.engage_comment_path(id:resource.id,scope:'flag',frame:engagement_frame_id,undo:1), remote: true, class: "nodec" do %>
+<%= icon(icon:'exclamation-triangle',icon_css:'text-warning me-1')  %>
+<% end %>
+<% end %>
+
+
+<% if current_user.favorited?(resource,scope:'liked') %>
+<%= link_to feedbacker.engage_comment_path(id:resource.id,scope:'like',frame:engagement_frame_id,undo:1), remote: true, class: "nodec" do %>
+<%= icon(icon:'thumbs-up',icon_css:'text-success me-1') %>
+<% end %>
+<% end %>
+
+<% if current_user.favorited?(resource,scope:'loved') %>
+<%= link_to feedbacker.engage_comment_path(id:resource.id,scope:'love',frame:engagement_frame_id,undo:1), remote: true, class: "nodec" do %>
+<%= icon(icon:'heart',icon_css:'text-danger me-1') %>
+<% end %>
+<% end %>

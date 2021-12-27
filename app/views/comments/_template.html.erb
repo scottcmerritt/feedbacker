@@ -34,7 +34,11 @@
   <% if commentable.root_comments.length == 0 %>
   <div class="alert alert-info">Be the first to comment</div>
   <% else %>
+
+  <% begin %>
   <%= render partial: "comments/reply", locals: {comments: comments,new_comment: new_comment} %>
+  <% rescue Exception=> ex %><%= ex %>
+  <% end %>
   <% end %>
 </div>
 <% if with_wrap %></div><% end %>

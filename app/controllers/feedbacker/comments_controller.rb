@@ -18,12 +18,38 @@ class CommentsController < ::ApplicationController
     end
   end
 
+  # '/engage/comment/:id/:scope'
+  # engage_comment_path
+  def engage
+    @frame = params[:frame]
+
+    scope_keys = {"flag"=>"flagged","like"=>"liked","love"=>"loved"}
+    @scope = params[:scope]
+    @comment = Comment.find_by(id: params[:id])
+    if params[:undo]
+      current_user.unfavorite(@comment, scope: scope_keys[@scope].to_sym) if scope_keys[@scope]
+    else
+      current_user.favorite(@comment, scope: scope_keys[@scope].to_sym) if scope_keys[@scope]
+    end
+  end
+
   def destroy
     @comment = Comment.find_by(id:params[:id])
+    @removed_id = @comment.id.to_s
+
     @commentable = @comment.commentable
     @comment.destroy
-    flash[:notice] = "Comment removed"
-    redirect_to @commentable rescue redirect_to(main_app.root_path)
+    
+
+    respond_to do |format|
+      format.html do 
+        flash[:notice] = "Comment removed"
+        redirect_to @commentable rescue redirect_to(main_app.root_path)
+      end
+      format.js do
+        @frame = params[:frame]
+      end
+    end
   end
 
   private

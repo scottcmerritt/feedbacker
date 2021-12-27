@@ -7,33 +7,58 @@
 <% paging = false if local_assigns[:paging].nil? %>
 <% comments = Kaminari.paginate_array(comments).page(params[:page]).per(2) if paging %>
 <%= paginate comments if paging %>
+
 <% comments.each do |comment| %>
   <div class="comments-show">
-    <div class="comment">
+    <div class="comment" comment-id="<%= comment.id %>">
       <div class="body">
         <div class="d-flex">
           <%= render partial: "users/parts/list_row", locals: {user:comment.user,show_extra:false,size:"micro",wrap_css: user_css,profile_css:profile_css,is_admin:is_admin} rescue render(partial: "comments/user",locals: {comment:comment}) %>
 
-          <div class="ms-auto fs-7 d-flex"><%= tag.span("#{date_fmt(comment.created_at,fmt: "ago")}") rescue tag.span("#{time_ago_in_words(comment.created_at)} ago") %>
+
+          <div class="ms-auto d-flex">
+
+            <% engagement_frame_id = "engage#{SecureRandom.hex(10)}" %>
+            <%= tag.div render(partial: "comments/engagement", locals: {resource:comment,frame:engagement_frame_id}), id: engagement_frame_id unless current_user.nil? %>
+
+
+          <div class="fs-7 d-flex"><%= tag.span("#{date_fmt(comment.created_at,fmt: "ago")}") rescue tag.span("#{time_ago_in_words(comment.created_at)} ago") %>
 
             <div class="dropdown">
               <button class="bg-transparent border-0" type="button" id="cmtDropdown<%= comment.id %>" data-bs-toggle="dropdown" aria-expanded="false">
                 <%= icon(icon:"bars") %>
               </button>
               <ul class="dropdown-menu" aria-labelledby="cmtDropdown<%= comment.id %>">
-                <li><a class="dropdown-item" href="#">Flag</a></li>
+                <li>
+                  <%= link_to feedbacker.engage_comment_path(id:comment.id,scope:'like',frame:engagement_frame_id), remote: true, class: "dropdown-item" do %><%= icon(icon:"thumbs-up",icon_css:"text-success") %> Like
+                  <% end %>
+                </li>
+                <li>
+                  <%= link_to feedbacker.engage_comment_path(id:comment.id,scope:'love',frame:engagement_frame_id), remote: true, class: "dropdown-item" do %><%= icon(icon:"heart",icon_css:"text-danger") %> Love
+                  <% end %>
+                </li>
+
+                <li>
+                  <%= link_to feedbacker.engage_comment_path(id:comment.id,scope:'flag',frame:engagement_frame_id), remote: true, class: "dropdown-item" do %>
+<%= icon(icon:"exclamation-triangle",icon_css:"text-warning") %> Flag
+                  <% end %>
+                </li>
+                <% if is_admin? %>
                 <li><a class="dropdown-item" href="#">Add photo</a></li>
-                <li><a class="dropdown-item" href="#">Remove</a></li>                
+                <li><%= link_to icon(icon:'trash',lbl: dbt('comment.remove',d:'Remove')), feedbacker.comment_path(comment,frame:form_id), method: :delete, remote: true, class: "dropdown-item" %></li>                
+                <% end %>
               </ul>
             </div>
 
           </div>
+
+          </div>
+
         </div>
 
       <p class="d-flex align-items-top"><%= comment.body %>
         <br>
       </p>
-      
       <%= tag.div comment.subject, class:"fs-8 fw-bold text-end mx-1" if is_admin? %>
 
     </div>
