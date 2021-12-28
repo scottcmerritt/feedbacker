@@ -56,9 +56,12 @@ module Feedbacker
 		end
 
 		def sample_page
-			samples = Translate.get_logged_samples "#{self.tdomain}.#{self.tkey}"
+			samples = self.logged_samples # "#{self.tdomain}.#{self.tkey}"
 			# samples[:default], samples[:result]
 			samples[:page] unless samples[:page].nil?
+		end
+		def logged_samples
+			Translate.get_logged_samples self.full_key
 		end
 
 

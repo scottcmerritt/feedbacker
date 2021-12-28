@@ -15,6 +15,11 @@ module Feedbacker
       Translate.reset_miss_log! if params[:reset_log]
     end
 
+    # translates_pages_path, /admin/page/translations
+    def translated_pages
+      @pages = Translate.get_all_logged_pages
+    end
+
 
     # moved needed translations to a new page to speed up page load
     def needed

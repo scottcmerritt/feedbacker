@@ -75,8 +75,23 @@ module TranslationUtil
       Feedbacker::Cache.set_obj(cache_key,result,logger,cache_duration)
     end
 
+    # gets a sample page for WHERE the translation appears. NOTE: translations could appear on MANY pages and only have 1 sample
     def get_logged_samples phrase
       {page: self.get_logged_page(phrase),default:self.get_logged_default(phrase),result:self.get_logged_result(phrase)}
+    end
+
+    # WARNING, could be a slow method
+    def get_all_logged_pages
+      pages = {}
+      Feedbacker::TranslateKey.all.each do |translate_key|
+        page = translate_key.logged_samples[:page]
+        unless page.blank?
+          samples = translate_key.logged_samples
+          pages[page.downcase] = {} if pages[page.downcase].nil?
+          pages[page.downcase][translate_key.full_key] = samples
+        end
+      end
+      pages
     end
 
     def get_logged_page phrase, remove_params: [:locale]
