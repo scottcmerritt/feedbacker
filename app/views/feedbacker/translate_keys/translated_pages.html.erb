@@ -1,3 +1,4 @@
+<%= render partial: "feedbacker/translate_keys/parts/menu", locals: {selected:params[:action] == "translated_pages" ? 4 : 1} %>
 <h4>Translations by page</h4>
 <% @pages.each do |path_to_page,samples| %>
 <h6><%= path_to_page %></h6>

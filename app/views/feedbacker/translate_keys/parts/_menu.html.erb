@@ -1,6 +1,6 @@
 <% selected = 0 if local_assigns[:selected].nil? %>
 
-<% links = [["Translations",feedbacker.translates_path],["Keywords",feedbacker.translate_keys_path],["Tasks",feedbacker.translates_todo_path],["Emails",feedbacker.emails_path]] %>
+<% links = [["Translations",feedbacker.translates_path],["Keywords",feedbacker.translate_keys_path],["Tasks",feedbacker.translates_todo_path],["Emails",feedbacker.emails_path],["Pages",feedbacker.translated_pages_path]] %>
 
 <h5 class="d-flex align-items-center bg-secondary text-light p-1 px-2 mb-0 mt-1">
 <%= link_to icon(icon:"arrow-left"), feedbacker.translate_keys_path, class: "me-2" unless !params[:tdomain] %>

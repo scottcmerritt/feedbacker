@@ -92,6 +92,21 @@ module TranslationUtil
         end
       end
       pages
+
+      needed = Feedbacker::Translate.get_cache_misses(grouped:true)
+      needed.each do |lang,rows|
+        rows.each do |full_row|
+          row = full_row.kind_of?(Feedbacker::Translation) ? full_row : (full_row.has_key?(:obj) ? full_row[:obj] : full_row)
+          row_translate_full_key = "#{row.tdomain}.#{row.tkey}"
+          samples = Feedbacker::Translate.get_logged_samples row_translate_full_key
+          page = samples[:page]
+          unless samples[:page].nil?
+            pages[page.downcase] = {} if pages[page.downcase].nil?
+            pages[page.downcase][row_translate_full_key] = samples
+          end
+        end
+      end
+      pages
     end
 
     def get_logged_page phrase, remove_params: [:locale]
