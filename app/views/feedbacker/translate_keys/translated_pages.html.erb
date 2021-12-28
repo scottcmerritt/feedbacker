@@ -11,9 +11,9 @@
 
 <% if @combine_pages %>
 <% row_id = "#translated_#{SecureRandom.hex(6)}" %>
-<div class="d-flex flex-wrap">
+<div class="d-flex flex-wrap border m-1 p-1">
 <% @pages.each do |path_to_page,samples| %>
-<div class="fw-bold fs-4 d-flex align-items-center me-1 mb-1"><%= link_to path_to_page, row_id, data: {"bs-target": row_id, "bs-toggle": "collapse"}, class: "me-1" %>
+<div class="fw-bold fs-8 d-flex align-items-center me-1 mb-1 border p-1"><%= link_to path_to_page, row_id, data: {"bs-target": row_id, "bs-toggle": "collapse"}, class: "me-1" %>
 		<%= tag.div samples.keys.length, class: "badge bg-info fs-7 mx-1" %>
 	</div>
 
@@ -58,7 +58,7 @@
 			<div class="d-flex flex-column">
 			<%= render partial: "#{engine_prefix}translate_keys/parts/suggest_add", locals: {translate_key: translate_key,size:"sm",wrap_css: "fs-7 my-0"} unless translate_key.nil? %>
 
-			<%= render partial: "feedbacker/translate_keys/parts/hits_and_misses", locals: {translate_key:translate_key} %>
+			<%= tag.div render(partial: "feedbacker/translate_keys/parts/hits_and_misses", locals: {translate_key:translate_key}), class: "text-end" %>
 			</div>
 
 		</div>

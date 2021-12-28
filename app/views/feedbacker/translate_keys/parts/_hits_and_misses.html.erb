@@ -5,7 +5,11 @@
 <%= tag.span "#{hits_and_misses[:hits]} hits", class:"me-2" %>
 <%= tag.span "#{hits_and_misses[:misses]} misses" %>
 
-<%= tag.span safe_join(["Last used: ",tag.span(date_fmt(hits_and_misses[:updated_at],fmt:"ago"),class:"text-success fw-bold")," ago"]) %>
-
+<% updated_at = hits_and_misses[:updated_at] %>
+<% if updated_at.blank? %>
+	<%= tag.span "NOT used", class: "text-danger" %> 
+<% else %>
+	<%= tag.span safe_join(["Last used: ",tag.span(date_fmt(updated_at,fmt:"ago"),class:"text-success fw-bold")," ago"]) %>
+<% end %>
 </div>
 <% end %>
