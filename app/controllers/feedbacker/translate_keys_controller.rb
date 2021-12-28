@@ -18,6 +18,7 @@ module Feedbacker
     # translates_pages_path, /admin/page/translations
     def translated_pages
       @page_query = params[:pageq]
+      @combine_pages = params[:combine] # combine the pages in the UI
       @pages = Translate.get_all_logged_pages page_query: @page_query
     end
 
