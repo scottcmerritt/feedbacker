@@ -7,6 +7,8 @@
     <div>
     <%= render partial: "shared/switch_user",locals:{wrap_css:"ms-auto"} unless Rails.env.production? rescue nil %>
     <%= render partial: "shared/switch_site",locals:{wrap_css:"ms-auto"} if is_admin? rescue nil %>
+    <%= render partial: "feedbacker/shared/page_stats",locals:{wrap_css:"ms-auto"} if is_admin? %>
+
   </div>
   </div>
 </footer>

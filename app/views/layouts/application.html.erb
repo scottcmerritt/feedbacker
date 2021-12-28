@@ -29,8 +29,11 @@
 
       <%= yield %>
     </main>
-   
-   <%= render partial: "shared/footer" rescue "Footer missing" %>
+   <% begin %>
+   <%= render partial: "shared/footer" %>
+   <% rescue Exception=>ex %>
+   <%= ex %>
+   <% end %>
   </body>
   <%= render partial: "layouts/bootstrap_scripts" %>
 </html>

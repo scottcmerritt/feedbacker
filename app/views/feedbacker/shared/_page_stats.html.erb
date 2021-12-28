@@ -1,0 +1,22 @@
+<div class="btn-group dropup <%= wrap_css unless local_assigns[:wrap_css].nil? %> mt-2">
+  <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+    Stats
+  </button>
+  <div class="dropdown-menu p-1" style="width:350px;">
+
+    <% range_param = 60.days.ago %>
+	<% my_sql = Impression.where(impressionable_type:"Site").where("created_at >= ?",range_param).group_by_day(:created_at,range: range_param.midnight..Time.now) %>
+		<%= column_chart my_sql.count("DISTINCT(user_id)"), title: "Users/day", height: 200 %>
+
+		<% range_param = 60.days.ago %>
+		<% my_sql = Impression.where(impressionable_type:"Site",controller_name:controller.controller_name,action_name:controller.action_name).where("created_at >= ?",range_param).group_by_day(:created_at,range: range_param.midnight..Time.now) %>
+		<%= column_chart my_sql.count, title: "Views/day (this feature: #{controller.controller_name}:#{controller.action_name})", height: 200 %>
+
+
+		<% range_param = 365.days.ago %>
+		<% my_sql = Impression.where(impressionable_type:"Site",controller_name:controller.controller_name,action_name:controller.action_name).where("created_at >= ?",range_param).group_by_month(:created_at,range: range_param.midnight..Time.now) %>
+		<%= column_chart my_sql.count, title: "Views/month (this feature: #{controller.controller_name}:#{controller.action_name})", height: 200 %>
+
+    
+  </div>
+</div>
