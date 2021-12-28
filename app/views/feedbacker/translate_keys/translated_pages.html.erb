@@ -1,2 +1,13 @@
 <h4>Translations by page</h4>
-<%= @pages.as_json %>
+<% @pages.each do |path_to_page,samples| %>
+<h6><%= path_to_page %></h6>
+<% samples.each do |k,v| %>
+<div class="border bg-light mb-1 ms-2 p-2 fs-7">
+	<h6><%= k %></h6>
+	<div class="ms-3">
+	<%= v %>
+	</div>
+</div>
+<% end %>
+
+<% end %>
