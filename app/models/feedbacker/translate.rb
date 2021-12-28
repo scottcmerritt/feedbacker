@@ -159,12 +159,14 @@ module Feedbacker
 		Feedbacker::Cache.increment! Translate.hits_key
 		Translate.phrase_hit! phrase unless phrase.nil?
 		Feedbacker::Translate.log_page! phrase, page: page unless page.nil?
+		Feedbacker::Translate.log_phrase_lookup_datetime! phrase
 	end
 
 	def self.cache_miss! phrase: nil, page: nil
 		Feedbacker::Cache.increment! Translate.misses_key
 		Translate.phrase_miss! phrase unless phrase.nil?
 		Feedbacker::Translate.log_page! phrase, page: page unless page.nil?
+		Feedbacker::Translate.log_phrase_lookup_datetime! phrase
 	end
 	
 	
@@ -180,6 +182,16 @@ module Feedbacker
 			Feedbacker::Cache.increment! Translate.misses_key
 		end
 =end
+
+		def self.redis_timestamp
+			Time.now.to_s
+		end
+		def self.log_phrase_lookup_datetime! phrase, cache_expiration = 600
+			Feedbacker::Cache.set_obj self.phrase_lookedup_prefix+"::"+phrase, self.redis_timestamp, nil, cache_expiration
+		end
+		def self.get_phrase_lookup_datetime phrase
+			Feedbacker::Cache.get_obj self.phrase_lookedup_prefix+"::"+phrase
+		end
 
 		# experimentally logging phrase misses (and hits)
 		def self.phrase_miss! phrase

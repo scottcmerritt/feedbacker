@@ -127,6 +127,10 @@ module TranslationUtil
       Feedbacker::Cache.get_obj cache_key
     end
 
+     def phrase_lookedup_prefix
+      "cachelookup::phrase::translate"
+    end
+
     def cache_hits
       Feedbacker::Cache.integer_value(Feedbacker::Translate.hits_key)
     end
@@ -150,7 +154,7 @@ module TranslationUtil
 
     def hits_and_misses row
       phrase_key = "#{row.tdomain}.#{row.tkey}"
-      {hits: Feedbacker::Translate.phrase_hits(phrase_key), misses: Feedbacker::Translate.phrase_misses(phrase_key)}
+      {updated_at:Feedbacker::Translate.get_phrase_lookup_datetime(phrase_key),hits: Feedbacker::Translate.phrase_hits(phrase_key), misses: Feedbacker::Translate.phrase_misses(phrase_key)}
     end
 
 
@@ -161,6 +165,7 @@ module TranslationUtil
       d = d || default
       phrase = Feedbacker::Translate.lookup text, locale: locale, page: page, logger:logger # I18n.locale.to_s
       
+      # similar to text.partition(".").first, etc...
       tdomain = text.split(".",2).first if text.split(".",2).length > 1
       tkey = text.split(".",2).last
       #return Translate.object_hashkey(tdomain:tdomain,tkey:tkey,lang:I18n.locale.to_s) #{tdomain} #{tkey}"
@@ -208,9 +213,6 @@ module TranslationUtil
       tdomain.blank? ? Feedbacker::Translate.joins(:translate_key).where("(translate_keys.tdomain is null or translate_keys.tdomain = '') AND translate_keys.tkey = ?", tkey).order("translates.updated_at DESC").where(lang:locale).first : Feedbacker::Translate.joins(:translate_key).where(translate_keys: {tdomain:tdomain,tkey:tkey},lang:locale).order("translates.updated_at DESC").first
     end
 
-
-
-
     def object_to_cache tdomain:, tkey:, lang:
       #{"tdomain"=>tdomain,"tkey"=>tkey,"lang"=>lang}
       Feedbacker::Translation.new(tdomain:tdomain,tkey:tkey,lang:lang)
@@ -232,7 +234,8 @@ module TranslationUtil
       Feedbacker::CacheBase.get_list_objects Feedbacker::Translate.cache_miss_log_key, load_objects: true, with_keys: with_keys
     end
 
-    def get_cache_misses grouped:false,sorted:true, tdomain_filter:nil, tkey_filter:nil
+    # exact_match requires an exact match (a == b) between tdomain and tkey, otherwise it does .include?
+    def get_cache_misses grouped:false,sorted:true, tdomain_filter:nil, tkey_filter:nil, exact_match: false
       #data = get_all_cache_misses with_keys: true
       data = Feedbacker::CacheBase.get_list_objects Feedbacker::Translate.cache_miss_log_key, load_objects: true, with_keys: true
       
@@ -243,10 +246,14 @@ module TranslationUtil
 
           unless row.nil? 
             idx[row.lang] = [] if idx[row.lang].nil? #['lang']].nil?
-            if tdomain_filter.nil?
-              idx[row.lang].push full_row
+            if exact_match
+              idx[row.lang].push(full_row) if (!row.tdomain.nil? && row.tdomain == tdomain_filter) && (!tkey_filter.nil? && !row.tkey.nil? && row.tkey == tkey_filter)
             else
-              idx[row.lang].push(full_row) if (!row.tdomain.nil? && row.tdomain.include?(tdomain_filter)) || (!tkey_filter.nil? && !row.tkey.nil? && row.tkey.include?(tkey_filter))
+              if tdomain_filter.nil?
+                idx[row.lang].push full_row
+              else
+                idx[row.lang].push(full_row) if (!row.tdomain.nil? && row.tdomain.include?(tdomain_filter)) || (!tkey_filter.nil? && !row.tkey.nil? && row.tkey.include?(tkey_filter))
+              end
             end
           end
         end

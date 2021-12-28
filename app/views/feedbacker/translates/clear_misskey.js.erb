@@ -1,0 +1,7 @@
+<% if @remove_frame %>
+$("#<%= @remove_frame %>").html('<div class="alert-success fs-8 p-1"><%= j icon(icon:"check",lbl:@msg) %> It will show up if the key exists in the app still</div>')
+<% else %>
+alert('<%= @msg %>')
+var res = <%= raw @objs %>;
+alert(res)
+<% end %>

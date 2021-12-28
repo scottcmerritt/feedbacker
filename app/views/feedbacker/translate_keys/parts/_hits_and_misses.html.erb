@@ -4,5 +4,8 @@
 <div class="p-0 fs-8 ms-2">
 <%= tag.span "#{hits_and_misses[:hits]} hits", class:"me-2" %>
 <%= tag.span "#{hits_and_misses[:misses]} misses" %>
+
+<%= tag.span safe_join(["Last used: ",tag.span(date_fmt(hits_and_misses[:updated_at],fmt:"ago"),class:"text-success fw-bold")," ago"]) %>
+
 </div>
 <% end %>

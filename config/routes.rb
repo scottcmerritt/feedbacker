@@ -22,6 +22,8 @@ Feedbacker::Engine.routes.draw do
 
 
 	match '/admin/cms' =>"translates#cms", :as => :translates_cms, :via=>[:get,:post]
+	match '/admin/clear/translate/miss_key' =>"translates#clear_misskey", :as => :translates_clear_misskey, :via=>[:get,:post]
+
 	match '/admin/todo/translates' =>"translates#todo", :as => :translates_todo, :via=>[:get,:post]
 
 	

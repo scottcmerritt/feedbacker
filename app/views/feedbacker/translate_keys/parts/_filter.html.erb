@@ -22,10 +22,10 @@ $searchBox.on('input', function() {
     //$div.toggle($div.text().toLowerCase().indexOf(scope.value.toLowerCase()) > -1);
     if($div.text().toLowerCase().indexOf(scope.value.toLowerCase()) > -1)
     {
-    	$div.removeClass('d-none')
+    	$div.closest('.search-row').removeClass('d-none')
     }
     else {
-    	$div.addClass('d-none')
+    	$div.closest('.search-row').addClass('d-none')
     }
   })
 

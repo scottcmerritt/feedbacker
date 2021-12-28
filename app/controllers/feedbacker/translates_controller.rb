@@ -19,6 +19,43 @@ module Feedbacker
 			@translators = User.select("users.*,count(translates.id) as translates_count").joins("JOIN translates ON translates.user_id = users.id").group("users.id").order("translates_count DESC")			
 		end
 
+		# translates_clear_misskey_path
+		def clear_misskey
+			# based on the tdomain and tkey, lookup the misskey AND remove it
+
+			@remove_frame = params[:remove_frame]
+			if params[:remove_misskey]
+				@msg = "Miss key CLEARED!"
+				
+				Feedbacker::Translate.remove_cache_miss_key! params[:remove_misskey]
+			else
+				needed = Feedbacker::Translate.get_cache_misses(grouped:true,tdomain_filter:@tdomain,tkey_filter:@tkey,exact_match:true)
+				
+				if needed.empty?
+					@msg = "No keys found, tdomain: #{@tdomain}, tkey: #{@tkey}"
+				else
+					miss_keys = []
+					needed.each do |lang,rows|
+						rows.each do |full_row|
+							miss_keys.push full_row[:key] if full_row.has_key?(:key)
+						end
+					end
+					@miss_keys = miss_keys.uniq
+
+					@msg = "Keys found (#{@miss_keys.length}), not cleared though, tdomain: #{@tdomain}, tkey: #{@tkey}, #{@miss_keys}"
+					@objs = []
+					@miss_keys.each do |k|
+
+						obj = Feedbacker::CacheBase.get_obj k
+						@objs.push obj.to_json.to_s
+						@msg+=(" " + obj.as_json.to_s)
+						Feedbacker::Translate.remove_cache_miss_key! k
+					end
+				end
+			end
+
+		end
+
 		def new
 			
 			@translate = Feedbacker::Translate.new(translate_key_id:params[:key_id],lang:params[:lang])

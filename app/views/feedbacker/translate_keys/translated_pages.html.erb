@@ -1,4 +1,5 @@
 <%= render partial: "feedbacker/translate_keys/parts/menu", locals: {selected:params[:action] == "translated_pages" ? 4 : 1} %>
+<div class="bg-white p-1">
 <h4>Translations by page</h4>
 
 <form method="get" action="">
@@ -29,7 +30,7 @@
 <% unless @combine_pages %>
 
 	<% row_id = "#translated_#{SecureRandom.hex(6)}" %>
-	<div class="fw-bold fs-4 d-flex align-items-center"><%= link_to path_to_page, row_id, data: {"bs-target": row_id, "bs-toggle": "collapse"} %>
+	<div class="fw-bold fs-4 d-flex align-items-center border border-dark ps-1 bg-light mt-1" style="border-left-width: 6px !important;border-top-width: 2px !important;"><%= link_to path_to_page, row_id, data: {"bs-target": row_id, "bs-toggle": "collapse"} %>
 		
 		<%= tag.div samples.keys.length, class: "badge bg-info fs-7 mx-1" %>
 	</div>
@@ -37,8 +38,8 @@
 <% end %>
 
 <% samples.each do |k,v| %>
-	<% tdomain = k.split(".")[0] %>
-	<% tkey = k.split(".")[1] %>
+	<% tdomain = k.partition(".").first.blank? ? nil : k.partition(".").first %>
+	<% tkey = k.partition(".").last %>
 	<% translate = Feedbacker::Translate.new %>
 	<% translate.build_translate_key!(tdomain:tdomain,tkey:tkey) %>
 	<% translate_key = translate.translate_key %>
@@ -52,8 +53,13 @@
 		<div><%= k %></div>
 		<%= tag.div v[:default], class: "text-muted fs-8" %>
 		<% end %>
-		<div class="ms-auto">
-<%= render partial: "#{engine_prefix}translate_keys/parts/suggest_add", locals: {translate_key: translate_key,size:"sm",wrap_css: "fs-7 my-0"} unless translate_key.nil? %>
+		<div class="ms-auto d-flex align-items-center">
+			<%= link_to icon(icon:"trash",lbl:"Clear key",icon_css:"me-1"), feedbacker.translates_clear_misskey_path(tdomain:tdomain,tkey:tkey), class: "btn btn-sm bg-danger text-light m-1", remote: true %>
+			<div class="d-flex flex-column">
+			<%= render partial: "#{engine_prefix}translate_keys/parts/suggest_add", locals: {translate_key: translate_key,size:"sm",wrap_css: "fs-7 my-0"} unless translate_key.nil? %>
+
+			<%= render partial: "feedbacker/translate_keys/parts/hits_and_misses", locals: {translate_key:translate_key} %>
+			</div>
 
 		</div>
 
@@ -62,7 +68,7 @@
 	<%= v if false %>
 	
 
-	<%= render partial: "feedbacker/translate_keys/parts/hits_and_misses", locals: {translate_key:translate_key} %>
+	
 
 	<h4><%= link_to icon_text("","arrow-left"), feedbacker.translates_path, class: "btn btn-sm btn-outline-secondary" %> Add a new translation</h4>
 <%= render partial: "#{engine_prefix}translates/form", locals: {translate: translate} %>
@@ -77,3 +83,5 @@
 <% unless @combine_pages %></div><% end %>
 <% end %>
 <% if @combine_pages %></div><% end %>
+
+</div>
