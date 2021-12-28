@@ -186,7 +186,7 @@ module Feedbacker
 		def self.redis_timestamp
 			Time.now.to_s
 		end
-		def self.log_phrase_lookup_datetime! phrase, cache_expiration = 600
+		def self.log_phrase_lookup_datetime! phrase, cache_expiration = 60000
 			Feedbacker::Cache.set_obj self.phrase_lookedup_prefix+"::"+phrase, self.redis_timestamp, nil, cache_expiration
 		end
 		def self.get_phrase_lookup_datetime phrase
