@@ -1,7 +1,6 @@
 <% show_page = true if local_assigns[:show_page].nil? %>
 <div>
 <% samples = Feedbacker::Translate.get_logged_samples "#{translate_key.tdomain}.#{translate_key.tkey}" %>
-<% hits_and_misses = Feedbacker::Translate.hits_and_misses translate_key %>
 
 <div class="ms-2">
 <%= tag.div raw("Sample page: " + link_to("#{request.protocol}#{request.host_with_port}#{samples[:page]}",samples[:page], class: "fw-bold fs-8")), class: "fs-8" unless samples[:page].nil? || !show_page %>
@@ -9,11 +8,6 @@
 <%= tag.div "Result: " + samples[:result], class: "fw-bold fs-8" unless samples[:result].nil? %>
 </div>
 
-<% unless hits_and_misses[:hits] == 0 && hits_and_misses[:misses] == 0 %>
-<div class="p-0 fs-8 ms-2">
-<%= tag.span "#{hits_and_misses[:hits]} hits", class:"me-2" %>
-<%= tag.span "#{hits_and_misses[:misses]} misses" %>
-</div>
-<% end %>
+<%= render partial: "feedbacker/translate_keys/parts/hits_and_misses", locals: {translate_key:translate_key} %>
 
 </div>

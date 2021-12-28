@@ -20,19 +20,40 @@
 
 <div class="ms-3 collapse <%= div_css %>" id="<%= row_id.split("#")[1] %>">
 <% samples.each do |k,v| %>
-<div class="border bg-light mb-1 ms-2 p-2 fs-7">
+	<% tdomain = k.split(".")[0] %>
+	<% tkey = k.split(".")[1] %>
+	<% translate = Feedbacker::Translate.new %>
+	<% translate.build_translate_key!(tdomain:tdomain,tkey:tkey) %>
+	<% translate_key = translate.translate_key %>
+
+<div class="border bg-light mb-1 ms-2 py-1 px-2 fs-7">
 	<% row_id = "#translated_#{SecureRandom.hex(6)}" %>
 
-	<div class="fw-bold fs-7"><%= link_to row_id, data: {"bs-target": row_id, "bs-toggle": "collapse"}, class: "fw-bold fs-7 d-flex align-items-top" do %>
-		<%= k %>
-		<%= tag.div v[:default], class: "text-muted fs-8 ms-auto" %>
+	<div class="fw-bold fs-7 d-flex">
 
+		<%= link_to row_id, data: {"bs-target": row_id, "bs-toggle": "collapse"}, class: "fw-bold fs-7 d-flex flex-fill flex-column align-items-top nodec" do %>
+		<div><%= k %></div>
+		<%= tag.div v[:default], class: "text-muted fs-8" %>
 		<% end %>
+		<div class="ms-auto">
+<%= render partial: "#{engine_prefix}translate_keys/parts/suggest_add", locals: {translate_key: translate_key,size:"sm",wrap_css: "fs-7 my-0"} unless translate_key.nil? %>
+
+		</div>
+
 	</div>
 	<div class="ms-3 collapse hide" id="<%= row_id.split("#")[1] %>">
-	<%= v %>
+	<%= v if false %>
 	
 
+	<%= render partial: "feedbacker/translate_keys/parts/hits_and_misses", locals: {translate_key:translate_key} %>
+
+	<h4><%= link_to icon_text("","arrow-left"), feedbacker.translates_path, class: "btn btn-sm btn-outline-secondary" %> Add a new translation</h4>
+<%= render partial: "#{engine_prefix}translates/form", locals: {translate: translate} %>
+
+<%= render partial: "#{engine_prefix}translate_keys/parts/show", locals: {translate_key: translate_key,show_key:false} unless translate_key.nil? %>
+
+
+	
 	</div>
 </div>
 <% end %>

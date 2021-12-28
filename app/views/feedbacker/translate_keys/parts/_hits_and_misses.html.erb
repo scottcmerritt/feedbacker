@@ -1,0 +1,8 @@
+<% hits_and_misses = Feedbacker::Translate.hits_and_misses translate_key %>
+
+<% unless hits_and_misses[:hits] == 0 && hits_and_misses[:misses] == 0 %>
+<div class="p-0 fs-8 ms-2">
+<%= tag.span "#{hits_and_misses[:hits]} hits", class:"me-2" %>
+<%= tag.span "#{hits_and_misses[:misses]} misses" %>
+</div>
+<% end %>

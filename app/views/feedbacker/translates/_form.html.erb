@@ -1,25 +1,26 @@
-<%= simple_form_for([feedbacker,@translate], :html=> { class: 'bg-white border p-2 rounded' }) do |form| %>
-  <% if @translate.errors.any? %>
+<% translate = @translate if local_assigns[:translate].nil? %>
+<%= simple_form_for([feedbacker,translate], :html=> { class: 'bg-white border p-2 rounded' }) do |form| %>
+  <% if translate.errors.any? %>
     <div id="error_explanation":html=> { class: 'foobarbaz' } >
       <h2><%= pluralize(book.errors.count, "error") %> prohibited this entry from being saved:</h2>
 
       <ul>
-        <% @translate.errors.each do |error| %>
+        <% translate.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
       </ul>
     </div>
   <% end %>
 
-  <%= render partial: "#{engine_prefix}translate_keys/parts/key", locals: {translate_key: @translate.id.nil? ? Feedbacker::TranslateKey.find_by(id:@translate.translate_key_id) : @translate.translate_key} unless @translate.translate_key.nil?  %>
-  <%= form.input :translate_key_id, :as => :hidden, :input_html => { :value => @translate.translate_key_id } %>
+  <%= render partial: "#{engine_prefix}translate_keys/parts/key", locals: {translate_key: translate.id.nil? ? Feedbacker::TranslateKey.find_by(id:translate.translate_key_id) : translate.translate_key} unless translate.translate_key.nil?  %>
+  <%= form.input :translate_key_id, :as => :hidden, :input_html => { :value => translate.translate_key_id } %>
   
 <% if false %>
   <%= form.input :tdomain %>
   <%= form.input :tkey %>
 <% end %>
 
-<% if @translate.use_cms? %>
+<% if translate.use_cms? %>
 <%= form.input :phrase, as: :text, :input_html=>{rows:5} %>
 <div class="col-3">
 <%= form.input :lang, collection: get_all_langs, label: "Language", input_html: {class:'form-select'} %>
@@ -29,7 +30,7 @@
   <div class="row mt-4">
     <div class="col-0 col-sm-1"></div>
     <div class="col-8 col-sm-7">
-      <% unless @translate.use_cms? %>
+      <% unless translate.use_cms? %>
       <%= form.input :phrase %>
       <% else %>
       <%= form.input :phrase, as: :text, :input_html=>{rows:5} %>
@@ -47,8 +48,8 @@
 
     <div class="d-flex">
     <%= form.button :submit,"Save", class: "btn-sm btn-primary" %>
-    <%= link_to "Cancel", @translate.nil? || @translate.id.nil? ? feedbacker.translates_path : [feedbacker,@translate], class: "ms-1 btn btn-sm btn-outline-secondary" %>
-    <%= link_to icon_text("Delete phrase","trash"), [feedbacker,@translate], method: :delete, class: "ms-5 btn btn-sm btn-danger text-light" unless @translate.id.nil? %>
+    <%= link_to "Cancel", translate.nil? || translate.id.nil? ? feedbacker.translates_path : [feedbacker,translate], class: "ms-1 btn btn-sm btn-outline-secondary" %>
+    <%= link_to icon_text("Delete phrase","trash"), [feedbacker,translate], method: :delete, class: "ms-5 btn btn-sm btn-danger text-light" unless translate.id.nil? %>
     </div>
     <div></div>
     
@@ -56,4 +57,4 @@
 
 <% end %>
 
-<%= render partial: "#{engine_prefix}translates/parts/preview", locals: {translate: @translate,show: {edit:false,delete:false}} unless @translate.nil? || @translate.id.nil? %>
+<%= render partial: "#{engine_prefix}translates/parts/preview", locals: {translate: translate,show: {edit:false,delete:false}} unless translate.nil? || translate.id.nil? %>

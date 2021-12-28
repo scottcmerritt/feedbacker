@@ -1,79 +1,68 @@
+<% translate_key = @translate_key if local_assigns[:translate_key].nil? %>
 <% show_key = true if local_assigns[:show_key].nil? %>
 <div class="p-2 py-1 bg-light border my-1">
-      <%= render partial: "feedbacker/translate_keys/parts/key", locals: {translate_key: @translate_key} if show_key %>
+      <%= render partial: "feedbacker/translate_keys/parts/key", locals: {translate_key: translate_key} if show_key %>
     <div class="my-2 mx-2">
+
       <% if false %>
       <div class="bg-primary text-light p-1 px-3 fs-5 d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center">
-        Used <%= @translate_key.languages.length %> times in <span class="mx-1 fw-bold"><%= @translate_key.langs_used.length %> <%= "language".pluralize(@translate_key.langs_used.length) %></span>
+        Used <%= translate_key.languages.length %> times in <span class="mx-1 fw-bold"><%= translate_key.langs_used.length %> <%= "language".pluralize(translate_key.langs_used.length) %></span>
           <div class="p-1">
-          <% @translate_key.langs_used.each do |lang| %>
+          <% translate_key.langs_used.each do |lang| %>
             <%= tag.span lang, class: "badge bg-dark ms-1 fs-6" %>
           <% end %>
           </div>
         </div>
 
-        <%= render partial: "#{engine_prefix}translate_keys/parts/suggest_add", locals: {translate_key: @translate_key} if false %>
+        <%= render partial: "#{engine_prefix}translate_keys/parts/suggest_add", locals: {translate_key: translate_key} if false %>
       </div>
       <% end %>
 
 
-      <% @translate_key.translates.each do |row| %>
+      <% translate_key.translates.each do |row| %>
         <%= render partial: "#{engine_prefix}translates/parts/translate",locals:{translate:row} %>
       <% end %>
       
         <% if false %>
-        <%= render partial: "#{engine_prefix}translate_keys/parts/key", locals: {translate_key: @translate_key} %>
+        <%= render partial: "#{engine_prefix}translate_keys/parts/key", locals: {translate_key: translate_key} %>
 
         <div class="d-flex align-items-center">
-
-            <div class="p-2 fs-5">Used by <span class="fw-bold"><%= @translate_key.langs_used.length %> <%= "language".pluralize(@translate_key.langs_used.length) %></span></div>
-
+            <div class="p-2 fs-5">Used by <span class="fw-bold"><%= translate_key.langs_used.length %> <%= "language".pluralize(translate_key.langs_used.length) %></span></div>
         </div>
         <% end %>
 
         <div class="d-flex align-items-center text-muted fs-6 m-1">
         <span class="me-auto">
-           Who can edit? <%= render partial: "shared/permissions/show", locals: {target:@translate_key} %>
+           Who can edit? <%= render partial: "shared/permissions/show", locals: {target:translate_key} %>
           <span class="ms-auto">
-           <%= render partial: "shared/permissions/show", locals: {target:@translate_key} %>
-         </span>
-             <div class="text-end">Added by
-    <%= tag.span @translate_key.createdby.nil? ? "Anonymous" : link_to(@translate_key.creator.email,@translate_key.creator) %>
-    </div>
+           <%= render partial: "shared/permissions/show", locals: {target:translate_key} %></span>
+            <div class="text-end">Added by <%= tag.span translate_key.createdby.nil? ? "Anonymous" : link_to(translate_key.creator.email,translate_key.creator) %>
+            </div>
+        </div>
 
       </div>
 
-
-      </div>
-
-
+</div>
 <% if false %>
-
-
     <div class="text-end">
-    <%= tag.span link_to(@translate_key.creator.email,@translate_key.creator) unless @translate_key.createdby.nil? %>
+    <%= tag.span link_to(translate_key.creator.email,translate_key.creator) unless translate_key.createdby.nil? %>
     </div>
-
-    
-
 
     <div class="d-flex align-items-center m-2 bg-white border-top border-bottom p-2">
       <b>Create translation</b>
       <% get_all_langs.each do |lang| %>
-      <%= tag.div link_to(lang, feedbacker.new_translate_path(lang:lang,key_id:@translate_key.id), class: "badge bg-success text-light mx-1") %>
+      <%= tag.div link_to(lang, feedbacker.new_translate_path(lang:lang,key_id:translate_key.id), class: "badge bg-success text-light mx-1") %>
 
       <% end %>
     </div>
 
     <div class="my-5 mx-2">
       <h6 class="bg-primary p-2 text-light ">Current translations</h6>
-    <% @translate_key.translates.each do |row| %>
+    <% translate_key.translates.each do |row| %>
       <div class="bg-white border my-1 p-2">
       <%= row.lang %>: <%= link_to row.phrase, feedbacker.edit_translate_path(row) %>
       </div>
     <% end %>
     </div>
-
-  </div>
-  <% end %>
+<% end %>
