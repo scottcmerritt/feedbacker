@@ -1,14 +1,23 @@
 <%= render partial: "feedbacker/translate_keys/parts/menu", locals: {selected:params[:action] == "translated_pages" ? 4 : 1} %>
 <h4>Translations by page</h4>
-<% @pages.each do |path_to_page,samples| %>
-<h6><%= path_to_page %></h6>
+<% @pages.sort_by{|k,v| -k}.each do |path_to_page,samples| %>
+<% row_id = "#translated_#{SecureRandom.hex(6)}" %>
+
+	<div class="fw-bold fs-4 d-flex align-items-center"><%= link_to path_to_page, row_id, data: {"bs-target": row_id, "bs-toggle": "collapse"} %>
+		
+		<%= tag.div samples.keys.length, class: "badge bg-info fs-7 mx-1" %>
+
+	</div>
+<div class="ms-3 collapse hide" id="<%= row_id.split("#")[1] %>">
 <% samples.each do |k,v| %>
 <div class="border bg-light mb-1 ms-2 p-2 fs-7">
-	<h6><%= k %></h6>
-	<div class="ms-3">
+	<% row_id = "#translated_#{SecureRandom.hex(6)}" %>
+
+	<div class="fw-bold fs-7"><%= link_to k, row_id, data: {"bs-target": row_id, "bs-toggle": "collapse"} %></div>
+	<div class="ms-3 collapse hide" id="<%= row_id.split("#")[1] %>">
 	<%= v %>
 	</div>
 </div>
 <% end %>
-
+</div>
 <% end %>
