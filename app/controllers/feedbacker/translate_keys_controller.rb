@@ -17,7 +17,8 @@ module Feedbacker
 
     # translates_pages_path, /admin/page/translations
     def translated_pages
-      @pages = Translate.get_all_logged_pages
+      @page_query = params[:pageq]
+      @pages = Translate.get_all_logged_pages page_query: @page_query
     end
 
 

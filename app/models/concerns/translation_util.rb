@@ -81,7 +81,7 @@ module TranslationUtil
     end
 
     # WARNING, could be a slow method
-    def get_all_logged_pages
+    def get_all_logged_pages page_query: nil
       pages = {}
       Feedbacker::TranslateKey.all.each do |translate_key|
         page = translate_key.logged_samples[:page]
@@ -106,7 +106,11 @@ module TranslationUtil
           end
         end
       end
-      pages
+      pages = pages.sort_by{|k,v| -k}
+
+#      regex_txt = "/^#{page_query}\d+/" # /^page_query\d+/
+      #page_query.blank? ? pages : pages.select{ |key, value| key.to_s.match(regex_txt) }
+      page_query.blank? ? pages : pages.select{ |key, value| key.include?(page_query) }
     end
 
     def get_logged_page phrase, remove_params: [:locale]

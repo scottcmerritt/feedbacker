@@ -1,6 +1,13 @@
 <%= render partial: "feedbacker/translate_keys/parts/menu", locals: {selected:params[:action] == "translated_pages" ? 4 : 1} %>
 <h4>Translations by page</h4>
-<% @pages.sort_by{|k,v| -k}.each do |path_to_page,samples| %>
+
+<form method="get" action="">
+<input type="text" name="pageq" value="<%= @page_query %>"> <input type="submit" value="Search">
+</form>
+
+<% div_css = @pages.length > 5 ? "hide" : "show" %>
+<% @pages.each do |path_to_page,samples| %>
+
 <% row_id = "#translated_#{SecureRandom.hex(6)}" %>
 
 	<div class="fw-bold fs-4 d-flex align-items-center"><%= link_to path_to_page, row_id, data: {"bs-target": row_id, "bs-toggle": "collapse"} %>
@@ -8,14 +15,24 @@
 		<%= tag.div samples.keys.length, class: "badge bg-info fs-7 mx-1" %>
 
 	</div>
-<div class="ms-3 collapse hide" id="<%= row_id.split("#")[1] %>">
+	
+
+
+<div class="ms-3 collapse <%= div_css %>" id="<%= row_id.split("#")[1] %>">
 <% samples.each do |k,v| %>
 <div class="border bg-light mb-1 ms-2 p-2 fs-7">
 	<% row_id = "#translated_#{SecureRandom.hex(6)}" %>
 
-	<div class="fw-bold fs-7"><%= link_to k, row_id, data: {"bs-target": row_id, "bs-toggle": "collapse"} %></div>
+	<div class="fw-bold fs-7"><%= link_to row_id, data: {"bs-target": row_id, "bs-toggle": "collapse"}, class: "fw-bold fs-7 d-flex align-items-top" do %>
+		<%= k %>
+		<%= tag.div v[:default], class: "text-muted fs-8 ms-auto" %>
+
+		<% end %>
+	</div>
 	<div class="ms-3 collapse hide" id="<%= row_id.split("#")[1] %>">
 	<%= v %>
+	
+
 	</div>
 </div>
 <% end %>
