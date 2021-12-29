@@ -23,11 +23,11 @@ module TranslatesHelper
 		phrase.nil? ? st(text,d:d) : phrase
 	end
 
-	def dbt text, d:nil, default:nil, admin: false, locale: I18n.locale.to_s
+	def dbt text, d:nil, default:nil, admin: false, locale: I18n.locale.to_s, log_default:true
 		logger.debug "DBT: #{text}, #{request.fullpath}"
 		cn = controller_name
 		an = action_name
-		Translate.dbt(text,d:d,default:default,admin:admin,locale:locale,page:request.fullpath,logger:logger,controller:cn,action:an)
+		Translate.dbt(text,d:d,default:default,admin:admin,locale:locale,page:request.fullpath,logger:logger,controller:cn,action:an,log_default:log_default)
 	end
 
 

@@ -186,7 +186,8 @@ module TranslationUtil
      # database translation
     #TODO: cache results, do automatic translations, etc...
     # TODO: build list of unfulfilled/auto-translated domain.keys (saved by pages loading)
-    def dbt text, d:nil, default:nil, admin: false, locale: I18n.locale.to_s, page:nil, logger:nil,controller:nil,action:nil
+    # log_default: if FALSE, do NOT log the default
+    def dbt text, d:nil, default:nil, admin: false, locale: I18n.locale.to_s, page:nil, logger:nil,controller:nil,action:nil, log_default:true
       d = d || default
       phrase = Feedbacker::Translate.lookup text, locale: locale, page: page, logger:logger, controller:controller,action:action # I18n.locale.to_s
       
@@ -197,7 +198,7 @@ module TranslationUtil
 
       if phrase.nil?
 
-        Feedbacker::Translate.log_default! text, default: d
+        Feedbacker::Translate.log_default!(text, default: d) if log_default
         res = ApplicationController.helpers.st(text,d:d)
         Feedbacker::Translate.log_result!(text, result: res) if res!=d
         
