@@ -4,7 +4,8 @@
 <div class="bg-white p-1">
 <h4>Translations by page</h4>
 <div class="fs-8">
-Filter as you type...OR, click "Search" to post back to the server. <b>Only ALREADY visible</b> results will be filtered.
+<%= tag.div 'check "Combine results" and then clcik "Search" to group pages (and use live filtering)', id:"searchExplained", class: "px-1 fw-bold" unless @combine_pages %>
+<%= tag.div "Filter: (start typing or clicking checkboxes to live filter", id:"searchExplained", class: "px-1 fw-bold" if @combine_pages %>
 </div>
 
 <form method="get" action="">
@@ -13,9 +14,11 @@ Filter as you type...OR, click "Search" to post back to the server. <b>Only ALRE
 
 <input type="checkbox" name="combine" <%= @combine_pages ? "checked=true" : "" %>> Combine results?
 
+<% if @combine_pages %>
 <div class="border ms-3 me-1 p-1 d-inline-block">
 	<div class="fs-8 fw-bold">Uncheck languages to ONLY filter by text</div>
 	<div>
+
 
 	<input id="showTranslatedKeys" type="checkbox" name="completed" <%= @show_completed ? "checked=true" : "" %>> Show completed?
 
@@ -28,9 +31,10 @@ Filter as you type...OR, click "Search" to post back to the server. <b>Only ALRE
 	</div>
 	</div>
 </div>
+<% end %>
 
 </form>
-<div id="searchExplained">Filter:</div>
+
 
 <% if @combine_pages %>
 <% row_id = "#translated_#{SecureRandom.hex(6)}" %>
