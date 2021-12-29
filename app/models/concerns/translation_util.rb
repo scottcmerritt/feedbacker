@@ -58,10 +58,35 @@ module TranslationUtil
   # for including static methods
   module ClassMethods
 
+
+    def phrases_by_controller_and_action_cache_key controller:, action:
+      page_key = "#{controller}.#{action}"
+      set_cache_key = "TRANSLATIONS_by_CONTROLLER_ACTION::#{page_key}"
+    end
+
+    def phrases_by_controller_and_action controller:, action:
+      list_cache_key = self.phrases_by_controller_and_action_cache_key controller:controller,action:action
+      Feedbacker::Cache.get_list_objects(list_cache_key,load_objects:true,with_keys:true)
+    end
+
+    # page_keys in a LIST/SET, so we can reverse lookup
+    def log_controller_and_action! phrase, cache_duration: 60*60*24*5, logger:nil, overwrite:false, controller: nil, action: nil
+#      cache_key = "PAGE::CONTROLLER::ACTION" + self.phrase_miss_prefix+"::"+phrase
+
+      # by page_key (i.e. controller::action)
+      #add_page_key = overwrite || !Feedbacker::CacheBase.exists?(cache_key)
+      list_cache_key = self.phrases_by_controller_and_action_cache_key controller:controller,action:action
+      #Feedbacker::Cache.set_obj(cache_key,page_key,logger,cache_duration) if add_page_key
+
+      Feedbacker::Cache.add_list_object list_cache_key, phrase, cache_expiration: cache_duration # if add_page_key
+    end
+
     # TODO: add pages to a LIST/SET
     def log_page! phrase, page:, cache_duration: 60*60*24*5, logger:nil, overwrite:false
       cache_key = "PAGE::" + self.phrase_miss_prefix+"::"+phrase
+      # by url
       add_page = overwrite || !Feedbacker::CacheBase.exists?(cache_key)
+
       Feedbacker::Cache.set_obj(cache_key,page,logger,cache_duration) if add_page
     end
 
@@ -161,9 +186,9 @@ module TranslationUtil
      # database translation
     #TODO: cache results, do automatic translations, etc...
     # TODO: build list of unfulfilled/auto-translated domain.keys (saved by pages loading)
-    def dbt text, d:nil, default:nil, admin: false, locale: I18n.locale.to_s, page:nil, logger:nil
+    def dbt text, d:nil, default:nil, admin: false, locale: I18n.locale.to_s, page:nil, logger:nil,controller:nil,action:nil
       d = d || default
-      phrase = Feedbacker::Translate.lookup text, locale: locale, page: page, logger:logger # I18n.locale.to_s
+      phrase = Feedbacker::Translate.lookup text, locale: locale, page: page, logger:logger, controller:controller,action:action # I18n.locale.to_s
       
       # similar to text.partition(".").first, etc...
       tdomain = text.split(".",2).first if text.split(".",2).length > 1
@@ -188,7 +213,7 @@ module TranslationUtil
       self.dbt("info::tag.#{text}",d:d,default:default,admin:admin,locale: locale).capitalize
     end
 
-    def lookup text, locale:, use_cache: true, page:nil, logger:nil
+    def lookup text, locale:, use_cache: true, page:nil, logger:nil, controller:nil,action:nil
       tdomain = text.split(".",2).first if text.split(".",2).length > 1
       tkey = text.split(".",2).last
       logger.debug "lookup: #{text}" unless logger.nil?
@@ -197,10 +222,10 @@ module TranslationUtil
         res = self.from_cache tdomain,tkey,locale
         logger.debug "lookup w cache: #{res}" unless logger.nil?
         if res.nil?
-          self.cache_miss! phrase: text, page: page
+          self.cache_miss! phrase: text, page: page, controller:controller,action:action
           Feedbacker::Cache.add_list_object self.cache_miss_log_key, self.object_to_cache(tdomain:tdomain,tkey:tkey,lang:locale)
         else
-          self.cache_hit! phrase: text, page: page
+          self.cache_hit! phrase: text, page: page, controller:controller,action:action
         end
         res
       else

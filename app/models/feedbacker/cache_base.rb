@@ -59,7 +59,7 @@ module Feedbacker
 			CacheBase.destroy_list_object! rkey, hashkey unless hashkey.nil?
 			return hashkey
 		end
-
+		
 		def self.get_list_objects rkey, load_objects: false, with_keys: false
 			if load_objects
 				data = []
@@ -146,6 +146,7 @@ module Feedbacker
 			$redis.set(hashkey,obj_as_string,{:ex=>cache_expiration})
 		end
 
+		# takes the objects, marshals them into a string, adds them to redis and returns the unique identifier
 		def self.set_unique_obj objects, logger: nil, cache_expiration:nil
 
 			obj_as_string = Marshal.dump(objects)

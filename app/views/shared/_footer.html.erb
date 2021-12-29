@@ -1,3 +1,26 @@
+<script>
+$( document ).ready(function() {
+$('.dropdown-menu li').on('click', function(event){
+//The event won't be propagated to the document NODE and 
+// therefore events delegated to document won't be fired
+   event.stopPropagation();
+ });
+
+ $(".dropdown-menu a[data-bs-toggle='collapse']").on('click',function(event) {
+  event.stopPropagation();
+  
+ })
+
+ $('.dropdown-menu > ul > li > a').on('click', function(event){
+  event.stopPropagation();
+  $(this).tab('show')
+  alert('clicked tab')
+ });
+
+});
+
+</script>
+
 <footer class="footer">
   <div class="container d-flex align-items-center justify-content-between">
     <%= render partial: "shared/switch_lang" unless @languages.nil? || (@languages.length == 1) rescue "Error w/ language" %>

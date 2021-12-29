@@ -1,0 +1,20 @@
+<% by_contr = Feedbacker::Translate.phrases_by_controller_and_action controller: controller.controller_name, action: controller.action_name %>
+<% if by_contr.empty? %>
+<%= tag.div "No phrases to translate on this page. Contact support if there are sections of this page that you would like to translate!", class: "alert alert-warning" %>
+<% else %>
+<% by_contr.each do |row| %>
+
+<% frame_id = "pagePhrase#{SecureRandom.hex(10)}" %>
+<div class="p-1 border bg-plain my-1 d-flex flex-column fs-7" id="<%= frame_id %>">
+	<%= tag.div class: "d-flex align-items-top" do %>
+	<%= row[:obj] %>
+	 <%= link_to icon(icon:'trash'), feedbacker.translates_clear_misskey_path({remove_misskey:row[:key],remove_frame:frame_id}), remote:true, class:"ms-auto mx-1 nodec clearKeyBtn text-muted fs-7" if row.has_key?(:key) %>
+	 <% end %>
+<% begin %>
+<%= render partial: "feedbacker/translate_keys/parts/phrase_edit", locals: {size:"tiny",phrase:row[:obj],extra:nil} %>
+<% rescue Exception=>ex %>
+<%= ex %>
+<% end %>
+</div>
+<% end %>
+<% end %>

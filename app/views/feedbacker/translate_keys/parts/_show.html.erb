@@ -15,17 +15,17 @@
           </div>
         </div>
 
-        <%= render partial: "#{engine_prefix}translate_keys/parts/suggest_add", locals: {translate_key: translate_key} if false %>
+        <%= render partial: "#{admin_engine_prefix}translate_keys/parts/suggest_add", locals: {translate_key: translate_key} if false %>
       </div>
       <% end %>
 
 
       <% translate_key.translates.each do |row| %>
-        <%= render partial: "#{engine_prefix}translates/parts/translate",locals:{translate:row} %>
+        <%= render partial: "#{admin_engine_prefix}translates/parts/translate",locals:{translate:row} %>
       <% end %>
       
         <% if false %>
-        <%= render partial: "#{engine_prefix}translate_keys/parts/key", locals: {translate_key: translate_key} %>
+        <%= render partial: "#{admin_engine_prefix}translate_keys/parts/key", locals: {translate_key: translate_key} %>
 
         <div class="d-flex align-items-center">
             <div class="p-2 fs-5">Used by <span class="fw-bold"><%= translate_key.langs_used.length %> <%= "language".pluralize(translate_key.langs_used.length) %></span></div>

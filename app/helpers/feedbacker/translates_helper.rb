@@ -5,6 +5,10 @@ module TranslatesHelper
 		@engine_name + "/" unless @engine_name.blank? 
 	end
 
+	def admin_engine_prefix
+		@admin_engine_name.blank? ? "feedbacker/" : @admin_engine_name + "/"
+	end
+
 	# database translation
 	#TODO: cache results, do automatic translations, etc...
 	# TODO: build list of unfulfilled/auto-translated domain.keys (saved by pages loading)
@@ -21,7 +25,9 @@ module TranslatesHelper
 
 	def dbt text, d:nil, default:nil, admin: false, locale: I18n.locale.to_s
 		logger.debug "DBT: #{text}, #{request.fullpath}"
-		Translate.dbt(text,d:d,default:default,admin:admin,locale:locale,page:request.fullpath,logger:logger)
+		cn = controller_name
+		an = action_name
+		Translate.dbt(text,d:d,default:default,admin:admin,locale:locale,page:request.fullpath,logger:logger,controller:cn,action:an)
 	end
 
 

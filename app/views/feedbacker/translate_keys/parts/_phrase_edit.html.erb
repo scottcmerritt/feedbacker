@@ -1,0 +1,45 @@
+<% size = "sm" if local_assigns[:size].nil? %>
+<% tdomain = phrase.partition(".").first.blank? ? nil : phrase.partition(".").first %>
+<% tkey = phrase.partition(".").last %>
+<% translate = Feedbacker::Translate.new %>
+<% translate.build_translate_key!(tdomain:tdomain,tkey:tkey) %>
+<% translate_key = translate.translate_key %>
+
+<div class="border bg-light mb-1 ms-2 py-1 px-2 fs-7">
+	<% row_id = "#translated_#{SecureRandom.hex(6)}" %>
+
+	<div class="fw-bold fs-7 d-flex">
+
+		<%= link_to row_id, data: {"bs-target": row_id, "bs-toggle": "collapse"}, class: "fw-bold fs-7 d-flex flex-fill flex-column align-items-top nodec" do %>
+		<div><%= phrase %></div>
+		<%= tag.div extra[:default], class: "text-muted fs-8" unless extra.nil? %>
+		<% end %>
+	<% if size == "tiny" %>
+	</div>
+	<div>
+	<% end %>
+
+		<div class="ms-auto d-flex align-items-center">
+			<%= link_to icon(icon:"trash",lbl:size == "tiny" ? "" : "Clear key",icon_css:"me-1"), feedbacker.translates_clear_misskey_path(tdomain:tdomain,tkey:tkey), class: "btn btn-sm bg-danger text-light m-1", remote: true %>
+			<div class="d-flex flex-column">
+			<%= render partial: "feedbacker/translate_keys/parts/suggest_add", locals: {translate_key: translate_key,size:size,wrap_css: "fs-7 my-0"} unless translate_key.nil? %>
+
+			<%= tag.div render(partial: "feedbacker/translate_keys/parts/hits_and_misses", locals: {translate_key:translate_key}), class: "text-end" %>
+			</div>
+
+		</div>
+
+	</div>
+	<div class="<%= size == "tiny" ? "" : "ms-3" %> collapse hide" id="<%= row_id.split("#")[1] %>">
+	<%= v if false %>
+	<% unless size == "tiny" %>
+	<h5><%= link_to icon_text("","arrow-left"), feedbacker.translates_path, class: "btn btn-sm btn-outline-secondary" %> Add a new translation</h5>
+	<% end %>
+<%= render partial: "feedbacker/translates/form", locals: {translate: translate,size:size} %>
+
+<%= render partial: "feedbacker/translate_keys/parts/show", locals: {translate_key: translate_key,show_key:false} unless translate_key.nil? %>
+
+
+	
+	</div>
+</div>

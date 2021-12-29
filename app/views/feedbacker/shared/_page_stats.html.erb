@@ -1,8 +1,25 @@
 <div class="btn-group dropup <%= wrap_css unless local_assigns[:wrap_css].nil? %>">
   <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-    Stats
+    <%= icon(icon:"lightbulb",lbl:"Admin") %>
   </button>
-  <div class="dropdown-menu p-1" style="width:350px;">
+  <div class="dropdown-menu p-1" style="width:350px;height:600px;overflow-y:scroll;">
+
+<div id="adminTipsWrap" class="mt-2 border p-2 bg-white">
+
+    <ul class="nav nav-tabs" id="myTipTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="adminStats-tab" data-bs-toggle="tab" data-bs-target="#adminStatsTab" type="button" role="tab" aria-controls="adminStatsTab" aria-selected="false">Stats</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active d-flex align-items-center" id="adminTranslate-tab" data-bs-toggle="tab" data-bs-target="#adminTranslateTab" type="button" role="tab" aria-controls="adminTranslateTab" aria-selected="true"><%= tag.span icon(icon:'language',lbl:"Translations",icon_css:'me-1'), class: 'badge badge-sm bg-info me-1' %></button>
+      </li>
+    </ul>
+    <div class="tab-content" id="myTipTabContent">
+
+      <div class="tab-pane fade " id="adminStatsTab" role="tabpanel" aria-labelledby="adminStats-tab">
+
+        <div id="adminStatsBody" class="">
+
 
     <% range_param = 60.days.ago %>
 	<% my_sql = Impression.where(impressionable_type:"Site").where("created_at >= ?",range_param).group_by_day(:created_at,range: range_param.midnight..Time.now) %>
@@ -17,6 +34,26 @@
 		<% my_sql = Impression.where(impressionable_type:"Site",controller_name:controller.controller_name,action_name:controller.action_name).where("created_at >= ?",range_param).group_by_month(:created_at,range: range_param.midnight..Time.now) %>
 		<%= column_chart my_sql.count, title: "Views/month (this feature: #{controller.controller_name}:#{controller.action_name})", height: 200 %>
 
+
+
+        </div>
+      </div>      
+
+      <div class="tab-pane fade show active" id="adminTranslateTab" role="tabpanel" aria-labelledby="adminTranslate-tab">
+
+        <div id="pageTranslations">          
+          <%= render partial: "feedbacker/translate_keys/parts/by_page_action" %>
+        </div>
+
+      </div>
+
+    </div>
+
+    </div> <!-- adminTipsWrap -->
+
+
+
+  	
     
   </div>
 </div>

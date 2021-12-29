@@ -6,7 +6,7 @@
     <div class="d-flex align-items-center">
             <% suggested = get_all_langs.difference(translate_key.langs_used) %>
             <% if suggested.empty? %>
-            <% congrats_lbl = "#{get_all_langs.length == 2 ? 'Both' : 'All'} languages #{size == "sm" ? "" : "already added"}" %>
+            <% congrats_lbl = "#{get_all_langs.length == 2 ? 'Both' : 'All'} #{"languages" if size!="tiny"} #{["sm","tiny"].include?(size) ? "" : "already added"}" %>
             <%= tag.div icon(icon:"check-circle",lbl:congrats_lbl,icon_css:"text-success me-1"), class: "d-flex align-items-center alert alert-success p-1 m-1" %>
             <% else %>
             <div class="border rounded px-1 d-flex align-items-center mx-2 my-1 pb-1">

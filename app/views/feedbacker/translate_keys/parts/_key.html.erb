@@ -30,11 +30,11 @@
           </span>
         </div>
         
-      <%= render partial: "#{engine_prefix}translate_keys/parts/suggest_add", locals: {translate_key: translate_key} unless translate_key.nil? %>
+      <%= render partial: "#{admin_engine_prefix}translate_keys/parts/suggest_add", locals: {translate_key: translate_key} unless translate_key.nil? %>
 
     </div>
     <div class="col-5">
-      <%= render partial: "#{engine_prefix}translate_keys/parts/samples_and_stats", locals: {translate_key:translate_key,show_page:false} %>
+      <%= render partial: "#{admin_engine_prefix}translate_keys/parts/samples_and_stats", locals: {translate_key:translate_key,show_page:false} %>
       <div class="alert alert-warning fs-8 p-2 py-1">
       <b>DEVELOPER NOTE:</b> Find in the source code as <span class="fw-bold">dbt('<%= translate_key.tdomain %>.<%= translate_key.tkey %>')</span>
       </div>

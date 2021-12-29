@@ -155,17 +155,19 @@ module Feedbacker
 		end
 =end		
 
-	def self.cache_hit! phrase: nil, page: nil
+	def self.cache_hit! phrase: nil, page: nil, controller:nil,action:nil
 		Feedbacker::Cache.increment! Translate.hits_key
 		Translate.phrase_hit! phrase unless phrase.nil?
 		Feedbacker::Translate.log_page! phrase, page: page unless page.nil?
+		Feedbacker::Translate.log_controller_and_action! phrase, controller:controller,action:action unless controller.nil? || action.nil?
 		Feedbacker::Translate.log_phrase_lookup_datetime! phrase
 	end
 
-	def self.cache_miss! phrase: nil, page: nil
+	def self.cache_miss! phrase: nil, page: nil, controller:nil,action:nil
 		Feedbacker::Cache.increment! Translate.misses_key
 		Translate.phrase_miss! phrase unless phrase.nil?
 		Feedbacker::Translate.log_page! phrase, page: page unless page.nil?
+		Feedbacker::Translate.log_controller_and_action! phrase, controller:controller,action:action unless controller.nil? || action.nil?
 		Feedbacker::Translate.log_phrase_lookup_datetime! phrase
 	end
 	
