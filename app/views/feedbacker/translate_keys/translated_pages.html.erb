@@ -25,7 +25,7 @@ Filter as you type...OR, click "Search" to post back to the server. <b>Only ALRE
 
 <% if @combine_pages %>
 <% row_id = "#translated_#{SecureRandom.hex(6)}" %>
-<div class="d-flex flex-wrap border m-1 p-1">
+<div style="overflow-x: scroll;" class="bg-light mb-2 pb-1 px-1 d-flex align-items-center flex-fill pb-2">
 <% @pages.each do |path_to_page,samples| %>
 <div class="fw-bold fs-8 d-flex align-items-center me-1 mb-1 border p-1"><%= link_to path_to_page, row_id, data: {"bs-target": row_id, "bs-toggle": "collapse"}, class: "me-1" %>
 		<%= tag.div samples.keys.length, class: "badge bg-info fs-7 mx-1" %>
