@@ -1,0 +1,79 @@
+<script type="text/javascript"> 
+  function textMatches(div,txt)
+  {
+    return (div.text().toLowerCase().indexOf(txt.toLowerCase()) > -1)
+  }
+  function attrMatches(div,attrName,txt) {
+    //TODO: handle an array ALSO
+    if(!txt || txt == '')
+      return true
+
+    if(div.attr(attrName) == undefined)
+      return false
+    return (div.attr(attrName).indexOf(txt) > -1)
+  }
+
+	function setupRealTimeTranslate() {
+
+
+var $searchBox = $('#search-translations');
+var $browseDivs = $('.search-data a');
+var $browseCols = $('.search-data .search-row');
+
+$searchBox.on('input',function() {
+  runTranslateFilter(this)
+})
+
+
+var runTranslateFilter = function(scope) {
+  //var scope = this;
+  var textQuery = scope.value
+  var attrLookup = 'suggested'
+  var langQuery = undefined //'en'
+
+  if (!langQuery && (!textQuery || textQuery == '')) {
+    //$browseDivs.show();
+    $browseDivs.removeClass('d-none');
+    $browseCols.removeClass('d-none');
+    return;
+  }
+
+  $browseDivs.each(function(i, div) {
+    var $div = $(div);
+    //let divText = $div.text()
+    
+    //$div.toggle($div.text().toLowerCase().indexOf(scope.value.toLowerCase()) > -1);
+    if(textMatches($div,textQuery) && attrMatches($div,attrLookup,langQuery))
+    {
+    	$div.closest('.search-row').removeClass('d-none')
+    }
+    else {
+    	$div.closest('.search-row').addClass('d-none')
+    }
+  })
+
+   $browseCols.each(function(i, div) {
+    var $div = $(div);
+    let divText = $div.text()
+    //console.log('inside browseCols')
+    //console.log(divText)
+    //$div.toggle($div.text().toLowerCase().indexOf(scope.value.toLowerCase()) > -1);
+    if(textMatches($div,textQuery) && attrMatches($div,attrLookup,langQuery))
+    {
+    	$div.removeClass('d-none')
+    }
+    else {
+    	$div.addClass('d-none')
+    }
+  })
+  
+
+}
+
+}
+
+jQuery(document).ready(function($) {
+	setupRealTimeTranslate()
+})
+
+</script>

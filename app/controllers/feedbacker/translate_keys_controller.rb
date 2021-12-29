@@ -20,6 +20,8 @@ module Feedbacker
       @page_query = params[:pageq]
       @combine_pages = params[:combine] # combine the pages in the UI
       @pages = Translate.get_all_logged_pages page_query: @page_query
+
+      @langs = params[:lang] || get_all_langs
     end
 
 

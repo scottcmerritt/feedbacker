@@ -1,12 +1,26 @@
+<%= render partial: "feedbacker/translate_keys/parts/filter_search_js" %>
+
 <%= render partial: "feedbacker/translate_keys/parts/menu", locals: {selected:params[:action] == "translated_pages" ? 4 : 1} %>
 <div class="bg-white p-1">
 <h4>Translations by page</h4>
+<div class="fs-8">
+Filter as you type...OR, click "Search" to post back to the server. <b>Only ALREADY visible</b> results will be filtered.
+</div>
 
 <form method="get" action="">
 	<%= link_to "Show all", feedbacker.url_for({}), class: "me-1 fs-6" unless @page_query.blank? %>
-<input type="text" name="pageq" value="<%= @page_query %>"> <input type="submit" value="Search">
+<input id="search-translations" type="text" name="pageq" value="<%= @page_query %>"> <input type="submit" value="Search">
 
 <input type="checkbox" name="combine" <%= @combine_pages ? "checked=true" : "" %>> Combine results?
+
+<div class="d-inline-block">
+<% get_all_langs.each do |lang| %>
+<div class="mx-1">
+<input type="checkbox" name="lang[]" value="<%= lang %>" <%= @langs.include?(lang) ? "checked=true" : "" %>> <%= lang %>
+</div>
+<% end %>
+</div>
+
 </form>
 
 <% if @combine_pages %>
@@ -22,7 +36,7 @@
 <% end %>
 <% div_css = @pages.length > 5 && !@combine_pages ? "hide" : "show" %>
 <% if @combine_pages %>
-<div class="ms-3 collapse <%= div_css %>" id="<%= row_id.split("#")[1] %>">
+<div class="search-data ms-3 collapse <%= div_css %>" id="<%= row_id.split("#")[1] %>">
 <% end %>
 
 <% @pages.each do |path_to_page,samples| %>
@@ -37,8 +51,20 @@
 <div class="ms-3 collapse <%= div_css %>" id="<%= row_id.split("#")[1] %>">
 <% end %>
 
-<% samples.each do |k,v| %>
-	<%= render partial: "feedbacker/translate_keys/parts/phrase_edit", locals: {phrase:k,extra:v} %>
+<% samples.each do |phrase,v| %>
+
+<% tdomain = phrase.partition(".").first.blank? ? nil : phrase.partition(".").first %>
+<% tkey = phrase.partition(".").last %>
+<% translate = Feedbacker::Translate.new %>
+<% translate.build_translate_key!(tdomain:tdomain,tkey:tkey) %>
+<% translate_key = translate.translate_key %>
+
+
+
+<% suggested = get_all_langs.difference(translate_key.langs_used) %>
+<div class="search-row" suggested="<%= suggested.to_s %>">
+	<%= render partial: "feedbacker/translate_keys/parts/phrase_edit", locals: {phrase:phrase,extra:v,translate_key:translate_key,translate:translate} %>
+</div>
 <% end %>
 <% unless @combine_pages %></div><% end %>
 <% end %>

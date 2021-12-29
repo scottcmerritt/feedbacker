@@ -3,7 +3,7 @@
 <div class="text-dark <%= wrap_css %>">
     <%= tag.div "Add translation for this key", class: "fw-bold p-1 px-2 fs-8" if false %>
 
-    <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center fs-6">
             <% suggested = get_all_langs.difference(translate_key.langs_used) %>
             <% if suggested.empty? %>
             <% congrats_lbl = "#{get_all_langs.length == 2 ? 'Both' : 'All'} #{"languages" if size!="tiny"} #{["sm","tiny"].include?(size) ? "" : "already added"}" %>

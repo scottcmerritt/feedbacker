@@ -1,9 +1,12 @@
 <% size = "sm" if local_assigns[:size].nil? %>
 <% tdomain = phrase.partition(".").first.blank? ? nil : phrase.partition(".").first %>
 <% tkey = phrase.partition(".").last %>
+
+<% if local_assigns[:translate].nil? || local_assigns[:translate_key].nil? %>
 <% translate = Feedbacker::Translate.new %>
 <% translate.build_translate_key!(tdomain:tdomain,tkey:tkey) %>
 <% translate_key = translate.translate_key %>
+<% end %>
 
 <div class="border bg-light mb-1 <%= size == "tiny" ? "ms-0" : "ms-2" %> py-1 fs-7">
 	<% row_id = "#translated_#{SecureRandom.hex(6)}" %>
@@ -17,7 +20,6 @@
 		<% end %>
 		
 		<%= link_to icon(icon:"trash",lbl:size == "tiny" ? "" : "Clear key",icon_css:"me-1"), feedbacker.translates_clear_misskey_path(tdomain:tdomain,tkey:tkey), class: "text-danger fs-7 mx-1", remote: true %>
-
 	</div>
 	
 
