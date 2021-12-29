@@ -65,6 +65,16 @@ var $filterLangs = $('.filter-lang')
 
 var $filterTranslated = $('#showTranslatedKeys');
 
+function updateCounts() {
+  var list = $("#listSummary")
+  list.removeClass('d-none')
+  list.find('.totalCount').html($browseCols.length)
+  let visibleRows = $browseCols.filter(function () {
+    return !$(this).hasClass('d-none')
+}).length;
+  list.find('.rowCount').html(visibleRows)
+
+}
 function getLangQuery() {
   var res = []
   $filterLangs.each(function() {
@@ -173,6 +183,8 @@ $("#searchExplained").html(`Filtering for: ${textQuery}, WITH languages (${attrL
   
 
   })
+
+   updateCounts()
 
    
   

@@ -8,7 +8,7 @@
 <%= tag.div "Filter: (start typing or clicking checkboxes to live filter", id:"searchExplained", class: "px-1 fw-bold" if @combine_pages %>
 </div>
 
-<form method="get" action="">
+<form method="get" action="" class="m-1">
 	<%= link_to "Show all", feedbacker.url_for({}), class: "me-1 fs-6" unless @page_query.blank? %>
 <input id="search-translations" type="text" name="pageq" value="<%= @page_query %>"> <input type="submit" value="Search">
 
@@ -50,6 +50,11 @@
 <% div_css = @pages.length > 5 && !@combine_pages ? "hide" : "show" %>
 <% if @combine_pages %>
 <div class="search-data ms-3 collapse <%= div_css %>" id="<%= row_id.split("#")[1] %>">
+
+<div id="listSummary" class="<%= default_h_css %> d-none">
+	<span class="me-1">Showing</span><span class="rowCount">_</span> <span class="mx-1">rows</span> 
+	<div class="ms-auto me-1"><span class="totalCount">____</span><span class="ms-1">total rows</span></div>
+</div>
 <% end %>
 
 <% @pages.each do |path_to_page,samples| %>
@@ -62,6 +67,7 @@
 		<%= tag.div samples.keys.length, class: "badge bg-info fs-7 mx-1" %>
 	</div>
 <div class="ms-3 collapse <%= div_css %>" id="<%= row_id.split("#")[1] %>">
+
 <% end %>
 
 <% samples.each do |phrase,v| %>
