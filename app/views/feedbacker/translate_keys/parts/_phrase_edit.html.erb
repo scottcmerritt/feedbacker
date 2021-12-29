@@ -7,7 +7,7 @@
 <% translate.build_translate_key!(tdomain:tdomain,tkey:tkey) %>
 <% translate_key = translate.translate_key %>
 <% end %>
-
+<% extra = translate_key.logged_samples if local_assigns[:extra].nil? %>
 <div class="border bg-light mb-1 <%= size == "tiny" ? "ms-0" : "ms-2" %> py-1 fs-7">
 	<% row_id = "#translated_#{SecureRandom.hex(6)}" %>
 

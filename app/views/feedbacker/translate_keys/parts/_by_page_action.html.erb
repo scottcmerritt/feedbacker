@@ -7,6 +7,7 @@
 <% if phrase.nil? %>
 <div>Error: Empty phrase</div>
 <% else %>
+
 	<% tdomain = phrase.partition(".").first.blank? ? nil : phrase.partition(".").first %>
 	<% tkey = phrase.partition(".").last %>
 	<% translate = Feedbacker::Translate.new %>
@@ -19,7 +20,7 @@
 	<% frame_id = "pagePhrase#{SecureRandom.hex(10)}" %>
 	<div class="px-1 border border-dark bg-plain my-1 fs-7" id="<%= frame_id %>">
 		<%= tag.div class: "d-flex align-items-top" do %>
-		<%= phrase %>
+		<%= raw dbt(phrase) %>
 		 <%= link_to icon(icon:'trash'), feedbacker.translates_clear_misskey_path({remove_misskey:row[:key],remove_frame:frame_id}), remote:true, class:"ms-auto mx-1 nodec clearKeyBtn text-muted fs-7" if row.has_key?(:key) %>
 		 <% end %>
 
