@@ -6,7 +6,7 @@
 <div class="py-1">
 <h4 class="mt-1 d-flex align-items-center"><%= link_to icon_text("","arrow-left"), feedbacker.translate_key_path(id:@translate.translate_key.id), class: "btn btn-sm btn-outline-secondary" %> <span class="mx-1">Edit translation</span>
 
-<%= link_to icon_text("Delete","trash"), @translate, method: :delete, class: "ms-auto btn btn-sm btn-danger text-light" %>
+<%= link_to icon_text("Delete","trash"), [feedbacker,@translate], method: :delete, class: "ms-auto btn btn-sm btn-danger text-light" %>
 </h4>
 <%= render partial: "#{engine_prefix}translates/form" %>
 </div>
