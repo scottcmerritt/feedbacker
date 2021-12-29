@@ -1,10 +1,22 @@
+<% lang = "en" if local_assigns[:lang].nil? #I18n.locale.to_s %>
+<% parent_frame = nil if local_assigns[:parent_frame].nil? %>
 <% show_page = true if local_assigns[:show_page].nil? %>
+<% translate_key = local_assigns[:translate_key] %>
+
+<% frame_id = "approveKey_#{SecureRandom.hex(10)}" %>
 <div>
 <% samples = Feedbacker::Translate.get_logged_samples "#{translate_key.tdomain}.#{translate_key.tkey}" %>
 
 <div class="ms-2">
 <%= tag.div raw("Sample page: " + link_to("#{request.protocol}#{request.host_with_port}#{samples[:page]}",samples[:page], class: "fw-bold fs-8")), class: "fs-8" unless samples[:page].nil? || !show_page %>
-<%= tag.div "Default: " + samples[:default], class: "fw-bold fs-8" unless samples[:default].nil? %>
+
+    <% unless samples[:default].nil? %>
+        <div id="<%= frame_id %>" class="border p-1">
+          <%= tag.div samples[:default],  class: "fw-bold fs-8"  %>
+          <%= link_to "Approve", feedbacker.translates_approve_default_path({lang:lang,tdomain:translate_key.tdomain,tkey:translate_key.tkey, parent_frame:parent_frame}), remote:true,class: "fs-8" %>
+        </div>
+    <% end %>
+
 <%= tag.div "Result: " + samples[:result], class: "fw-bold fs-8" unless samples[:result].nil? %>
 </div>
 

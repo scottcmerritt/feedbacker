@@ -1,0 +1,5 @@
+<% if @remove_frame %>
+$("#<%= @remove_frame %>").html('<div class="alert-success fs-8 p-1"><%= j icon(icon:"check",lbl:@msg) %> Translation approved</div>')
+<% else %>
+alert('<%= @msg %>')
+<% end %>

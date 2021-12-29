@@ -32,7 +32,11 @@
       <div class="border-bottom search-row" id="<%= frame_id %>">
         <%= link_to icon(icon:'trash'), feedbacker.translates_clear_misskey_path({remove_misskey:full_row[:key],remove_frame:frame_id}), remote:true, class:"me-2 nodec clearKeyBtn" if full_row.has_key?(:key) %>
         <%= link_to "#{row.tdomain}.#{row.tkey}", feedbacker.new_translate_path(lang:lang,tdomain:row.tdomain,tkey:row.tkey), class: "nodec" %>
-        <%= render partial: "#{engine_prefix}translate_keys/parts/samples_and_stats", locals: {translate_key:row} %>
+        <% begin %>
+        <%= render partial: "#{engine_prefix}translate_keys/parts/samples_and_stats", locals: {translate_key:row,parent_frame:frame_id,lang:lang} %>
+        <% rescue Exception=>ex %>
+        <%= ex %>
+        <% end %>`
         <%= tag.div full_row[:key], class: "fs-7" if params[:debug] %>
       </div>
       <% end %>

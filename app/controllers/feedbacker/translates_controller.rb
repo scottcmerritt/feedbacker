@@ -19,6 +19,21 @@ module Feedbacker
 			@translators = User.select("users.*,count(translates.id) as translates_count").joins("JOIN translates ON translates.user_id = users.id").group("users.id").order("translates_count DESC")			
 		end
 
+		def approve_default
+			@remove_frame = params[:parent_frame]
+
+			@translate = Feedbacker::Translate.new(lang:params[:lang], user_id:current_user.id)
+			translate_key_id = @translate.build_translate_key! tdomain: @tdomain, tkey: @tkey, createdby: current_user.id
+			samples = Feedbacker::Translate.get_logged_samples "#{@translate.translate_key.tdomain}.#{@translate.translate_key.tkey}"
+			unless samples[:default].blank?
+				@translate.phrase = samples[:default]
+				@translate.save
+				@msg = "Translate id: #{@translate.id}, with phrase: #{@translate.phrase}, for lang: #{@translate.lang} was created"
+				@msg+=" WITH TK: #{translate_key_id}"
+			end
+		end
+
+
 		# translates_clear_misskey_path
 		def clear_misskey
 			# based on the tdomain and tkey, lookup the misskey AND remove it
@@ -26,7 +41,7 @@ module Feedbacker
 			@remove_frame = params[:remove_frame]
 			if params[:remove_misskey]
 				@msg = "Miss key CLEARED!"
-				
+
 				Feedbacker::Translate.remove_cache_miss_key! params[:remove_misskey]
 			else
 				needed = Feedbacker::Translate.get_cache_misses(grouped:true,tdomain_filter:@tdomain,tkey_filter:@tkey,exact_match:true)
