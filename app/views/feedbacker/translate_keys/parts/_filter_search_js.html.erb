@@ -1,15 +1,57 @@
 <script type="text/javascript"> 
+  //does the text of an element match the var: txt?
+
+  const includeComplete = true
+  const useAndMatch = true //if false, then it is an OR match
+  const useAndAttrMatch = false
+
   function textMatches(div,txt)
   {
+    if(txt == undefined || txt == '')
+      return true
+    if(div.text() == undefined)
+      return false
+    console.log(`Comparing ${div.text()} to ${txt}`)
+
     return (div.text().toLowerCase().indexOf(txt.toLowerCase()) > -1)
   }
+  //does the attribute of an element match the var: txt?
   function attrMatches(div,attrName,txt) {
     //TODO: handle an array ALSO
-    if(!txt || txt == '')
+    if(!txt || txt == '' || (Array.isArray(txt) && txt.length == 0))
       return true
 
+    // if the attribute has no VALUE, return FALSE
     if(div.attr(attrName) == undefined)
       return false
+
+    if(Array.isArray(txt)) { //array of at least length 1
+      var matchCount = 0
+      for(i=0;i<txt.length;i++)
+      {
+        var iTxt = txt[i]
+        
+        console.log(`Comparing ${div.attr(attrName)} to ${iTxt}`)
+        if(div.attr(attrName).indexOf(iTxt) > -1)
+        {
+          if(useAndAttrMatch)
+          {
+           matchCount+=1 
+          }
+          else {
+            return true
+          }
+        }
+        else {
+          if(useAndAttrMatch)
+            return false
+        }
+      }
+      if(useAndAttrMatch)
+        return matchCount == txt.length
+      return false
+    }
+
     return (div.attr(attrName).indexOf(txt) > -1)
   }
 
@@ -19,53 +61,120 @@
 var $searchBox = $('#search-translations');
 var $browseDivs = $('.search-data a');
 var $browseCols = $('.search-data .search-row');
+var $filterLangs = $('.filter-lang')
+
+var $filterTranslated = $('#showTranslatedKeys');
+
+function getLangQuery() {
+  var res = []
+  $filterLangs.each(function() {
+    if($(this).is(':checked'))
+      res.push($(this).val())
+  })
+  return res
+//  return ['en','es']
+}
 
 $searchBox.on('input',function() {
-  runTranslateFilter(this)
+  var textQuery = this.value
+  runTranslateFilter(this,textQuery)
+})
+
+$filterLangs.on('input',function() {
+  runTranslateFilter($searchBox,$searchBox.val())
+})
+
+$filterTranslated.on('input',function() {
+  console.log(`SHOW TRANSLATED: ${showTranslatedKeys()}`)
+  runTranslateFilter($searchBox,$searchBox.val())
 })
 
 
-var runTranslateFilter = function(scope) {
-  //var scope = this;
-  var textQuery = scope.value
-  var attrLookup = 'suggested'
-  var langQuery = undefined //'en'
+var showTranslatedKeys = function() {
 
-  if (!langQuery && (!textQuery || textQuery == '')) {
+  
+  //if($filterTranslated.attr('checked') == undefined)
+  //  return false
+  console.log(`filterTranslated: ${$filterTranslated.val()}`)
+  return $filterTranslated.is(':checked') //attr('checked') == 'true' ? true : false
+}
+
+var runTranslateFilter = function(scope,textQuery) {
+  //var scope = this;
+  
+  var attrLookup = showTranslatedKeys() ? 'completed' : 'needed'
+  $("#searchExplained").html(attrLookup)
+  var langQuery = getLangQuery() //undefined //'en'
+$("#searchExplained").html(`Filtering for: ${textQuery}, WITH languages (${attrLookup}) ${langQuery.toString()}`)
+  $browseDivs.removeClass('d-none');
+  $browseCols.removeClass('d-none');
+
+  /*
+  if ((!langQuery || (Array.isArray(langQuery) && langQuery.length == 0)) && (!textQuery || textQuery == '')) {
     //$browseDivs.show();
     $browseDivs.removeClass('d-none');
     $browseCols.removeClass('d-none');
     return;
   }
+  */
 
+  // match on the A tags/links
   $browseDivs.each(function(i, div) {
     var $div = $(div);
     //let divText = $div.text()
     
     //$div.toggle($div.text().toLowerCase().indexOf(scope.value.toLowerCase()) > -1);
-    if(textMatches($div,textQuery) && attrMatches($div,attrLookup,langQuery))
+    if(textMatches($div,textQuery)) // && attrMatches($div,attrLookup,langQuery))
     {
     	$div.closest('.search-row').removeClass('d-none')
     }
     else {
+      console.log(`hiding search-row: ${$div.text()}`)
     	$div.closest('.search-row').addClass('d-none')
     }
+
+  })
+  $browseCols.each(function(i, div) {
+    var $div = $(div);
+    let divText = $div.text()
+    //console.log('inside browseCols')
+    //console.log(divText)
+    //$div.toggle($div.text().toLowerCase().indexOf(scope.value.toLowerCase()) > -1);
+
+    if(textMatches($div,textQuery)) // && attrMatches($div,attrLookup,langQuery))
+    {
+        $div.removeClass('d-none')
+    }
+    else {
+      //if(useAndMatch)
+       //$div.addClass('d-none')
+    }
+
   })
 
+
+    // specific match on the search-row div (and attributes)
    $browseCols.each(function(i, div) {
     var $div = $(div);
     let divText = $div.text()
     //console.log('inside browseCols')
     //console.log(divText)
     //$div.toggle($div.text().toLowerCase().indexOf(scope.value.toLowerCase()) > -1);
-    if(textMatches($div,textQuery) && attrMatches($div,attrLookup,langQuery))
+    
+    if(attrMatches($div,attrLookup,langQuery))
     {
-    	$div.removeClass('d-none')
+      if(!useAndMatch)
+        $div.removeClass('d-none')
     }
     else {
-    	$div.addClass('d-none')
+      if(useAndMatch)
+        $div.addClass('d-none')
     }
+  
+
   })
+
+   
   
 
 }

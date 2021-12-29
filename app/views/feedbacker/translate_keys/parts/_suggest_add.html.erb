@@ -5,11 +5,9 @@
 
     <div class="d-flex align-items-center fs-6">
             <% suggested = get_all_langs.difference(translate_key.langs_used) %>
-            <% if suggested.empty? %>
-            <% congrats_lbl = "#{get_all_langs.length == 2 ? 'Both' : 'All'} #{"languages" if size!="tiny"} #{["sm","tiny"].include?(size) ? "" : "already added"}" %>
-            <%= tag.div icon(icon:"check-circle",lbl:congrats_lbl,icon_css:"text-success me-1"), class: "d-flex align-items-center alert alert-success p-1 m-1" %>
-            <% else %>
+            <% unless suggested.empty? %>
             <div class="border rounded px-1 d-flex align-items-center mx-2 my-1 pb-1">
+                <div class="fw-bold mx-1 fs-7">Needed</div>
             <% suggested.each do |lang| %>
 
                 <%= tag.div link_to(lang, feedbacker.new_translate_path(lang:lang,key_id:translate_key.id), class: "badge bg-success text-light mx-1 mt-0") %>
@@ -19,6 +17,11 @@
         
 
         <div class="ms-auto d-flex align-items-center">
+            <% if suggested.empty? %>
+            <% congrats_lbl = "#{get_all_langs.length == 2 ? 'Both' : 'All'} #{"languages" if size!="tiny"} #{["sm","tiny"].include?(size) ? "" : "already added"}" %>
+            <%= tag.div icon(icon:"check-circle",lbl:congrats_lbl,icon_css:"text-success me-1"), class: "d-flex align-items-center alert alert-success p-1 m-1" %>
+            <% end %>
+
             <% get_all_langs.intersection(translate_key.langs_used).each do |lang| %>
             <%= tag.div link_to(lang, feedbacker.new_translate_path(lang:lang,key_id:translate_key.id), class: "badge bg-secondary text-light mx-1 mt-0") %>
             <% end %>
