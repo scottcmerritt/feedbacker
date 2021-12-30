@@ -38,7 +38,7 @@
 
       <div id="pageTranslations">          
         <% begin %>
-        <%= render partial: "feedbacker/translate_keys/parts/by_page_action" %>
+        <%= render partial: "feedbacker/translate_keys/parts/by_page_action", locals: {controller_name: controller_name,action_name:action_name} %>
         <% rescue Exception=>ex %>
         <%= ex %>
         <% end %>
