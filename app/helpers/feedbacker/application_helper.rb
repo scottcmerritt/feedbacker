@@ -10,7 +10,6 @@ module Feedbacker
       end
     end
 
-
     def default_html_loader
       raw '<div class="m-3"><div class="spinner-grow" role="status"><span class="visually-hidden">Loading...</span></div></div>'
     end
