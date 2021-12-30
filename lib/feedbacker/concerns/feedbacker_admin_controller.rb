@@ -9,6 +9,7 @@ module Feedbacker
 
         before_action :authenticate_admin!, except: [:updates,:first_admin,:contact_us]
         before_action :visitor_shared, only: [:visits, :visit_locations, :visit_referrers]
+        protect_from_forgery except: :page_ideas
       end
   
       def first_admin
@@ -17,6 +18,20 @@ module Feedbacker
           redirect_to admin_users_path, notice: "You are now an admin!"
         else
           redirect_to admin_users_path
+        end
+      end
+
+      def page_ideas
+        @action_name = params[:action_name]
+        @controller_name = params[:controller_name]
+
+        respond_to do |format|
+          format.html {  }
+          format.js do 
+            html = render_to_string(:partial=>"feedbacker/admin/page_ideas",:locals=>{controller_name:@controller_name,action_name:@action_name},:layout=>false)
+            render json: {html: html}
+          end
+          #format.json { head :no_content }
         end
       end
       

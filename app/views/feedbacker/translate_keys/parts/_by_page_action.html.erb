@@ -1,15 +1,18 @@
-<% by_contr = Feedbacker::Translate.phrases_by_controller_and_action controller: controller.controller_name, action: controller.action_name %>
+<% controller_name = controller.controller_name if local_assigns[:controller_name].nil? %>
+<% action_name = controller.action_name if local_assigns[:action_name].nil? %>
+
+<% by_contr = Feedbacker::Translate.phrases_by_controller_and_action controller: controller_name, action: action_name %>
 <% if by_contr.empty? %>
-<% action_names = Impression.select('controller_name,action_name')
+	<% action_names = Impression.select('controller_name,action_name')
       .where(controller_name:["translates","translate_keys"]).uniq.pluck(:action_name) %>
 
-<%= tag.div "No phrases to translate on this page. Contact support if there are sections of this page that you would like to translate!", class: "alert alert-warning" %>
+	<%= tag.div "No phrases to translate on this page. Contact support if there are sections of this page that you would like to translate!", class: "alert alert-warning" %>
 
-	<% by_contr = Feedbacker::Translate.phrases_by_controller controller: controller.controller_name %>
+	<% by_contr = Feedbacker::Translate.phrases_by_controller controller: controller_name %>
 <% end %>
 
 <% if by_contr.empty? %>
-<%= tag.div "ALSO, no phrases related to the general functionality of the controller: #{controller.controller_name}", class: "alert alert-danger" %>
+<%= tag.div "ALSO, no phrases related to the general functionality of the controller: #{controller_name}", class: "alert alert-danger" %>
 <% else %>
 <% by_contr.each do |row| %>
 <% phrase = row[:obj] %>
@@ -29,20 +32,18 @@
 	<% frame_id = "pagePhrase#{SecureRandom.hex(10)}" %>
 	<div class="px-1 border border-dark bg-plain my-1 fs-7" id="<%= frame_id %>">
 		<% if translate.use_cms? %>
-		<% translate.phrase = dbt(phrase,log_default:false) %>
-		<%= debug_render{render(partial: "#{admin_engine_prefix}translates/parts/preview", locals: {preview_id: SecureRandom.hex(6), translate: translate,show:{edit:false,delete:false}})} %>
+			<% translate.phrase = dbt(phrase,log_default:false) %>
+			<%= debug_render{render(partial: "#{admin_engine_prefix}translates/parts/preview", locals: {preview_id: SecureRandom.hex(6), translate: translate,show:{edit:false,delete:false}})} %>
 		<% end %>
 
 		<%= tag.div class: "d-flex align-items-top" do %>
-		<%= raw dbt(phrase,log_default:false) unless translate.use_cms? %>
-		 <%= link_to icon(icon:'trash'), feedbacker.translates_clear_misskey_path({remove_misskey:row[:key],remove_frame:frame_id}), remote:true, class:"ms-auto mx-1 nodec clearKeyBtn text-muted fs-7" if row.has_key?(:key) %>
-		 <% end %>
+			<%= raw dbt(phrase,log_default:false) unless translate.use_cms? %>
+		 	<%= link_to icon(icon:'trash'), feedbacker.translates_clear_misskey_path({remove_misskey:row[:key],remove_frame:frame_id}), remote:true, class:"ms-auto mx-1 nodec clearKeyBtn text-muted fs-7" if row.has_key?(:key) %>
+		<% end %>
 
-	<%= render partial: "feedbacker/translate_keys/parts/phrase_edit", locals: {size:"tiny",phrase:row[:obj],extra:nil,translate:translate,translate_key:translate_key,related_show:{edit:false,delete:false}} %>
-	
+		<%= render partial: "feedbacker/translate_keys/parts/phrase_edit", locals: {size:"tiny",phrase:row[:obj],extra:nil,translate:translate,translate_key:translate_key,related_show:{edit:false,delete:false}} %>
+	<% end %>
 
-<% end %>
-
-</div>
+	</div>
 <% end %>
 <% end %>

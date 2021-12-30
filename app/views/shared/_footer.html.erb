@@ -1,4 +1,52 @@
+<% path_to_delayed = local_assigns[:path].nil? ? feedbacker.admin_page_ideas_path(format:'js',refresh:params[:refresh],controller_name:controller.controller_name,action_name:controller.action_name) : local_assigns[:path] %>
 <script>
+  function doPageIdeasLoad(refreshCache) {
+  //alert(refreshCache == true || refreshCache == 'true' ? 'tt' : 'ff')
+  return new Promise((resolve, reject) => {
+    let fullLoadUrl = '<%= path_to_delayed %>'.includes("?") ? `<%= path_to_delayed %>&refresh=${refreshCache}` : `<%= path_to_delayed %>?refresh=${refreshCache}` ;
+
+
+  $.ajax({ url: fullLoadUrl,
+          type: 'GET',
+          dataType: 'json',
+          beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+          success: (response) => {
+            return resolve({response:response})
+          },
+          error: (response) => {
+            //alert(`Error fetching ${url}`)
+            console.log(`Error fetching ${fullLoadUrl}`)
+            console.log(response)
+            return reject({msg:'ERROR ajaxPromise 1',error:response})
+          }
+      });
+  })
+
+    return reject({msg:`RARE SERVER ERROR fetching {$url}`,error:'ERROR INFO'})
+}
+
+
+function loadAdminPage() {
+  let res = doPageIdeasLoad(false)
+.then((result) => {
+  console.log(result)
+  let cacheUsed = result.response.cache_used
+  
+  if(result.response.parts)
+  {
+    $("#subMenu").html(result.response.parts.sub_menu)
+    $("#sideMenu").html(addDivWrap(result.response.parts.side_menu,cacheUsed,'animate__animated animate__fadeInLeft'))
+  }
+  else {
+    $("#adminTipsWrap").html(result.response.html)
+//    $("#delayed").html(result.response.html)
+  }
+ // setupRealTimeTranslate()
+  })
+
+
+}
+
 /* NOTE: this may not be needed anymore with bootstrap 5, using data-bs-auto-close="outside" */
 $( document ).ready(function() {
 $('.dropdown-menu li').on('click', function(event){
@@ -18,7 +66,18 @@ $('.dropdown-menu li').on('click', function(event){
   alert('clicked tab')
  });
 
+$("#adminPageStats").on('show.bs.dropdown',function(e) {
+  loadAdminPage()
+  
+  
+
+})
+
 });
+
+
+
+
 
 </script>
 
