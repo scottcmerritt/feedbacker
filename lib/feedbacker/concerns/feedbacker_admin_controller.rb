@@ -229,7 +229,7 @@ def cleanup
         redirect_to controller:"admin", action:"send_user_message"
       else
         @hidden_fields = @user.nil? ? {} : {"user_id":@user.id}
-        @messages = RoomMessage.recent.where(user_id:@admin_ids)
+        @messages = RoomMessage.recent.where(user_id:@admin_ids).page(params[:page])
       end
     end
 

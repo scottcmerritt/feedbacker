@@ -5,6 +5,7 @@
 	<div class="col-4">
 		<h4>Sent messages</h4>
 		<% unless @messages.nil? %>
+		<%= paginate @messages rescue "pager not working" %>
 		<% @messages.each do |room_message| %>
 		<%= render partial: "#{engine_prefix}/rooms/room_message",locals: {room_message:room_message} %>
 		<% end %>
