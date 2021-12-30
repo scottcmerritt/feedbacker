@@ -36,3 +36,4 @@ require "feedbacker/concerns/feedbacker_admin_controller"
 require "feedbacker/concerns/user_info"
 
 require 'diffy'
+#require 'kaminari'

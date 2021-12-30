@@ -24,19 +24,19 @@
     <% needed.each do |lang,rows| %>
     <% is_active = needed.keys[0] == lang %>
 
-    <div id="langs-<%= lang %>" data-lang="<%= lang %>" class="search-data bg-white border mb-1 p-1 tab-pane fade <%= "show active" if is_active %>" role="tabpanel" aria-labelledby="langs-<%= lang %>-tab">
-      <h6>Language: <%= lang %></h6>
+    <div id="langs-<%= lang %>" data-lang="<%= lang %>" class="search-data bg-white border mb-1 p-0 tab-pane fade <%= "show active" if is_active %>" role="tabpanel" aria-labelledby="langs-<%= lang %>-tab">
+      <h6 class="px-2">Language: <%= lang %></h6>
       <% rows.each do |full_row| %>
       <% row = full_row.kind_of?(Feedbacker::Translation) ? full_row : (full_row.has_key?(:obj) ? full_row[:obj] : full_row) %>
       <% frame_id = "missKey_#{SecureRandom.hex(10)}" %>
-      <div class="border-bottom search-row" id="<%= frame_id %>">
+      <div class="border-bottom search-row mb-1 p-1 px-2 border mx-1 bg-light" id="<%= frame_id %>">
         <%= link_to icon(icon:'trash'), feedbacker.translates_clear_misskey_path({remove_misskey:full_row[:key],remove_frame:frame_id}), remote:true, class:"me-2 nodec clearKeyBtn" if full_row.has_key?(:key) %>
         <%= link_to "#{row.tdomain}.#{row.tkey}", feedbacker.new_translate_path(lang:lang,tdomain:row.tdomain,tkey:row.tkey), class: "nodec" %>
         <% begin %>
         <%= render partial: "#{engine_prefix}translate_keys/parts/samples_and_stats", locals: {translate_key:row,parent_frame:frame_id,lang:lang} %>
         <% rescue Exception=>ex %>
         <%= ex %>
-        <% end %>`
+        <% end %>
         <%= tag.div full_row[:key], class: "fs-7" if params[:debug] %>
       </div>
       <% end %>

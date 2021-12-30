@@ -9,6 +9,7 @@ gem 'redis-namespace'
 gem 'simple_form'
 
 gem 'diffy'
+#gem 'kaminari'
 
 group :development do
   gem 'sqlite3'
