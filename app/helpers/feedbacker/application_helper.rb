@@ -100,6 +100,21 @@ module Feedbacker
   def default_h_css padding: "p-1 px-2", margin: "",font:""
     "d-flex align-items-center bg-dark text-light #{padding} #{margin} #{font}"
   end
+
+  def default_toggle_icons color: "dark", margin: "me-2", font: "fs-5"
+    shared_css = "#{font} text-#{color} #{margin}"
+    raw "<i class='fa fa-chevron-down #{shared_css} text-collapsed'></i><i class='fa fa-chevron-up #{shared_css} text-expanded'></i>"
+  end
+
+  # the idea is to pass the partial to this to reduce several lines of code in an .erb file
+  # it doesn't seem to be working well
+  def debug_render 
+    begin
+      yield
+    rescue Exception=>ex
+      ex
+    end
+  end
     
 
 

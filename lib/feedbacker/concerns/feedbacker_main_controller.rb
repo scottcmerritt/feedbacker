@@ -44,6 +44,7 @@ module Feedbacker
    rescue ActiveRecord::StatementInvalid => e
 
    end
+   
    load_langs
    set_locale
   end

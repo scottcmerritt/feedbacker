@@ -161,6 +161,7 @@ module Feedbacker
 		Feedbacker::Translate.log_page! phrase, page: page unless page.nil?
 		Feedbacker::Translate.log_controller_and_action! phrase, controller:controller,action:action unless controller.nil? || action.nil?
 		Feedbacker::Translate.log_phrase_lookup_datetime! phrase
+		Rails.logger.debug "CONTROLLER: #{controller}, ACTION: #{action}, hit"
 	end
 
 	def self.cache_miss! phrase: nil, page: nil, controller:nil,action:nil
@@ -169,6 +170,7 @@ module Feedbacker
 		Feedbacker::Translate.log_page! phrase, page: page unless page.nil?
 		Feedbacker::Translate.log_controller_and_action! phrase, controller:controller,action:action unless controller.nil? || action.nil?
 		Feedbacker::Translate.log_phrase_lookup_datetime! phrase
+		Rails.logger.debug "CONTROLLER: #{controller}, ACTION: #{action}, miss"
 	end
 	
 	

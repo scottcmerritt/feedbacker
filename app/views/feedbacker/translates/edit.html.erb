@@ -10,5 +10,5 @@
 </h4>
 <%= render partial: "#{engine_prefix}translates/form" %>
 </div>
-
+<%= render partial: "#{admin_engine_prefix}translates/parts/related",locals:{translate:@translate} %>
 <%= render partial: "#{engine_prefix}translate_keys/parts/needed", locals: {title: "Translations needed"} %>

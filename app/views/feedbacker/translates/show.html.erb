@@ -1,16 +1,12 @@
 <%= render partial: "admin/manage/header" %>
 <%= render partial: "admin/manage/menu" if false %>
-<%= render partial: "#{engine_prefix}translate_keys/parts/menu" %>
-<%= render partial: "#{engine_prefix}translate_keys/parts/filter" %>
+<%= render partial: "#{admin_engine_prefix}translate_keys/parts/menu" %>
+<%= render partial: "#{admin_engine_prefix}translate_keys/parts/filter" %>
 
 <% translate_key = (@translate.id.nil? ? Feedbacker::TranslateKey.find_by(id:@translate.translate_key_id) : @translate.translate_key) unless @translate.translate_key.nil? %>
 
-<%= render partial: "#{engine_prefix}translate_keys/parts/key", locals: {translate_key: translate_key} unless translate_key.nil?  %>
+<%= render partial: "#{admin_engine_prefix}translate_keys/parts/key", locals: {translate_key: translate_key} unless translate_key.nil?  %>
 
-<%= render partial: "#{engine_prefix}translates/parts/translate",locals:{translate:@translate} %>
+<%= render partial: "#{admin_engine_prefix}translates/parts/translate",locals:{translate:@translate} %>
 
-
-<div class="fw-bold bg-light p-1 px-2 mt-4 text-dark border border-dark rounded-top border-bottom-muted">Related translations</div>
-<div class="p-2 border border-dark rounded-bottom border-top-0">
-<%= render partial: "#{engine_prefix}translates/parts/list", locals: {translations:@translate.related.page(params[:page])} %>
-</div>
+<%= render partial: "#{admin_engine_prefix}translates/parts/related",locals:{translate:@translate} %>

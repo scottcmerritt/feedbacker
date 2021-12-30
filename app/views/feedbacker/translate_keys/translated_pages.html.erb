@@ -1,4 +1,4 @@
-<%= render partial: "feedbacker/translate_keys/parts/filter_search_js" %>
+<%= render partial: "feedbacker/translate_keys/parts/filter_search2_js", locals: {use_and_match:true} %>
 
 <%= render partial: "feedbacker/translate_keys/parts/menu", locals: {selected:params[:action] == "translated_pages" ? 4 : 1} %>
 <div class="bg-white p-1">
@@ -47,7 +47,8 @@
 <% end %>
 </div>
 <% end %>
-<% div_css = @pages.length > 5 && !@combine_pages ? "hide" : "show" %>
+<% aria_expanded = !(@pages.length > 5 && !@combine_pages) %>
+<% div_css = aria_expanded ? "show" : "hide" %>
 <% if @combine_pages %>
 <div class="search-data ms-3 collapse <%= div_css %>" id="<%= row_id.split("#")[1] %>">
 
@@ -60,9 +61,8 @@
 <% @pages.each do |path_to_page,samples| %>
 
 <% unless @combine_pages %>
-
 	<% row_id = "#translated_#{SecureRandom.hex(6)}" %>
-	<div class="fw-bold fs-4 d-flex align-items-center border border-dark ps-1 bg-light mt-1" style="border-left-width: 6px !important;border-top-width: 2px !important;"><%= link_to path_to_page, row_id, data: {"bs-target": row_id, "bs-toggle": "collapse"} %>
+	<div class="fw-bold fs-4 d-flex align-items-center border border-dark ps-1 bg-light mt-1" style="border-left-width: 6px !important;border-top-width: 2px !important;"><%= link_to safe_join([default_toggle_icons,path_to_page]), row_id, data: {"bs-target": row_id, "bs-toggle": "collapse"}, aria: {expanded:aria_expanded,controls:row_id.partition("#").last}, class: "text-toggle" %>
 		
 		<%= tag.div samples.keys.length, class: "badge bg-info fs-7 mx-1" %>
 	</div>

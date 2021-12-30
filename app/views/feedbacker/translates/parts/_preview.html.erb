@@ -1,12 +1,14 @@
-<% show_defaults = {edit:true,delete:true} %>
-<% show = local_assigns[:show].nil? ? show_defaults : show_defaults.merge(show) %>
+<% show_defaults = {edit:false,delete:false} %>
+<% show = local_assigns[:show].nil? ? show_defaults : show_defaults.merge(local_assigns[:show]) %>
+<% preview_id = translate.id if local_assigns[:preview_id].nil? %>
+
 
 <div class="d-flex align-items-center">
- <a class="btn btn-sm btn-primary py-0 fs-7 m-1" data-bs-toggle="collapse" href="#preview<%= translate.id %>" role="button" aria-expanded="false" aria-controls="preview<%= translate.id %>">Show preview</a>
+ <a class="btn btn-sm btn-primary py-0 fs-7 m-1" data-bs-toggle="collapse" href="#preview<%= preview_id %>" role="button" aria-expanded="false" aria-controls="preview<%= translate.id %>">Show preview</a>
  <%= link_to "Open in sandbox", feedbacker.admin_html_sandbox_path(translate_id:translate.id), class: "btn btn-sm btn-warning py-0 fs-7 m-1" %>
  <div class="ms-auto me-1">
     <%= link_to icon_text("Edit phrase: #{translate.lang}","edit"),feedbacker.edit_translate_path(id:translate.id), class: "nodec btn-secondary btn-sm" if show[:edit] %>
     <%= link_to icon_text("Delete phrase: #{translate.lang}","trash"),feedbacker.translate_path(id:translate.id), method: :delete, class: "ms-3 nodec btn-danger btn-sm" if show[:delete] %>
 </div>
 </div>
- <div class="hide collapse p-1" id="preview<%= translate.id %>"><%=h raw translate.phrase %></div>
+ <div class="hide collapse p-1" id="preview<%= preview_id %>"><%=h raw translate.phrase %></div>

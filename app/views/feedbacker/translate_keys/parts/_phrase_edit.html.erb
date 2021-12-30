@@ -8,18 +8,22 @@
 <% translate_key = translate.translate_key %>
 <% end %>
 <% extra = translate_key.logged_samples if local_assigns[:extra].nil? %>
-<div class="border bg-light mb-1 <%= size == "tiny" ? "ms-0" : "ms-2" %> py-1 fs-7">
+<% wrap_id = "translated_#{SecureRandom.hex(6)}" %>
+
+
+<div class="border bg-light mb-1 <%= size == "tiny" ? "ms-0" : "ms-2" %> py-1 fs-7" id="<%= wrap_id %>">
 	<% row_id = "#translated_#{SecureRandom.hex(6)}" %>
 
-	<div class="fw-bold fs-7 d-flex px-2">
+	<div class="fw-bold fs-7 d-flex bg-white border-bottom">
 
-		<%= link_to row_id, data: {"bs-target": row_id, "bs-toggle": "collapse"}, class: "fw-bold fs-7 d-flex flex-fill align-items-top nodec" do %>
-		<div class="d-flex flex-column"><%= tag.div phrase %>
+		<%= link_to row_id, data: {"bs-target": row_id, "bs-toggle": "collapse"}, aria: {expanded:false,controls:row_id.partition("#").last}, class: "text-toggle fw-bold fs-7 d-flex flex-fill align-items-top nodec" do %>
+		<div class="d-flex flex-column px-2">
+			<%= tag.div safe_join([default_toggle_icons(font:"fs-7"),phrase]), class: "" %>
 		<%= tag.div extra[:default], class: "text-muted fs-8" unless extra.nil? %>
 		</div>
 		<% end %>
 		
-		<%= link_to icon(icon:"trash",lbl:size == "tiny" ? "" : "Clear key",icon_css:"me-1"), feedbacker.translates_clear_misskey_path(tdomain:tdomain,tkey:tkey), class: "text-danger fs-7 mx-1", remote: true %>
+		<%= link_to icon(icon:"trash",lbl:size == "tiny" ? "" : "Clear key",icon_css:"me-1"), feedbacker.translates_clear_misskey_path(tdomain:tdomain,tkey:tkey,remove_frame: wrap_id), class: "text-danger fs-7 mx-1", remote: true %>
 	</div>
 	
 
@@ -37,7 +41,7 @@
 	<% end %>
 <%= render partial: "feedbacker/translates/form", locals: {translate: translate,size:size} %>
 
-<%= render partial: "feedbacker/translate_keys/parts/show", locals: {translate_key: translate_key,show_key:false} unless translate_key.nil? %>
+<%= render partial: "feedbacker/translate_keys/parts/show", locals: {translate_key: translate_key,show_key:false,related_show:local_assigns[:related_show]} unless translate_key.nil? %>
 
 
 	

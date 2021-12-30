@@ -1,3 +1,5 @@
+<% show_defaults = {edit:true,delete:true} %>
+<% show = local_assigns[:show].nil? ? show_defaults : show_defaults.merge(show) %>
 <div class="bg-white border border-secondary rounded-top my-2">
 
 	<div class="px-2 fs-7 d-flex align-items-center border-bottom bg-light rounded-top">
@@ -29,7 +31,7 @@
 	<%= tag.div row.phrase, class: "text-muted fs-7 p-1" %>
 
 	</div>
-	<%= render partial: "#{admin_engine_prefix}translates/parts/preview", locals: {translate: row} %>
+	<%= render partial: "#{admin_engine_prefix}translates/parts/preview", locals: {translate: row,show:show} %>
 
 	<% else %>
 	<div class="p-2 d-flex align-items-center">

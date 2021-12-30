@@ -1,8 +1,7 @@
 <div class="btn-group dropup <%= wrap_css unless local_assigns[:wrap_css].nil? %>" style="line-height:16px;">
-  <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+  <button type="button" class="btn btn-sm btn-secondary dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
     <%= icon(icon:"lightbulb",lbl:"Admin") %>
   </button>
-
   <div class="dropdown-menu p-0 px-1 bg-dark border-4 border-dark rounded" style="width:350px;height:600px;overflow-y:scroll;">
 
 <div id="adminTipsWrap" class="mt-1 p-1 bg-white">
@@ -48,7 +47,11 @@
       <div class="tab-pane fade show active" id="adminTranslateTab" role="tabpanel" aria-labelledby="adminTranslate-tab">
 
         <div id="pageTranslations">          
+          <% begin %>
           <%= render partial: "feedbacker/translate_keys/parts/by_page_action" %>
+          <% rescue Exception=>ex %>
+          <%= ex %>
+          <% end %>
         </div>
 
       </div>

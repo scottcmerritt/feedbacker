@@ -57,7 +57,7 @@ module Feedbacker
 					end
 					@miss_keys = miss_keys.uniq
 
-					@msg = "Keys found (#{@miss_keys.length}), not cleared though, tdomain: #{@tdomain}, tkey: #{@tkey}, #{@miss_keys}"
+					@msg = "Keys found (#{@miss_keys.length}), tdomain: #{@tdomain}, tkey: #{@tkey}, #{@miss_keys}"
 					@objs = []
 					@miss_keys.each do |k|
 

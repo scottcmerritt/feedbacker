@@ -1,13 +1,9 @@
 <% use_and_match = "false" if local_assigns[:use_and_match].nil? %>
 <script type="text/javascript"> 
- 
-
-	function setupRealTimeTranslate() {
-
- //does the text of an element match the var: txt?
-  const useAndAttrMatch = false
-  const useAndMatch = <%= use_and_match.to_s %> //if false, then it is an OR match
+  //does the text of an element match the var: txt?
   
+var useAndMatch = <%= use_and_match.to_s %> //if false, then it is an OR match
+var useAndAttrMatch = false
 
   function textMatches(div,txt)
   {
@@ -59,8 +55,10 @@
     return (div.attr(attrName).indexOf(txt) > -1)
   }
 
+	function setupRealTimeTranslate() {
+
 var $searchBox = $('#search-translations');
-var $browseDivs = $('.search-data a.searchItem');
+var $browseDivs = $('.search-data a');
 var $browseCols = $('.search-data .search-row');
 var $filterLangs = $('.filter-lang')
 
@@ -119,8 +117,10 @@ var runTranslateFilter = function(scope,textQuery) {
   var langQuery = getLangQuery() //undefined //'en'
 $("#searchExplained").html(`Filtering for: ${textQuery}, WITH languages (${attrLookup}) ${langQuery.toString()}`)
   
-  $browseDivs.removeClass('d-none'); // horizontal row of domains
-  $browseCols.removeClass('d-none'); // vertical col of needed translations
+
+  $browseDivs.removeClass('d-none');
+  $browseCols.removeClass('d-none');
+
 
   /*
   if ((!langQuery || (Array.isArray(langQuery) && langQuery.length == 0)) && (!textQuery || textQuery == '')) {
@@ -141,12 +141,11 @@ $("#searchExplained").html(`Filtering for: ${textQuery}, WITH languages (${attrL
     if(textMatches($div,textQuery)) // && attrMatches($div,attrLookup,langQuery))
     {
     	$div.closest('.search-row').removeClass('d-none')
-      $div.removeClass('d-none')
     }
     else {
       console.log(`hiding search-row: ${$div.text()}`)
-      $div.closest('.search-row').addClass('d-none')
-      $div.addClass('d-none')
+      if(useAndMatch)
+      	$div.closest('.search-row').addClass('d-none')
     }
   })
 
@@ -158,17 +157,16 @@ $("#searchExplained").html(`Filtering for: ${textQuery}, WITH languages (${attrL
     if(textMatches($div,textQuery)) // && attrMatches($div,attrLookup,langQuery))
     {
         $div.removeClass('d-none')
-        $div.closest('.search-row').removeClass('d-none')
     }
     else {
       //if(useAndMatch)
-      $div.addClass('d-none')
+      //$div.addClass('d-none')
 
     }
 
   })
 
-/*
+
     // specific match on the search-row div (and attributes)
    $browseCols.each(function(i, div) {
     var $div = $(div);
@@ -189,7 +187,7 @@ $("#searchExplained").html(`Filtering for: ${textQuery}, WITH languages (${attrL
   
 
   })
-*/
+
    updateCounts()
 
    

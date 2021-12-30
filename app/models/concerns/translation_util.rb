@@ -64,9 +64,36 @@ module TranslationUtil
       set_cache_key = "TRANSLATIONS_by_CONTROLLER_ACTION::#{page_key}"
     end
 
+    #TODO: add them to a list of CONTROLLER phrases (for controller only lookup)
     def phrases_by_controller_and_action controller:, action:
       list_cache_key = self.phrases_by_controller_and_action_cache_key controller:controller,action:action
       Feedbacker::Cache.get_list_objects(list_cache_key,load_objects:true,with_keys:true)
+    end
+
+    def phrases_by_controller controller:
+      controller = ["translates","translate_keys"] if ["translates","translate_keys"].include?(controller)
+
+      # get actions from impressions
+      rows = Impression.select('controller_name,action_name')
+      .where(controller_name:controller).uniq
+      res = []
+      rows.each do |row|
+        Rails.logger.debug "CONTROLLER: #{row.controller_name}, ACTION: #{row.action_name}, LOOPING"
+
+        list_cache_key = self.phrases_by_controller_and_action_cache_key controller:row.controller_name,action:row.action_name
+        res = res + Feedbacker::Cache.get_list_objects(list_cache_key,load_objects:true,with_keys:true)
+      end
+
+      keys = {} # gather a unique list
+      output = []
+      res.each do |row|
+        unless keys[row[:key]]
+          keys[row[:key]] = 1
+          output.push row
+        end
+      end
+
+      output
     end
 
     # page_keys in a LIST/SET, so we can reverse lookup

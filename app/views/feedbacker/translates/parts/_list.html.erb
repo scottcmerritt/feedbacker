@@ -1,5 +1,7 @@
+<% show_defaults = {edit:true,delete:true} %>
+<% show = local_assigns[:show].nil? ? show_defaults : show_defaults.merge(show) %>
 <% translations = @translations if local_assigns[:translations].nil? %>
 <%= feedbacker_paginate translations,page: params[:page] %>
 <% translations.each do |row| %>
-	<%= render partial: "#{engine_prefix}translates/parts/list_row", locals: {row: row} %>
+	<%= render partial: "#{engine_prefix}translates/parts/list_row", locals: {row: row,show:show} %>
 <% end %>

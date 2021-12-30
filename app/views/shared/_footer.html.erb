@@ -1,4 +1,5 @@
 <script>
+/* NOTE: this may not be needed anymore with bootstrap 5, using data-bs-auto-close="outside" */
 $( document ).ready(function() {
 $('.dropdown-menu li').on('click', function(event){
 //The event won't be propagated to the document NODE and 
@@ -8,8 +9,8 @@ $('.dropdown-menu li').on('click', function(event){
 
  $(".dropdown-menu a[data-bs-toggle='collapse']").on('click',function(event) {
   event.stopPropagation();
-  
  })
+
 
  $('.dropdown-menu > ul > li > a').on('click', function(event){
   event.stopPropagation();
