@@ -22,6 +22,7 @@
 module Feedbacker
 module Ui
 class Gradient
+
   def initialize(options)
     options = { steps: 10 }.merge(options)
     @steps = options[:steps]-1 # Minus one to make room for the final breakpoint
@@ -120,5 +121,7 @@ class Gradient
       else raise "#{color.inspect} is not a valid RGB or Hex color"
       end
     end
+
+end
 end
 end
