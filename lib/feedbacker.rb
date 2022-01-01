@@ -26,6 +26,8 @@ module Feedbacker
 
 end
 
+require "feedbacker/concerns/room_utility"
+require "feedbacker/concerns/chat_utility"
 require "feedbacker/concerns/feedbacker_util"
 require "feedbacker/concerns/feedbacker_comment_util"
 require "feedbacker/concerns/feedbacker_main_controller"

@@ -1,0 +1,40 @@
+<%= render partial: "community/shared/menu" %>
+
+<% nav_link_css = "nav-link badge bg-secondary badge-secondary p-1 px-3 mx-1 badge-pill" %>
+
+<div class="d-flex align-items-center">
+<%= link_to icon(icon:"comment",lbl:"Compose",icon_css:"text-primary"),"#do_compose", class: "fw-bold font-weight-bold btn btn-sm bg-white border border-2 border-primary mt-1 ms-1 ml-1", aria: {expanded:false,controls:"do_compose"}, role: "button", data: {toggle: "collapse", "bs-target": "#do_compose", "bs-toggle": "collapse"} %>
+
+
+
+<ul class="nav justify-content-center d-flex flex-fill">
+<li class="nav-item">
+<%= link_to "Active", feedbacker.user_conversations_path, class: "#{nav_link_css} #{@closed!=true ? "active" : ""}" %>
+</li>
+<li class="nav-item">
+<%= link_to "Closed",feedbacker.user_conversations_path(status: "closed"), class: "#{nav_link_css} #{@closed ? "active" : ""}" %>
+</li>
+</ul>
+
+</div>
+<div id="do_compose" class="collapse bg-white p-1 m-1 border">
+<%= render partial: "community/conversations/start" %>
+
+</div>
+
+<div class="m-1" id="conversations">
+<% if @conversations.nil? || @conversations.length == 0 %>
+<div class="row">
+	<div class="col-6">
+<div class="alert alert-info">No conversations</div>
+</div>
+<div class="col-6">
+<%= link_to "Browse members", community_path if respond_to? :community_path %>
+</div>
+</div>
+<% else %>
+<% @conversations.each do |conversation| %>
+<%= render partial: "community/conversations/list_row", locals: {conversation:conversation} %>
+<% end %>
+<% end %>
+</div>

@@ -1,0 +1,46 @@
+<%= render partial: "community/shared/menu" %>
+<% custom_locals = {connections:@connections,connections_requested:@requested,connections_pending:@pending} %>
+
+<% unless @items.nil? %>
+<h6 class="bg-primary-light border border-contrast text-contrast fw-bold font-weight-bold p-1 px-2 mt-1 d-flex align-items-center">Interests <span class="text-muted fs-8 fw-normal mx-1">(Filter by public or private interests)</span>
+
+	<div class="ms-auto ml-auto d-flex align-items-center">
+	<a href="#" class="border bg-white p-1 mx-1 nodec d-flex align-items-center">Public <%= tag.span @items.length, class: "badge bg-dark text-light mx-1" %></a>
+
+	<a href="#" class="border bg-white p-1 mx-1 nodec d-flex align-items-center">Private <%= tag.span @items.length, class: "badge bg-dark text-light mx-1" %></a>
+
+	</div>
+
+</h6>
+<div class="d-flex flex-wrap">
+<% @items.each do |item| %>
+<div class="mx-1 bg-white border rounded p-1">
+<%= link_to item.name, newsify.item_path(item) %>
+</div>
+<% end %>
+</div>
+<div class="d-flex">
+<% @items_requested.each do |item| %>
+<div class="mx-1 bg-white border rounded p-1">
+<%= item.name %>
+</div>
+<% end %>
+</div>
+<% end %>
+
+<div class="row m-1 border py-1">
+	<div class="col-sm-6 bg-white pb-1">
+	<h5><%= @requested.count %> connection requests</h5>
+	<% custom_locals[:users] = @requested %>
+	<%= render partial: "/users/participants/list", locals: custom_locals %>
+	</div>
+	<div class="col-sm-6 bg-white pb-1">
+		<% custom_locals[:users] = @pending %>
+		<h5>You made <%= @pending.count %> connection requests</h5>
+		<%= render partial: "/users/participants/list", locals: custom_locals %>
+	</div>
+</div>
+
+<h4>Connections</h4>
+<% custom_locals[:users] = @connections %>
+<%= render partial: "/users/participants/list", locals: custom_locals %>

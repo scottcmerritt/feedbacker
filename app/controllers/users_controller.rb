@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
+  before_action :hide_news_menu, only: [:conversations]
   include Feedbacker::FeedbackerUsersController
   
   def welcome
@@ -14,6 +15,10 @@ class UsersController < ApplicationController
   end
 
 
+  private
+  def hide_news_menu
+    @hide_news_menu = true
+  end
   
 =begin
   def index

@@ -25,7 +25,7 @@
     <%= render 'shared/flash' %>
     <%= feedbacker_menu tabs: @site_links, controller: controller_name, action: action_name, style:nil,horiz:true,color:"dark" %>
 
-      <%= render partial: "users/profile_mini",locals: {user:current_user} rescue nil%>
+      <%= render partial: "users/profile_mini",locals: {user:current_user} if false %>
 
       <%= yield %>
     </main>

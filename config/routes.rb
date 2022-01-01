@@ -3,10 +3,25 @@ Feedbacker::Engine.routes.draw do
 	resources :comments #, :admin
 	resources :translates, :emails
 	resources :translate_keys, path: "translations"
+	resources :rooms, :room_messages # :orgs, 
 
 
 	match '/engage/comment/:id/:scope' => 'comments#engage', :as => :engage_comment, :via=> [:get,:post]
-	
+	match "/add/connection/:otype/:id" => "connect#add", :as => :add_connection, :via=>:get
+  	match "/cancel/connection/:otype/:id" => "connect#cancel", :as => :cancel_connection, :via=>:get
+  	match "/connections" => "connect#list", :as => :connections, :via=>:get
+
+	match '/ac/search/select/user' => "chat#search_select", :as => :search_select_user, :via=>[:get,:post]
+	match '/ac/search/users(/:q)' => "chat#autocomplete_search", :as => :autocomplete_search_users, :via=>[:get,:post]
+	#match '/search/rooms(/:q)' =>"rooms#search", :as => :search_rooms, :via=>[:get,:post]
+
+	match '/conversations(/:status)' => 'chat#conversations', :as => :user_conversations, :via => :get
+	match '/conversation/:id' => 'rooms#show', :as => :user_conversation, :via => :get
+	match '/add/conversation(/:target_id)' => 'chat#conversations_add', :as => :user_conversations_add, :via => :get
+
+	match "/message/remove/:id" => "room_messages#soft_remove", :as=>:room_message_soft_remove, :via=>:post
+
+
 	match '/tag/search' => 'tags#search', :as => :search_tag, :via=> :post
 	match '/tag/add' => 'tags#add', :as => :add_tag, :via=> [:post,:get]
 	match '/tag/remove' => 'tags#remove', :as => :remove_tag, :via=> :delete
