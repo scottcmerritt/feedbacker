@@ -10,7 +10,12 @@ class RoomsController < ::ApplicationController
 	
 		if !@room.can_view? current_user  
 		    logger.debug "cannot view"
-		    redirect_to room_join_path @room
+		    if feedbacker.respond_to?(:room_join_path)
+		    	redirect_to room_join_path @room
+		    else
+		    	flash[:notice] = "This conversation cannot be viewed"
+		    	redirect_to feedbacker.user_conversations_path
+		    end
 		end
 
 		@room_message = RoomMessage.new room: @room
