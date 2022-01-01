@@ -16,6 +16,8 @@ class RoomMessagesController < ApplicationController
 
     @room_message = RoomMessage.find_by(id: params[:id])
     @room_message.soft_remove!(current_user) if is_admin?
+
+    render "feedbacker/community/chat/soft_remove"
   end
 
   def show
