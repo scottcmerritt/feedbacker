@@ -13,13 +13,13 @@ module RoomUtility
   private
 
    def load_user_colors
-    @user_color = UserColor.new({:room=>@room,:users=>@users})
+    @user_color = Feedbacker::Ui::UserColor.new({:room=>@room,:users=>@users})
     @colors_indexed = @user_color.user_colors
   end
 
   def get_user_color user = nil
     #UserColor.new({:indexed=>})
-    @user_color = UserColor.new({:room=>@room,:users=>@room.room_users.where("role_id>0")}) if @user_color.nil?
+    @user_color = Feedbacker::Ui::UserColor.new({:room=>@room,:users=>@room.room_users.where("role_id>0")}) if @user_color.nil?
     
     _color = @user_color.get_color(user.nil? ? current_user : user)
     @colors_indexed = @user_color.user_colors

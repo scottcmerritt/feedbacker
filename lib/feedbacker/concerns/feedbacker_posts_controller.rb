@@ -33,7 +33,7 @@ module Feedbacker
       def active
         @page_title = "Active"
 
-        @ui = Feedbacker::Ui.new params: params
+        @ui = Feedbacker::UiFilter.new params: params
         @posts = Post.active within: @ui.filter[:within][:mins].to_i
 
         render "index"

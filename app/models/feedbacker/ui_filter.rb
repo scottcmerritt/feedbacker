@@ -1,5 +1,5 @@
 module Feedbacker
-	class Ui
+	class UiFilter
 		attr_accessor :filter
 		def initialize params:
 			@filter = {within: {days: params[:within] || 0.5 }}
