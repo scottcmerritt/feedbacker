@@ -1,7 +1,7 @@
 Feedbacker::Engine.routes.draw do
 	root controller: :home, action: :index
 	resources :comments #, :admin
-	resources :translates, :emails
+	resources :translates, :emails, :menus
 	resources :translate_keys, path: "translations"
 	resources :rooms, :room_messages # :orgs, 
 

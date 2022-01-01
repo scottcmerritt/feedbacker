@@ -29,6 +29,13 @@
       <% rows.each do |full_row| %>
       <% row = full_row.kind_of?(Feedbacker::Translation) ? full_row : (full_row.has_key?(:obj) ? full_row[:obj] : full_row) %>
       <% frame_id = "missKey_#{SecureRandom.hex(10)}" %>
+      <% if row.tdomain.include?("menu::content") %>
+      
+      <%= link_to feedbacker.new_translate_path(lang:lang,tdomain:row.tdomain,tkey:row.tkey), class: "nodec" do %>
+      <span class="text-danger fw-bold">No need to edit</span> "#{row.tdomain}.#{row.tkey}"
+      <% end %>
+      <% else %>
+
       <div class="border-bottom search-row mb-1 p-1 px-2 border mx-1 bg-light" id="<%= frame_id %>">
         <%= link_to icon(icon:'trash'), feedbacker.translates_clear_misskey_path({remove_misskey:full_row[:key],remove_frame:frame_id}), remote:true, class:"me-2 nodec clearKeyBtn" if full_row.has_key?(:key) %>
         <%= link_to "#{row.tdomain}.#{row.tkey}", feedbacker.new_translate_path(lang:lang,tdomain:row.tdomain,tkey:row.tkey), class: "nodec" %>
@@ -41,6 +48,8 @@
       </div>
       <% end %>
     </div>
+    <% end %>
+
     <% end %>
   </div>
 <% end %>

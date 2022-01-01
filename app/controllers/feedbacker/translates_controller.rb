@@ -118,13 +118,14 @@ module Feedbacker
 			@translations = @translations.where("translate_keys.tdomain = ? AND translate_keys.tkey = ?",@tdomain,@tkey)
 			@translations = @translations.page(params[:page])
 
-			@tkeys = @tkey.split("_")
-
 			@similar = []
-			@tkeys.each do |tkey|
-				@similar = @similar + Feedbacker::TranslateKey.where("tkey LIKE ?","%#{tkey}%").to_a
+			unless @tkeys.nil?
+				@tkeys = @tkey.split("_")
+				
+				@tkeys.each do |tkey|
+					@similar = @similar + Feedbacker::TranslateKey.where("tkey LIKE ?","%#{tkey}%").to_a
+				end
 			end
-
 		end
 
 		def destroy
