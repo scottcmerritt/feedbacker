@@ -29,10 +29,10 @@
       <% rows.each do |full_row| %>
       <% row = full_row.kind_of?(Feedbacker::Translation) ? full_row : (full_row.has_key?(:obj) ? full_row[:obj] : full_row) %>
       <% frame_id = "missKey_#{SecureRandom.hex(10)}" %>
-      <% if row.tdomain.include?("menu::content") %>
+      <% if !row.tdomain.nil? && row.tdomain.include?("menu::content") %>
       
       <%= link_to feedbacker.new_translate_path(lang:lang,tdomain:row.tdomain,tkey:row.tkey), class: "nodec" do %>
-      <span class="text-danger fw-bold">No need to edit</span> "#{row.tdomain}.#{row.tkey}"
+      <span class="text-danger fw-bold">No need to edit</span> <%= "#{row.tdomain}.#{row.tkey}" %>
       <% end %>
       <% else %>
 
