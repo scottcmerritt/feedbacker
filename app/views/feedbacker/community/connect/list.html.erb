@@ -41,6 +41,9 @@
 	</div>
 </div>
 
-<h4>Connections</h4>
+<div class="bg-white border m-1 py-1 px-2">
+<h4 class="<%= default_h_css %>">Connections</h4>
 <% custom_locals[:users] = @connections %>
+
 <%= render partial: "/users/participants/list", locals: custom_locals %>
+</div>
