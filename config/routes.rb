@@ -65,7 +65,7 @@ Feedbacker::Engine.routes.draw do
 
 	match '/admin/users(/:role)' => 'admin#users', as: :admin_users, :via => :get
 	match '/admin/flag/user(/:id)' => 'admin#flag_spammer', :as => :user_flag_spammer, :via=> :post
-	match '/admin/roles/change' => 'admin#modify_role', :as => :modify_role, :via => :post
+	match '/admin/roles/change' => 'admin#modify_role', :as => :modify_role, :via => [:get,:post]
 	match '/confirm/user/:id' => 'admin#user_confirm', :as => :user_confirm, :via => :post
 	
 	match '/admin/html/sandbox' => 'admin#html_sandbox', :as=> :admin_html_sandbox, :via=>:get
