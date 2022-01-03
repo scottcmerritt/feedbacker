@@ -18,6 +18,8 @@ class RoomsController < ::ApplicationController
 		    end
 		end
 
+		@room.update(is_public:false,is_global:false) if params[:private] && is_admin?
+
 		@room_message = RoomMessage.new room: @room
 		load_room_to_show
 	end
