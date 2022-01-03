@@ -17,11 +17,12 @@ module Feedbacker
 	  	ids.uniq.compact
 	  end
 
-	  def announce_comment! sender:nil
+	  # announces a comment ABOUT something
+	  def announce_comment! sender:nil, comment: nil
         self.commenter_ids.each do |user_id|
         	if sender.nil? || (sender.id != user_id)
 	          user = User.find_by(id:user_id)
-	          user.announce_comment!(resource:self,sender:sender) unless user.nil?
+	          user.announce_comment!(resource:self,sender:sender,comment:nil) unless user.nil?
 	      	end
         end
 	  end
