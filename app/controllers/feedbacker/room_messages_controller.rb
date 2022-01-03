@@ -27,6 +27,8 @@ class RoomMessagesController < ApplicationController
   protected
 
   def save_and_broadcast
+    @room.announce_chat! sender: current_user
+
     @room_message = RoomMessage.create user: current_user,
                                          room: @room,
                                          message: params.dig(:room_message, :message),
