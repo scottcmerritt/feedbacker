@@ -37,10 +37,11 @@ module ChatUtility
   end  
 
   def conversations_add
-
     target_id = params[:target_id] || params[:room_message][:target_user_id]
     @message = params[:room_message][:message]
 
+    @room, added_message = UserConversation.add_message! message: @message, sender: current_user, recipient_id: target_id, reward: true
+=begin
     if target_id
       conv = UserConversation.joins("LEFT JOIN rooms on user_conversations.room_id = rooms.id")
       .where("rooms.closed = ? AND ((user_conversations.user_id = ? AND user_conversations.target_id = ?) OR (user_conversations.target_id = ? AND user_conversations.user_id = ?))",false,current_user.id,target_id,target_id,current_user.id).first
@@ -52,7 +53,7 @@ module ChatUtility
     @room = conv.room
     room_message = conv.send_message! message: @message, sender: current_user unless @message.blank?
     RoomChannel.broadcast_to @room, {newMessage:room_message} if defined?(RoomChannel)
-
+=end
     @room_message = RoomMessage.new
 
     @conversation = UserConversation.mine(current_user.id).find_by(id:conv.id) # (user_conversations: {id:conv.id})
