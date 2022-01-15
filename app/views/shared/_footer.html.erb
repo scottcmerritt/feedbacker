@@ -39,8 +39,7 @@ function loadAdminPage() {
   }
   else {
     $("#adminTipsWrap").html(result.response.html)
-    $("#adminTipsScroll").height($(window).height())
-    console.log(`page WINDOW height ${$(window).height()}`)
+    $("#adminTipsScroll").height($(window).height()-100)
 //    $("#delayed").html(result.response.html)
   }
  // setupRealTimeTranslate()
