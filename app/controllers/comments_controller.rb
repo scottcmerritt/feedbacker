@@ -2,6 +2,10 @@ class CommentsController < ApplicationController
   before_action :authenticate_user!
   
 
+  def show
+    redirect_to main_app.recent_comments_path(cid:params[:id])
+  end
+
   def create
     commentable = commentable_type.constantize.find(commentable_id)
     @extra_fields = extra_fields
