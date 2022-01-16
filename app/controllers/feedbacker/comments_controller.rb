@@ -24,12 +24,16 @@ class CommentsController < ::ApplicationController
     @frame = params[:frame]
 
     scope_keys = {"flag"=>"flagged","like"=>"liked","love"=>"loved"}
-    @scope = params[:scope]
-    @comment = Comment.find_by(id: params[:id])
-    if params[:undo]
-      current_user.unfavorite(@comment, scope: scope_keys[@scope].to_sym) if scope_keys[@scope]
-    else
-      current_user.favorite(@comment, scope: scope_keys[@scope].to_sym) if scope_keys[@scope]
+    @scope = params[:scope] if scope_keys.include?(params[:scope])
+
+    unless @scope.nil?
+      @comment = Comment.find_by(id: params[:id])
+      if params[:undo]
+        current_user.unfavorite(@comment, scope: scope_keys[@scope].to_sym) if scope_keys[@scope]
+      else
+        current_user.favorite(@comment, scope: scope_keys[@scope].to_sym) if scope_keys[@scope]
+        @comment.announce_engage! sender:current_user, engage_key: @scope
+      end
     end
   end
 

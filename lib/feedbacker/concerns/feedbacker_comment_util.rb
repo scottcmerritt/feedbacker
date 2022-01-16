@@ -17,6 +17,13 @@ module Feedbacker
 	  	ids.uniq.compact
 	  end
 
+	  def announce_engage! sender:, engage_key: "like"
+	  	user_id = self.respond_to?(:createdby) ? self.createdby : (self.respond_to?(:createdby) ? self.created_by : self.user_id)
+	  	user = User.find_by(id: user_id)
+	  	user.announce_engage!(resource:self,sender:sender,engage_key: engage_key) unless user.nil?
+	  end
+
+
 	  # announces a comment ABOUT something
 	  def announce_comment! sender:nil, comment: nil
         self.commenter_ids.each do |user_id|
