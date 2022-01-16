@@ -1,13 +1,20 @@
+<% form_id = "commentForm#{SecureRandom.hex(10)}" if local_assigns[:form_id].nil? %>
+<% user_css = "m-0 p-0 rounded bg-none" %>
+<% profile_css = "d-flex align-items-center m-0" %>
+<% engagement_frame_id = "engage#{SecureRandom.hex(10)}" %>
+<% is_admin = false if local_assigns[:is_admin].nil? %>
+<% size = "micro" if local_assigns[:size].nil? %>
+
   <div class="comments-show">
     <div class="comment" comment-id="<%= comment.id %>">
       <div class="body">
         <div class="d-flex">
-          <%= render partial: "users/parts/list_row", locals: {user:comment.user,show_extra:false,size:"micro",wrap_css: user_css,profile_css:profile_css,is_admin:is_admin} rescue render(partial: "comments/user",locals: {comment:comment}) %>
+          <%= render partial: "users/parts/list_row", locals: {user:comment.user,show_extra:false,size:size,wrap_css: user_css,profile_css:profile_css,is_admin:is_admin} rescue render(partial: "comments/user",locals: {comment:comment}) %>
 
 
           <div class="ms-auto d-flex">
 
-            <% engagement_frame_id = "engage#{SecureRandom.hex(10)}" %>
+            
             <%= tag.div render(partial: "comments/engagement", locals: {resource:comment,frame:engagement_frame_id}), id: engagement_frame_id unless current_user.nil? %>
 
 
