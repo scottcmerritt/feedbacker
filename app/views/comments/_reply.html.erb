@@ -2,6 +2,7 @@
 <% size = "micro" if local_assigns[:size].nil? %>
 
 <% is_admin = false if local_assigns[:is_admin].nil? %>
+<% new_comment = @new_comment if local_assigns[:new_comment].nil? %>
 
 <% paging = false if local_assigns[:paging].nil? %>
 <% comments = Kaminari.paginate_array(comments).page(params[:page]).per(2) if paging %>

@@ -5,6 +5,8 @@
 <% is_admin = false if local_assigns[:is_admin].nil? %>
 <% size = "micro" if local_assigns[:size].nil? %>
 
+<% new_comment = @new_comment if local_assigns[:new_comment].nil? %>
+
   <div class="comments-show">
     <div class="comment" comment-id="<%= comment.id %>">
       <div class="body">
