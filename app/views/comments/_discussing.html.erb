@@ -7,11 +7,11 @@
 
 <% if target.commenter_ids.empty? %>
 <% if show_discuss_link %>
-Nobody has discussed this yet! <a href="<%= discuss_link %>" class="mx-1"><%= icon(icon:"comment",lbl:"Discuss") %></a>
+<%= dbt('resource:comments.nobody_has_discussed',d:'Nobody has discussed this yet!') %> <a href="<%= discuss_link %>" class="mx-1"><%= icon(icon:"comment",lbl:dbt('resource:comments.discuss',d:'Discuss')) %></a>
 <% end %>
 <% else %>
 <div class="d-flex align-items-center">
-	<div class="mx-1 fs-7 text-muted"><%= icon(icon:"comments",lbl:"Discussed by") %></div>
+	<div class="mx-1 fs-7 text-muted"><%= icon(icon:"comments",lbl:dbt('resource:comments.discussed_by',d:"Discussed by")) %></div>
 <% target.commenter_ids.each do |user_id| %>
 <% user = User.find_by(id:user_id) %>
 <%= render partial: "users/parts/list_row", locals: {user:user,show_extra:false,size:"micro",wrap_css: user_css,profile_css:profile_css,is_admin:is_admin} rescue render(partial: "comments/user",locals: {comment:comment}) %>

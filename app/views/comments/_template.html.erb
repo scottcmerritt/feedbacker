@@ -32,7 +32,7 @@
 <%= render partial: "comments/form", locals: form_locals %>
 <div class="comments-container rounded">
   <% if commentable.root_comments.length == 0 %>
-  <div class="alert alert-info">Be the first to comment</div>
+  <div class="alert alert-info"><%= dbt('resource:comments.add_first_comment',d:'Be the first to comment') %></div>
   <% else %>
 
   <% begin %>
