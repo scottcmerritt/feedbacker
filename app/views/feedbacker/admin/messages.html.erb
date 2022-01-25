@@ -5,6 +5,8 @@
 
 <div class="row">
 	<div class="col-4">	
+		<%= render partial: "#{engine_prefix}admin/parts/message_list", locals: {title:"Failed logins",list:@failed_logins} %>
+
 		<%= render partial: "#{engine_prefix}admin/parts/message_list", locals: {title:"Book Additions",list:@add_msgs} %>
 	</div>
 	<div class="col-4">

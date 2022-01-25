@@ -214,6 +214,8 @@ def cleanup
     @update_msgs = @admin_room.room_messages.where("message LIKE ?","Report:: UPDATING%").order("created_at DESC")
     @add_msgs = @admin_room.room_messages.where("message LIKE ?","Report:: ADDING%").order("created_at DESC")
 
+    @failed_logins = @admin_room.room_messages.where("message LIKE ?","LOGIN::FAIL%").order("created_at DESC")
+
     @spam_msgs = @admin_room.room_messages.where("message LIKE ?","Spam detected from registration:%").order("created_at DESC")
 
     exclude_ids = @spam_msgs.pluck(:id) + @add_msgs.pluck(:id) + @update_msgs.pluck(:id)
