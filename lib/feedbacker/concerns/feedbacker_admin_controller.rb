@@ -209,7 +209,7 @@ def cleanup
 
   def messages
     @admin_room = Room.admin_messages
-    @admin_room.room_messages.where(room_message:{id:params[:rmid]}).first.destroy if params[:rmid] && params[:msg_remove] && is_admin?
+    @admin_room.room_messages.where("room_messages.id = ?", params[:rmid]).first.destroy if params[:rmid] && params[:msg_remove] && is_admin?
     
     @update_msgs = @admin_room.room_messages.where("message LIKE ?","Report:: UPDATING%").order("created_at DESC")
     @add_msgs = @admin_room.room_messages.where("message LIKE ?","Report:: ADDING%").order("created_at DESC")
