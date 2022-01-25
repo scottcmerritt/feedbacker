@@ -208,6 +208,8 @@ def cleanup
   end
 
   def messages
+    Room.admin_messages.where(room_message:{id:params[:rmid]}).first.destroy if params[:rmid] && params[:msg_remove] && is_admin?
+
     @admin_room = Room.admin_messages
     
     @update_msgs = @admin_room.room_messages.where("message LIKE ?","Report:: UPDATING%").order("created_at DESC")
@@ -217,6 +219,7 @@ def cleanup
 
     exclude_ids = @spam_msgs.pluck(:id) + @add_msgs.pluck(:id) + @update_msgs.pluck(:id)
     @admin_msgs = @admin_room.room_messages.where.not(id:exclude_ids).order("created_at DESC")
+
   end
 
     def send_user_message

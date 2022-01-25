@@ -19,5 +19,7 @@
 		</div>
 		</div>
 
+		<%= link_to icon(icon:"trash"), feedbacker.admin_messages_path({rmid:room_message.id,msg_remove:1}), method: :post, class: "btn btn-sm bg-danger text-light" if is_admin? %>
+
 	</div>
 	<% end %>
