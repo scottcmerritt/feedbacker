@@ -27,6 +27,14 @@
                 <%= icon(icon:"bars") %>
               </button>
               <ul class="dropdown-menu" aria-labelledby="cmtDropdown<%= comment.id %>">
+                <% Feedbacker.engage_keys.each do |scope_key,scope_action| %>
+                <li>
+                    <%= link_to feedbacker.engage_comment_path(id:comment.id,scope:scope_key,frame:engagement_frame_id), remote: true, class: "dropdown-item" do %><%= icon(icon:Feedbacker.engage_icons[scope_key][:icon],icon_css:Feedbacker.engage_icons[scope_key][:css]) %> <%= scope_key.capitalize %>
+                  <% end %>
+                </li>
+                <% end %>
+
+                <% if false %>
                 <li>
                   <%= link_to feedbacker.engage_comment_path(id:comment.id,scope:'like',frame:engagement_frame_id), remote: true, class: "dropdown-item" do %><%= icon(icon:"thumbs-up",icon_css:"text-success") %> Like
                   <% end %>
@@ -41,6 +49,7 @@
 <%= icon(icon:"exclamation-triangle",icon_css:"text-warning") %> Flag
                   <% end %>
                 </li>
+                <% end %>
                 <% if is_admin? %>
                 <li><a class="dropdown-item" href="#">Add photo</a></li>
                 <li><%= link_to icon(icon:'trash',lbl: dbt('comment.remove',d:'Remove')), feedbacker.comment_path(comment,frame:form_id), method: :delete, remote: true, class: "dropdown-item" %></li>                
