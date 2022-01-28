@@ -60,6 +60,9 @@ Feedbacker::Engine.routes.draw do
   	get '/admin/analytics(/:q)' => 'admin#analytics', as: :admin_analytics
   	get '/admin/cleanup(/:query_id)' => 'admin#cleanup', as: :admin_cleanup
 	get '/admin/tags(/:q)' => 'admin#tags', as: :admin_tags
+	get '/admin/lists(/:q)' => 'admin#lists', as: :admin_lists
+	get '/admin/list(/:ttype)' => 'admin#list', as: :admin_list
+
 	get '/admin/cache(/:q)' => 'admin#cache', as: :admin_cache
 
 

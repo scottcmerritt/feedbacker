@@ -354,6 +354,16 @@ def cleanup
       @percentages = @percentages.delete_if{|k,v| !Site.country_code_whitelist.include?(k) && v < @chart_thresh} unless params[:all]
     end
 
+    # another VIEW for tags (since tags are used for content lists, i.e. "reading lists")
+    def lists
+      do_admin_tags
+      render "tags"
+    end
+    def list
+      do_admin_tags
+      render "tags"
+    end
+
     def tags
 =begin      
       @sortbys = ["count","az"]
@@ -369,34 +379,7 @@ def cleanup
       @grouped_tags_top = ActsAsTaggableOn::Tag.select("name,taggings_count").map{|row| [row.name,row.taggings_count]}.sort_by{|row| -row[1]}.first(@top)
 =end    
 
-
-    @q = params[:q]
-      @sortbys = ["count","az"]
-      @sortby = @sortbys.include?(params[:sortby]) ? params[:sortby] : "az"
-      
-      @selected_tag = Tag.find_by(id:params[:tag_id])
-
-      @parent_tags = Tag.most_used_tags otype:"Tag"
-
-      if @q.nil?
-        if params[:sortby] && params[:sortby] == "count" 
-          @tags = @selected_tag.nil? ? ActsAsTaggableOn::Tag.all : ActsAsTaggableOn::Tag.tagged_with([@selected_tag])
-          @tags = @tags.order("taggings_count DESC")# ?   : @tags.order("name ASC")
-        else
-          @tags = Tag.all_tags otype: nil, translated: (@sortby == "az"), tagged_with: @selected_tag # ActsAsTaggableOn::Tag.all
-        end
-      else
-        @tags = Tag.search(q: @q, langs: @languages, otype: nil).uniq
-      end
-      @tag = ActsAsTaggableOn::Tag.find_by(id:params[:id])
-
-      # it is easier to use our own model (to make tags Taggable)
-      @taggable_tag = Tag.find(@tag.id) unless @tag.nil?
-
-      @top = params[:top] ?  params[:top].to_i : 10
-
-      @grouped_tags = ActsAsTaggableOn::Tag.select("name,taggings_count").map{|row| [row.name,row.taggings_count]}.sort_by{|row| -row[1]}
-      @grouped_tags_top = ActsAsTaggableOn::Tag.select("name,taggings_count").map{|row| [row.name,row.taggings_count]}.sort_by{|row| -row[1]}.first(@top)
+      do_admin_tags
     end
 
      def db
@@ -700,6 +683,35 @@ def cleanup
         @tbls_selected
       end
 
+      def do_admin_tags
+        @q = params[:q]
+        @sortbys = ["count","az"]
+        @sortby = @sortbys.include?(params[:sortby]) ? params[:sortby] : "az"
+        
+        @selected_tag = Tag.find_by(id:params[:tag_id])
+
+        @parent_tags = Tag.most_used_tags otype:"Tag"
+
+        if @q.nil?
+          if params[:sortby] && params[:sortby] == "count" 
+            @tags = @selected_tag.nil? ? ActsAsTaggableOn::Tag.all : ActsAsTaggableOn::Tag.tagged_with([@selected_tag])
+            @tags = @tags.order("taggings_count DESC")# ?   : @tags.order("name ASC")
+          else
+            @tags = Tag.all_tags otype: nil, translated: (@sortby == "az"), tagged_with: @selected_tag, scope: params[:ttype] # ActsAsTaggableOn::Tag.all
+          end
+        else
+          @tags = Tag.search(q: @q, langs: @languages, otype: nil).uniq
+        end
+        @tag = ActsAsTaggableOn::Tag.find_by(id:params[:id])
+
+        # it is easier to use our own model (to make tags Taggable)
+        @taggable_tag = Tag.find(@tag.id) unless @tag.nil?
+
+        @top = params[:top] ?  params[:top].to_i : 10
+
+        @grouped_tags = ActsAsTaggableOn::Tag.select("name,taggings_count").map{|row| [row.name,row.taggings_count]}.sort_by{|row| -row[1]}
+        @grouped_tags_top = ActsAsTaggableOn::Tag.select("name,taggings_count").map{|row| [row.name,row.taggings_count]}.sort_by{|row| -row[1]}.first(@top)
+      end
 
       def manually_confirm_user!
         @user = User.find_by(id:params[:confirm_user])
