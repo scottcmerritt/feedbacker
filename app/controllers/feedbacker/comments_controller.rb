@@ -23,7 +23,7 @@ class CommentsController < ::ApplicationController
   def engage
     @frame = params[:frame]
 
-    scope_keys = {"flag"=>"flagged","like"=>"liked","love"=>"loved"}
+    scope_keys = Feedbacker.engage_keys #{"flag"=>"flagged","like"=>"liked","love"=>"loved","agree"=>"agreed"}
     @scope = params[:scope] if scope_keys.include?(params[:scope])
 
     unless @scope.nil?

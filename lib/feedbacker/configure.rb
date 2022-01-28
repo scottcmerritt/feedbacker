@@ -12,6 +12,12 @@ module Feedbacker
     @@languages = ["en","es"]
     @@default_language = "en"
 
+    @@default_engage_keys = {"flag"=>"flagged","like"=>"liked","love"=>"loved","agree"=>"agreed"}
+    @@default_engage_icons = {"flag"=>{:icon=>"exclamation-triangle",:css=>"text-warning"},"like"=>{:icon=>"thumbs-up",:css=>"text-success"},"love"=>{:icon=>"heart",:css=>"text-danger"},"agree"=>{:icon=>"handshake",:css=>"text-primary"}}
+
+    @@engage_keys = @@default_engage_keys
+    @@engage_icons = @@default_engage_icons
+
     @@service_upgrades = []
 
     def configure(*settings)
@@ -54,12 +60,30 @@ module Feedbacker
         config.languages = ["en","es"]
         config.default_language = "en"
 
+        config.engage_keys = @@default_engage_keys
+        config.engage_icons = @@default_engage_icons
+
         # info for updating the provided service (i.e. # of db rows etc...)
         # an array of hash service tiers, example_tier = {name:"Tier 1",rows:100000,price:"$1 billion/month",info:"Some db rows and great customer service"}
         config.service_upgrades = [] 
       end
     end
 
+    def engage_keys=(keys)
+      @@engage_keys = keys
+    end
+
+    def engage_keys
+      @@engage_keys
+    end
+
+    def engage_icons=(icons)
+      @@engage_icons = icons
+    end
+    
+    def engage_icons
+      @@engage_icons
+    end
 
     def service_upgrades=(upgrades)
       @@service_upgrades = upgrades
@@ -99,6 +123,8 @@ module Feedbacker
     end
 
     private
+
+
 
     def sanity_check settings
       true
