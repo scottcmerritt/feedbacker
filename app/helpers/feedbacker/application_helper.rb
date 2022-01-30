@@ -101,6 +101,10 @@ module Feedbacker
   end
 
 
+  def default_h content, css:nil
+    tag.div content, class: "#{default_h_css} #{css}"
+  end
+
   def default_h_css padding: "p-1 px-2", margin: "",font:""
     "d-flex align-items-center bg-dark text-light #{padding} #{margin} #{font}"
   end
