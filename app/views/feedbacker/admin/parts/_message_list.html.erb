@@ -17,7 +17,12 @@
 	<% unless emails_from_msg.empty? %>
 	<div class="px-1 fs-7">Emails:
 	<% emails_from_msg.each do |email_from_msg| %>
+	<% user = User.find_by(email:email_from_msg) %>
+
 	<%= link_to email_from_msg, feedbacker.admin_users_path(q:email_from_msg), class: "mx-1 nodec fs-7 fw-bold" unless email_from_msg.nil? %>
+
+	<%= tag.div "#{time_ago_in_words user.last_view} ago", class: "fs-8 mx-1" unless user.nil? || user.last_view.nil? %>		
+
 	<% end %>
 	</div>
 
