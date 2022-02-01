@@ -1,7 +1,8 @@
 <%= render partial: "admin/manage/header" %>
 <%= render partial: "admin/manage/menu" %>
 
-<%= link_to "Send message",feedbacker.admin_send_user_message_path, class:"btn btn-success my-1" %>
+<%= default_h "Login analytics" %>
+<%= link_to "Send message",feedbacker.admin_send_user_message_path, class:"btn btn-success my-1" if false %>
 
 <div class="row">
 	<div class="col-4">	
@@ -10,12 +11,16 @@
 	<div class="col-4">
 		<h4>Successful logins (I'll add them here)</h4>
 
+		<% Impression.where(controller_name:"sessions",action_name:"create").limit(50).each do |impression| %>
+		<%= render impression unless impression.user_id.nil? %>
+		<% end %>
 	</div>
 	<div class="col-4">
 		<h5 class="p-1 px-2 bg-dark text-light d-flex">Spammers caught <%= tag.span @spam_msgs.count, class: "badge bg-light text-dark ms-1" %>
 			
 			<%= link_to "Show all", feedbacker.admin_messages_path({spam:1}), class: "ms-auto px-1" unless params[:spam] %>
 		</h5>
+
 
 		<% @spam_msgs.limit(params[:spam] ? 100 : 10).each do |room_message| %>
 			<% unless room_message.id.nil? %>
