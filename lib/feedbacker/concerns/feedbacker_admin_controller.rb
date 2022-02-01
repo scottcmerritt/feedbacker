@@ -207,6 +207,12 @@ def cleanup
     end
   end
 
+  def logins
+    @admin_room = Room.admin_messages
+    @spam_msgs = @admin_room.room_messages.where("message LIKE ?","Spam detected from registration:%").order("created_at DESC")
+    @failed_logins = @admin_room.room_messages.where("message LIKE ?","LOGIN::FAIL%").order("created_at DESC")
+  end
+
   def messages
     @admin_room = Room.admin_messages
     @admin_room.room_messages.where("room_messages.id = ?", params[:rmid]).first.destroy if params[:rmid] && params[:msg_remove] && is_admin?
