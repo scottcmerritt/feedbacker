@@ -15,9 +15,9 @@
 <% emails_from_msg = room_message.message.split(" ").collect{|row| row if row.include?("@")}.compact unless room_message.message.nil?  %>
 
 	<% unless emails_from_msg.empty? %>
-	<div>Emails:
+	<div class="px-1 fs-7">Emails:
 	<% emails_from_msg.each do |email_from_msg| %>
-	<%= link_to email_from_msg, feedbacker.admin_users_path(q:email_from_msg), class: "mx-1 nodec" unless email_from_msg.nil? %>
+	<%= link_to email_from_msg, feedbacker.admin_users_path(q:email_from_msg), class: "mx-1 nodec fs-7 fw-bold" unless email_from_msg.nil? %>
 	<% end %>
 	</div>
 
