@@ -5,11 +5,24 @@
 	<div class="p-1 px-2 border d-flex align-items-top">
 	<%= link_to room_message.message, feedbacker.admin_messages_path(id:room_message.id), style: "white-space: pre-wrap;", class: "text-dark fs-8" %>
 
-	<%= tag.span time_ago_in_words(room_message.created_at), class: "ms-auto fs-8" unless room_message.created_at.nil? %>
+	<%= tag.span time_ago_in_words(room_message.created_at), class: "ms-auto fs-8", style: "min-width:40px;" unless room_message.created_at.nil? %>
 	</div>
 	<div class="text-muted fs-8 px-2">
 		<% if room_message.user.nil? %>Anonymously<% else %>by <%= room_message.user.display_name_public %><% end %>
 	</div>
+
+
+<% emails_from_msg = room_message.message.split(" ").collect{|row| row if row.include?("@")}.compact unless room_message.message.nil?  %>
+
+	<% unless emails_from_msg.empty? %>
+	<div>Emails:
+	<% emails_from_msg.each do |email_from_msg| %>
+	<%= link_to email_from_msg, feedbacker.admin_users_path(q:email_from_msg), class: "mx-1 nodec" unless email_from_msg.nil? %>
+	<% end %>
+	</div>
+
+	<% end %>
+
 </div>
 <% end %>
 <% end %>
