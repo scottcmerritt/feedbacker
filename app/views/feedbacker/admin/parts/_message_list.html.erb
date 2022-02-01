@@ -20,6 +20,7 @@
 	<% user = User.find_by(email:email_from_msg) %>
 
 	<%= link_to email_from_msg, feedbacker.admin_users_path(q:email_from_msg), class: "mx-1 nodec fs-7 fw-bold" unless email_from_msg.nil? %>
+	<%= link_to icon(icon:"address-card"), [main_app,user], class: "m-1" unless user.nil? %>
 
 	<% unless user.nil? || user.last_view.nil? %>
 	<%= tag.div "Last click: #{time_ago_in_words user.last_view} ago", class: "fs-8 mx-1" %>
