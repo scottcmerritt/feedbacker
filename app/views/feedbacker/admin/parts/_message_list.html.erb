@@ -15,7 +15,7 @@
 <% emails_from_msg = room_message.message.split(" ").collect{|row| row if row.include?("@")}.compact unless room_message.message.nil?  %>
 
 	<% unless emails_from_msg.empty? %>
-	<div class="px-1 fs-7">Emails:
+	<div class="px-1 fs-7"> <%= "Email".pluralize(emails_from_msg.length) %>:
 	<% emails_from_msg.each do |email_from_msg| %>
 	<% user = User.find_by(email:email_from_msg) %>
 
