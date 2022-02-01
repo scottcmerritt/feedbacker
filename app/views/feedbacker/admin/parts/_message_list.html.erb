@@ -24,7 +24,7 @@
 	<% unless user.nil? || user.last_view.nil? %>
 	<%= tag.div "Last click: #{time_ago_in_words user.last_view} ago", class: "fs-8 mx-1" %>
 	<% if user.last_view > room_message.created_at %>
-	<div class="text-success fw-bold mx-1 alert-success">They were able to USE their account AFTER this failure</div>
+	<div class="text-success fw-bold mx-1 alert-success px-1">They were able to USE their account AFTER this failure</div>
 	<% end %>
 
 	<% end %>
