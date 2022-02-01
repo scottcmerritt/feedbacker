@@ -21,7 +21,13 @@
 
 	<%= link_to email_from_msg, feedbacker.admin_users_path(q:email_from_msg), class: "mx-1 nodec fs-7 fw-bold" unless email_from_msg.nil? %>
 
-	<%= tag.div "#{time_ago_in_words user.last_view} ago", class: "fs-8 mx-1" unless user.nil? || user.last_view.nil? %>		
+	<% unless user.nil? || user.last_view.nil? %>
+	<%= tag.div "#{time_ago_in_words user.last_view} ago", class: "fs-8 mx-1" %>
+	<% if user.last_view > room_message.created_at %>
+	<div class="text-success fw-bold mx-1">Views AFTER this failure</div>
+	<% end %>
+
+	<% end %>
 
 	<% end %>
 	</div>
