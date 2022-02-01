@@ -11,7 +11,7 @@
 	<div class="col-4">
 		<h4>Successful logins (I'll add them here)</h4>
 
-		<% Impression.where(controller_name:"sessions",action_name:"create").limit(50).each do |impression| %>
+		<% Impression.where(controller_name:"sessions",action_name:"create").where("NOT user_id is null").limit(50).each do |impression| %>
 		<%= render impression unless impression.user_id.nil? %>
 		<% end %>
 	</div>
