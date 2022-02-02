@@ -1,4 +1,4 @@
-<% title = "They were able to USE their account AFTER this failure" %>
+<% title = "They USED their account AFTER this failure" %>
 <% message = nil if local_assigns[:message].nil? %>
 <% unless emails.empty? %>
 <div class="px-1 fs-7"> <%= "Email".pluralize(emails.length) %>:
@@ -9,10 +9,7 @@
 
 	<% unless user.nil? || user.last_view.nil? %>
 	<%= tag.div "Last click: #{time_ago_in_words user.last_view} ago", class: "fs-8 mx-1" %>
-		<% if !message.nil? && (user.last_view > message.created_at) %>
-		<div class="text-success fw-bold mx-1 alert-success px-1"><%= title %></div>
-		<% end %>
-
+	<%= tag.div title, class: "text-success fw-bold mx-1 alert-success px-1" !message.nil? && (user.last_view > message.created_at) %>
 	<% end %>
 
 <% end %>
