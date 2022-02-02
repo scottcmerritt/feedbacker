@@ -1,7 +1,6 @@
 <% user = current_user if local_assigns[:user].nil? %>
 <% link_only = true if local_assigns[:link_only].nil? %>
 <% wrap_css = "bg-white border" if local_assigns[:wrap_css].nil? %>
-
 <% unless user.nil? %>
 <% if link_only %>
 <div class="px-2 d-flex <%= wrap_css %>" style="line-height: 50px;">
@@ -16,7 +15,7 @@
 
 <% else %>
 <div class="rounded-end p-2 d-inline-block <%= wrap_css %>">
-<a class="nodec d-flex" data-bs-toggle="collapse" data-bs-target="#myProfile" href="#myProfile"><%= icon(icon:"user") %> <%= user.email %></a>
+<a class="nodec d-flex align-items-center" data-bs-toggle="collapse" data-bs-target="#myProfile" href="#myProfile"><%= icon(icon:"user",icon_css:"me-1") %> <%= user.email %></a>
 <div id="myProfile" class="collapse">
 [profile]
 	<div class="">

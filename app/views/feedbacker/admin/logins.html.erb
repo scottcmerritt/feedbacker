@@ -11,7 +11,7 @@
 	<div class="col-6">
 		<%= default_h "Successful logins" %>
 		
-		<% recent_logins = Impression.where(controller_name:"sessions",action_name:"create").where("NOT user_id is null") %>
+		<% recent_logins = Impression.where(controller_name:"sessions",action_name:"create").where("NOT user_id is null").order("created_at DESC") %>
 		<div class="d-flex align-items-center mb-1">
 
 			<div class="d-flex align-items-center flex-fill pb-0" style="overflow-x:scroll;scrollbar-width:thin;">
