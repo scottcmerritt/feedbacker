@@ -36,7 +36,7 @@
 				<%= tag.span time_ago_in_words(room_message.created_at), class: "ms-auto" unless room_message.created_at.nil? %>
 				</div>
 
-				<%= render partial: "admin/parts/user_by_emails", locals: {emails:extract_emails(room_message.message)} %>
+				<%= render partial: "feedbacker/admin/parts/user_by_emails", locals: {emails:extract_emails(room_message.message)} %>
 
 			</div>
 			<% end %>

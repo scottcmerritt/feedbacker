@@ -11,7 +11,7 @@
 		<% if room_message.user.nil? %>Anonymously<% else %>by <%= room_message.user.display_name_public %><% end %>
 	</div>
 
-	<%= render partial: "admin/parts/user_by_emails", locals: {emails:extract_emails(room_message.message)} %>
+	<%= render partial: "feedbacker/admin/parts/user_by_emails", locals: {emails:extract_emails(room_message.message)} %>
 
 </div>
 <% end %>
