@@ -17,7 +17,7 @@
 			<% User.where(id:recent_logins.limit(100).pluck(:user_id).uniq).sort_by{|user| -user.last_view.to_i}.each do |user| %>
 				<div class="bg-light border" style="min-width:120px;">
 					<%= tag.div "Active #{date_fmt(user.last_view,fmt:"ago")} ago", class: "text-muted fs-8 px-2" if user.respond_to?(:last_view) && !user.last_view.nil? %>
-					<%= render partial: "users/profile_mini", locals: {user:user,link_only:false,wrap_css: ""} %>
+					<%= render partial: "users/profile_mini", locals: {user:user,wrap_css: ""} %>
 				</div>
 			<% end %> 
 			</div>
