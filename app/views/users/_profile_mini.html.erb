@@ -16,11 +16,11 @@
 
 <% else %>
 <div class="rounded-end p-2 d-inline-block <%= wrap_css %>">
-<a class="nodec" data-bs-toggle="collapse" data-bs-target="#myProfile" href="#myProfile"><%= icon(icon:"user") %> <%= user.email %></a>
+<a class="nodec d-flex" data-bs-toggle="collapse" data-bs-target="#myProfile" href="#myProfile"><%= icon(icon:"user") %> <%= user.email %></a>
 <div id="myProfile" class="collapse">
 [profile]
 	<div class="">
-		<%= tag.div raw(safe_join([icon(icon:"user-circle"),link_to(user.email, [main_app,user], class: "px-1 fs-8 text-dark")])) unless Rails.env.production? %>
+		<%= tag.div raw(safe_join([icon(icon:"user-circle",icon_css:"me-1"),link_to(user.email, [main_app,user], class: "px-1 fs-8 text-dark")])) unless Rails.env.production? %>
 		<%= render partial: "users/user_roles",locals: {user:user} unless Rails.env.production? %>
 	</div>
 </div>
