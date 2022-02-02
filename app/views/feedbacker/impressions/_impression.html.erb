@@ -1,11 +1,6 @@
 <% is_bot = Site.is_bot?(ip: impression.ip_address) %>
 
-
 <div class="border <%= is_bot ? "border-danger alert-danger" : "bg-light" %>">
-	
-
-
-
 	<% if impression.respond_to?(:session_hash) && impression.respond_to?(:request_hash) %>
 	<div class="d-flex justify-content-between px-1 fs-8">
 		<div><%= impression.session_hash %></div>

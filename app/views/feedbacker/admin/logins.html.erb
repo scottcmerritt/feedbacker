@@ -1,7 +1,7 @@
 <%= render partial: "admin/manage/header" %>
 <%= render partial: "admin/manage/menu" %>
 
-<%= default_h "Login analytics" %>
+<%= default_h "Login analytics", css: "mb-1" %>
 <%= link_to "Send message",feedbacker.admin_send_user_message_path, class:"btn btn-success my-1" if false %>
 
 <div class="row">
@@ -9,9 +9,14 @@
 		<%= render partial: "#{engine_prefix}admin/parts/message_list", locals: {title:"Failed logins",list:@failed_logins} %>
 	</div>
 	<div class="col-4">
-		<h4>Successful logins (I'll add them here)</h4>
+		<%= default_h "Successful logins" %>
+		
+		<% recent_logins = Impression.where(controller_name:"sessions",action_name:"create").where("NOT user_id is null") %>
+		<% User.where(id:recent_logins.limit(100).pluck(:id).uniq).each do |user| %>
+		<%= render partial: "users/profile_mini", locals: {user:user,link_only:false} %>
+		<% end %> 
 
-		<% Impression.where(controller_name:"sessions",action_name:"create").where("NOT user_id is null").limit(50).each do |impression| %>
+		<% recent_logins.limit(50).each do |impression| %>
 		<%= render impression unless impression.user_id.nil? %>
 		<% end %>
 	</div>

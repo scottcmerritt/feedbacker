@@ -100,7 +100,6 @@ module Feedbacker
     "bg-dark text-light btn btn-sm rounded-0 rounded-top #{margin}"
   end
 
-
   def default_h content, css:nil
     tag.div content, class: "#{default_h_css} #{css}"
   end
@@ -112,6 +111,10 @@ module Feedbacker
   def default_toggle_icons color: "dark", margin: "me-2", font: "fs-5"
     shared_css = "#{font} text-#{color} #{margin}"
     raw "<i class='fa fa-chevron-down #{shared_css} text-collapsed'></i><i class='fa fa-chevron-up #{shared_css} text-expanded'></i>"
+  end
+
+  def extract_emails message
+    message.split(" ").collect{|row| row if row.include?("@")}.compact unless message.nil?
   end
 
   # the idea is to pass the partial to this to reduce several lines of code in an .erb file

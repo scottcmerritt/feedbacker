@@ -11,29 +11,8 @@
 		<% if room_message.user.nil? %>Anonymously<% else %>by <%= room_message.user.display_name_public %><% end %>
 	</div>
 
-
-<% emails_from_msg = room_message.message.split(" ").collect{|row| row if row.include?("@")}.compact unless room_message.message.nil?  %>
-
-	<% unless emails_from_msg.empty? %>
-	<div class="px-1 fs-7"> <%= "Email".pluralize(emails_from_msg.length) %>:
-	<% emails_from_msg.each do |email_from_msg| %>
-	<% user = User.find_by(email:email_from_msg) %>
-
-	<%= link_to email_from_msg, feedbacker.admin_users_path(q:email_from_msg), class: "mx-1 nodec fs-7 fw-bold" unless email_from_msg.nil? %>
-	<%= link_to icon(icon:"address-card"), [main_app,user], class: "m-1" unless user.nil? %>
-
-	<% unless user.nil? || user.last_view.nil? %>
-	<%= tag.div "Last click: #{time_ago_in_words user.last_view} ago", class: "fs-8 mx-1" %>
-	<% if user.last_view > room_message.created_at %>
-	<div class="text-success fw-bold mx-1 alert-success px-1">They were able to USE their account AFTER this failure</div>
-	<% end %>
-
-	<% end %>
-
-	<% end %>
-	</div>
-
-	<% end %>
+	<% emails_from_msg = extract_emails room_message.message %>
+	<%= render partial: "admin/parts/user_by_emails", locals: {emails:emails_from_msg} %>
 
 </div>
 <% end %>
