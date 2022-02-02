@@ -21,11 +21,10 @@
 		<% end %>
 	</div>
 	<div class="col-3">
-		<h5 class="p-1 px-2 bg-dark text-light d-flex">Spammers caught <%= tag.span @spam_msgs.count, class: "badge bg-light text-dark ms-1" %>
+		<h5 class="py-2 fs-6 px-2 bg-dark text-light d-flex align-items-center">Spammers caught <%= tag.span @spam_msgs.count, class: "badge bg-light text-dark ms-1" %>
 			
-			<%= link_to "Show all", feedbacker.admin_messages_path({spam:1}), class: "ms-auto px-1" unless params[:spam] %>
+			<%= link_to "Show all", feedbacker.admin_messages_path({spam:1}), class: "ms-auto px-1", style:"min-width: 65px;" unless params[:spam] %>
 		</h5>
-
 
 		<% @spam_msgs.limit(params[:spam] ? 100 : 10).each do |room_message| %>
 			<% unless room_message.id.nil? %>
