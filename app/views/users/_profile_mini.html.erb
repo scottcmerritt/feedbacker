@@ -1,9 +1,10 @@
 <% user = current_user if local_assigns[:user].nil? %>
 <% link_only = true if local_assigns[:link_only].nil? %>
+<% wrap_css = "bg-white border" if local_assigns[:wrap_css].nil? %>
 
 <% unless user.nil? %>
 <% if link_only %>
-<div class="bg-white border px-2 d-flex" style="line-height: 50px;">
+<div class="px-2 d-flex <%= wrap_css %>" style="line-height: 50px;">
 	<a href="<%= main_app.user_path(user) %>" class="nodec d-flex align-items-center" style="line-height: 45px;">
 		<%= render partial: "shared/best_image", locals: {target:user,img_css: "user me-1 img-fluid rounded-circle",default_icon:"user",wrap_css:"",size:"nano"} %>
 		<div class="d-inline-block ps-1">
@@ -14,7 +15,7 @@
 </div>
 
 <% else %>
-<div class="bg-white border rounded-end p-2 d-inline-block">
+<div class="rounded-end p-2 d-inline-block <%= wrap_css %>">
 <a class="nodec" data-bs-toggle="collapse" data-bs-target="#myProfile" href="#myProfile"><%= icon(icon:"user") %> <%= user.email %></a>
 <div id="myProfile" class="collapse">
 [profile]
