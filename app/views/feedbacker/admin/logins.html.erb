@@ -31,7 +31,7 @@
 			<% unless room_message.id.nil? %>
 			<div class="bg-light mb-1">
 				<div class="p-1 px-2 border d-flex align-items-top">
-				<%= link_to room_message.message, feedbacker.admin_messages_path(id:room_message.id), style: "white-space: pre-wrap;" %>
+				<%= room_message.message.include?("Spam detected from registration:") ? "Spam detected" : link_to(room_message.message, feedbacker.admin_messages_path(id:room_message.id), style: "white-space: pre-wrap;") %>
 
 				<%= tag.span time_ago_in_words(room_message.created_at), class: "ms-auto fs-8", style:"min-width:55px;" unless room_message.created_at.nil? %>
 				</div>
