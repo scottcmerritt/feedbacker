@@ -9,7 +9,7 @@
 
 	<% unless user.nil? || user.last_view.nil? %>
 	<%= tag.div "Last click: #{time_ago_in_words user.last_view} ago", class: "fs-8 mx-1" %>
-	<%= tag.div title, class: "text-success fw-bold mx-1 alert-success px-1" !message.nil? && (user.last_view > message.created_at) %>
+	<%= tag.div title, class: "text-success fw-bold mx-1 alert-success px-1" if !message.nil? && (user.last_view > message.created_at) %>
 	<% end %>
 
 <% end %>
