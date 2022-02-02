@@ -12,12 +12,12 @@
 		<%= default_h "Successful logins" %>
 		
 		<% recent_logins = Impression.where(controller_name:"sessions",action_name:"create").where("NOT user_id is null") %>
-		<% User.where(id:recent_logins.limit(100).pluck(:id).uniq).each do |user| %>
+		<% User.where(id:recent_logins.limit(100).pluck(:user_id).uniq).each do |user| %>
 		<%= render partial: "users/profile_mini", locals: {user:user,link_only:false} %>
 		<% end %> 
 
 		<% recent_logins.limit(50).each do |impression| %>
-		<%= render impression unless impression.user_id.nil? %>
+		<%= tag.div render(impression), class: "mb-1" unless impression.user_id.nil? %>
 		<% end %>
 	</div>
 	<div class="col-3">
