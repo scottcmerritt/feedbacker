@@ -12,9 +12,20 @@
 		<%= default_h "Successful logins" %>
 		
 		<% recent_logins = Impression.where(controller_name:"sessions",action_name:"create").where("NOT user_id is null") %>
-		<% User.where(id:recent_logins.limit(100).pluck(:user_id).uniq).each do |user| %>
-		<%= render partial: "users/profile_mini", locals: {user:user,link_only:false} %>
-		<% end %> 
+		<div class="d-flex align-items-center mb-1">
+
+			<div class="d-flex align-items-center flex-fill pb-0" style="overflow-x:scroll;scrollbar-width:thin;">
+			<% User.where(id:recent_logins.limit(100).pluck(:user_id).uniq).each do |user| %>
+				<div class="bg-light border">
+					<%= tag.div "Active #{date_fmt(user.last_view,fmt:"ago")} ago", class: "text-muted fs-8px-2" if user.respond_to?(:last_view) && !user.last_view.nil? %>
+					<%= render partial: "users/profile_mini", locals: {user:user,link_only:false} %>
+				</div>
+			<% end %> 
+			</div>
+		</div>
+
+
+
 
 		<% recent_logins.limit(50).each do |impression| %>
 		<%= tag.div render(impression), class: "mb-1" unless impression.user_id.nil? %>
