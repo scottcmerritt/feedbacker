@@ -1,6 +1,6 @@
 <% title = "They were able to USE their account AFTER this failure" %>
 <% unless emails.empty? %>
-<div class="px-1 fs-7"> <%= "Email".pluralize(emails_from_msg.length) %>:
+<div class="px-1 fs-7"> <%= "Email".pluralize(emails.length) %>:
 <% emails.each do |email| %>
 	<% user = User.find_by(email:email) %>
 	<%= link_to email, feedbacker.admin_users_path(q:email), class: "mx-1 nodec fs-7 fw-bold" unless email.nil? %>
