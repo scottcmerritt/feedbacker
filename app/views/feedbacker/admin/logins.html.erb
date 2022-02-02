@@ -5,10 +5,10 @@
 <%= link_to "Send message",feedbacker.admin_send_user_message_path, class:"btn btn-success my-1" if false %>
 
 <div class="row">
-	<div class="col-4">	
+	<div class="col-3">	
 		<%= render partial: "#{engine_prefix}admin/parts/message_list", locals: {title:"Failed logins",list:@failed_logins} %>
 	</div>
-	<div class="col-4">
+	<div class="col-6">
 		<%= default_h "Successful logins" %>
 		
 		<% recent_logins = Impression.where(controller_name:"sessions",action_name:"create").where("NOT user_id is null") %>
@@ -20,7 +20,7 @@
 		<%= render impression unless impression.user_id.nil? %>
 		<% end %>
 	</div>
-	<div class="col-4">
+	<div class="col-3">
 		<h5 class="p-1 px-2 bg-dark text-light d-flex">Spammers caught <%= tag.span @spam_msgs.count, class: "badge bg-light text-dark ms-1" %>
 			
 			<%= link_to "Show all", feedbacker.admin_messages_path({spam:1}), class: "ms-auto px-1" unless params[:spam] %>
