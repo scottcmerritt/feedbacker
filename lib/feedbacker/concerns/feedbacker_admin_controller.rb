@@ -61,6 +61,11 @@ module Feedbacker
         @downloads_public = Impression.where(action_name:"download_file",user_id:nil)
         @downloads = Impression.where("action_name = ? AND user_id > 0","download_file")
 
+        unless params[:all]
+          @downloads_public = @downloads_public.where("created_at > ?",30.days.ago)
+          @downloads = @downloads.where("created_at > ?",30.days.ago)
+        end
+
         @downloads_public_top   = Impression.select("impressionable_id,impressionable_type,COUNT(impressionable_id) as downloads,COUNT(DISTINCT(ip_address)) as downloaders").where(action_name:"download_file",user_id:nil,impressionable_type:"Book").group(:impressionable_type,:impressionable_id).order("COUNT(impressionable_id) DESC")
         @downloads_top      = Impression.select("impressionable_id,impressionable_type,COUNT(impressionable_id) as downloads,COUNT(DISTINCT(user_id)) as downloaders").where("action_name = ? AND user_id > 0 AND impressionable_type = ?","download_file","Book").group(:impressionable_type,:impressionable_id).order("COUNT(impressionable_id) DESC")
 
@@ -336,6 +341,8 @@ def cleanup
       @visitors = @visitors.page(params[:page]).per(@limit)
     end
 
+    # admin/visits/locations
+    # get unique ip addresses
     def visit_locations
       @unique_ip_addresses = Impression.select("DISTINCT(ip_address)")
       @unique_user_ids = Impression.select("DISTINCT(user_id)")
