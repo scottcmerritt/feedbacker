@@ -577,7 +577,7 @@ def cleanup
       manually_confirm_user! if params[:confirm_user]
 
       #@user = User.find_by(id: params[:user_id]) unless params[:user_id].nil?
-      
+
       if params[:spammers]
         users = User.spam
       else

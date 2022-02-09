@@ -24,6 +24,21 @@
 		</div>
 
 
+		<%= default_h "Confirmed (past month)" %>
+
+		<div class="d-flex align-items-center mb-1">
+
+			<div class="d-flex align-items-center flex-fill pb-0" style="overflow-x:scroll;scrollbar-width:thin;">
+			<% User.confirmed.order("confirmed_at DESC").where("confirmed_at > ?",30.days.ago).each do |user| %>
+				<div class="bg-light border" style="min-width:120px;">
+					<%= tag.div "Confirmed #{date_fmt(user.confirmed_at,fmt:"ago")} ago", class: "text-muted fs-8 px-2" %>
+					<%= render partial: "users/profile_mini", locals: {user:user,wrap_css: ""} %>
+				</div>
+			<% end %> 
+			</div>
+		</div>
+
+
 
 
 		<% recent_logins.limit(50).each do |impression| %>
