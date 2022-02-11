@@ -87,6 +87,7 @@ module Feedbacker
           @views = @views.where("user_id is NULL AND message LIKE ?","%#{params[:search]}%")
         else
           @views = @views.where(user_id:params[:user_id]) unless params[:user_id].blank?
+          @views = @views.where(ip_address:params[:ip_address]) unless params[:ip_address].blank?
         end
 
         @views_count = @views.count
