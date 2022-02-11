@@ -4,6 +4,7 @@
 <div class="px-1 fs-7"> <%= "Email".pluralize(emails.length) %>:
 <% emails.each do |email| %>
 	<% user = User.find_by(email:email) %>
+
 	<%= link_to email, feedbacker.admin_users_path(q:email), class: "mx-1 nodec fs-7 fw-bold" unless email.nil? %>
 	<%= link_to icon(icon:"address-card"), [main_app,user], class: "m-1" unless user.nil? %>
 
@@ -11,7 +12,7 @@
 	<%= tag.div "Last click: #{time_ago_in_words user.last_view} ago", class: "fs-8 mx-1" %>
 	<%= tag.div title, class: "text-success fw-bold mx-1 alert-success px-1" if !message.nil? && (user.last_view > message.created_at) %>
 	<% else %>
-	<%= tag.div "No account found!", class: "text-danger fw-bold mx-1 alert-success px-1" if user.nil? %>
+	<%= tag.div "No account found!", class: "text-danger fw-bold mx-1 alert-danger px-1" if user.nil? %>
 	<% end %>
 
 <% end %>
