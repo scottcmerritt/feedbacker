@@ -57,10 +57,10 @@
 				
 				<div class="tab-content" id="data-tabContent">
   					<div class="tab-pane fade show active" id="dataDownloads" role="tabpanel" aria-labelledby="view1">
-  	<% unless @downloads.nil? %>  	
+		  	<% unless @downloads.nil? %>
+					<%= column_chart @downloads_public.where("created_at > ?",7.days.ago).group_by_hour(:created_at).count, title: "Downloads/hr (public)" %>
+					<%= column_chart @downloads.where("created_at > ?",7.days.ago).group_by_hour(:created_at).count, title: "Downloads/hr (signed in)" %>
 
-					<%= column_chart @downloads_public.group_by_hour(:created_at).count, title: "Downloads/hr (public)" %>
-					<%= column_chart @downloads.group_by_hour(:created_at).count, title: "Downloads/hr (signed in)" %>
 					<%= column_chart @downloads_public.group_by_day(:created_at).count, title: "Downloads/day (public)" %>
 					<%= column_chart @downloads.group_by_day(:created_at).count, title: "Downloads/day (signed in)" %>
 			<% end %>
