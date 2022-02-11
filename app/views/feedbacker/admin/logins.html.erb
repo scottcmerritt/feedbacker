@@ -38,9 +38,6 @@
 			</div>
 		</div>
 
-
-
-
 		<% recent_logins.limit(50).each do |impression| %>
 		<%= tag.div render(impression), class: "mb-1" unless impression.user_id.nil? %>
 		<% end %>
