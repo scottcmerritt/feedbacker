@@ -15,11 +15,11 @@
 	<%= render partial: "feedbacker/admin/parts/user_by_emails", locals: {message:room_message,emails:room_message.extract_emails} %>
 	<% end %>
 
-	<% unless room_message.accounts_by_emails.empty? && is_failed_login %>
+
 	<div class="p-1 px-2 border d-flex align-items-top">
 	<%= link_to room_message.message.gsub("LOGIN::FAIL User FAILED to login","Login failed"), feedbacker.admin_messages_path(id:room_message.id), style: "white-space: pre-wrap;", class: "text-dark fs-8" %>
 	</div>
-	<% end %>
+
 
 </div>
 <% end %>
