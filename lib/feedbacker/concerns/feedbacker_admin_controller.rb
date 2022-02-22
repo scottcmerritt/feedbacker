@@ -650,6 +650,8 @@ def cleanup
       end
 
       def html_sandbox
+        @tight_layout = true
+        
         #require 'diffy'
         @diffed = Diffy::Diff.new("prev title OLD", "current title",:include_diff_info=>false).to_s(:html)
         @translate = Feedbacker::Translate.find_by(id:params[:translate_id])
