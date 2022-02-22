@@ -47,9 +47,24 @@
 </div>' %>
 
 
-<div class="bg-white border p-2 my-2 mt-5">
-	<h4 class="text-dark"><span class="text-black">HTML Ideas:</span> Copy and paste a section above to see how it looks</h4>
-	
+
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#htmlIdeas">
+  HTML Ideas
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="htmlIdeas" tabindex="-1" aria-labelledby="htmlIdeasLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">HTML Ideas:</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+Copy and paste a sample code to see how it looks
+
 	<div>
 		<div>Fonts: https://getbootstrap.com/docs/5.0/content/typography/</div>
 		<div>Colors: https://getbootstrap.com/docs/5.0/customize/color/</div>
@@ -79,4 +94,13 @@
 
 	<span class="d-none d-sm-block">This would show on medium and large screens</span>
 	<span class="d-block d-sm-none">This would show on ONLY mobile/small screens</span>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
 </div>
