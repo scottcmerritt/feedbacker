@@ -1,0 +1,21 @@
+<% if @translate %>
+<%= simple_form_for([feedbacker,@translate], :html=> { class: 'bg-white border p-2 rounded' }) do |form| %>
+<%= form.input :phrase, as: :text, :input_html=>{rows:13,id:"editor"} %>
+<div class="text-center my-2 d-flex justify-content-between col-12 col-sm-10 mx-auto">
+    <div></div>
+
+    <div class="d-flex">
+    <%= form.button :submit,"Save", class: "btn-sm btn-primary" %>
+    <%= link_to "Cancel", feedbacker.translate_path(@translate), class: "ms-1 btn btn-sm btn-outline-secondary" %>
+    <%= link_to icon_text("Delete phrase","trash"), [feedbacker,@translate], method: :delete, class: "ms-5 btn btn-sm btn-danger text-light" unless @translate.id.nil? %>
+    </div>
+    <div></div>
+    
+</div>
+
+<% end %>
+<% else %>
+
+<textarea id="editor" style="width:100%;height:100%;" rows="10"><% if @translate %><%= @translate.phrase %><% else %><%= sample_icons %><% end %>
+</textarea>
+<% end %>

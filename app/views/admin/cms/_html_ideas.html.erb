@@ -1,0 +1,82 @@
+<% sample_icons = '<span>Anything you type here will render to the right as html</span>
+
+<!- Sample columns, link with an icon -->
+<div class="row">
+
+<div class="col-4 border bg-dark">
+<a href="https://www.maktaba.org/books/teachers" class="p-2 d-flex align-items-center nodec"><i class="fa fa-school fs-3 text-info"></i>
+<span class="px-3 fs-4 text-light">Teachers</span>
+</a>
+</div>
+
+<div class="col-4 border bg-dark">
+<a href="https://www.maktaba.org/books/youth" class="p-2 d-flex align-items-center nodec"><i class="fa fa-child fs-3 text-success"></i>
+<span class="px-3 fs-4 text-light">Youth</span>
+</a>
+</div>
+
+<div class="col-4 border bg-dark">
+<a href="https://www.maktaba.org/books/farmers" class="p-2 d-flex align-items-center nodec"><i class="fa fa-seedling fs-3 text-primary"></i>
+<span class="px-3 fs-4 text-light">Farmers</span>
+</a>
+</div>
+
+</div>
+
+' %>
+
+<% sample_rows = '<!- Sample rows -->
+<div class="bg-white p-2 border border-dark">row 1</div>
+<div class="bg-white p-2 border border-dark rounded my-1">row 2</div>
+<div class="bg-dark text-light p-2 my-1 rounded">row 3</div>' %>
+
+<% sample_html = '<!- Sample bold text -->
+<div>
+<div class="text-dark">
+<div class="fw-bold">testing</div>
+<h4>Testing</h4>
+
+</div>
+</div>' %>
+
+<% sample2_html = '<!- Sample columns -->
+<div class="row">
+<div class="col-4 border bg-white"><div class="p-3">Section 1</div></div>
+<div class="col-4 border bg-white">Section 1</div>
+<div class="col-4 border bg-white">Section 1</div>
+</div>' %>
+
+
+<div class="bg-white border p-2 my-2 mt-5">
+	<h4 class="text-dark"><span class="text-black">HTML Ideas:</span> Copy and paste a section above to see how it looks</h4>
+	
+	<div>
+		<div>Fonts: https://getbootstrap.com/docs/5.0/content/typography/</div>
+		<div>Colors: https://getbootstrap.com/docs/5.0/customize/color/</div>
+		<div>To use these, do <span class="text-blue">Blue text</span></div>
+
+		.text-blue, 
+	.text-indigo,
+	.text-purple, 
+	.text-pink,
+	.text-red, 
+	.text-orange, 
+	.text-yellow, 
+	.text-green, 
+	.text-teal, 
+	.text-cyan
+	</div>
+
+	<pre><code><%=h sample_rows %>
+
+	<%=h sample_icons %>
+
+	<%=h sample_html %>
+
+	<%=h sample2_html %>
+	</code>
+	</pre>
+
+	<span class="d-none d-sm-block">This would show on medium and large screens</span>
+	<span class="d-block d-sm-none">This would show on ONLY mobile/small screens</span>
+</div>

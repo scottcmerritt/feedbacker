@@ -118,6 +118,7 @@ module Feedbacker
 
     def active_users minutes_ago: 60
       user_list = User.not_spam.each.collect{|user| user if user.online? || (user.last_activity > minutes_ago.minutes.ago) }.compact.sort_by{|user| user.last_activity}.reverse
+      
       ids = user_list.pluck(:id)
       User.where(id: ids).order_by_ids(ids)
     end
