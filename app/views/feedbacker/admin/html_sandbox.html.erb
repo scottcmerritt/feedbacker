@@ -66,11 +66,12 @@ jQuery(document).ready(function($) {
 
 <div class="splitter border border-dark border-2">
     <div id="first">
-    	<span class="fw-bold">LOCAL: Preview HTML as you type...you must save manually!</span>
+    	<span class="fw-bold px-1 fs-8">Preview HTML as you type...you must save manually!</span>
 		<%= render partial: "admin/cms/editor_input" %>
     </div>
     <div id="separator" ></div>
     <div id="second" >
+			
 
 
 	<div id="showDiff" class="collapse">
@@ -95,6 +96,9 @@ jQuery(document).ready(function($) {
 	<div>
 		<a href="#showCode" class="ms-auto bg-light border me-1 my-1 fs-7 px-1 nodec" data-bs-target="#showCode" data-bs-toggle="collapse" aria-expanded="false" id="showCodeLink">Source code</a>
 		<a href="#sandbox" class="bg-light border me-1 my-1 fs-7 px-1 nodec" data-bs-target="#sandbox" data-bs-toggle="collapse" aria-expanded="true" id="showSandbox">Preview</a>
+
+		<%= render partial: "admin/cms/html_ideas" %>
+		
 	</div>
 
 	<div class="fw-bold d-flex align-items-center">Live html preview <span id="sandbox_status" class="mx-1" style="height:22px;"></span></div>
@@ -111,7 +115,7 @@ jQuery(document).ready(function($) {
 </div>
 
 
-<%= render partial: "admin/cms/html_ideas" %>
+
 
 
 
