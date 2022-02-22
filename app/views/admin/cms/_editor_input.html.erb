@@ -1,12 +1,12 @@
 <% if @translate %>
 <%= simple_form_for([feedbacker,@translate], :html=> { class: 'bg-white border p-2 rounded' }) do |form| %>
-<div class="text-center my-2 d-flex justify-content-between col-12 col-sm-10 mx-auto">
+<div class="text-center d-flex justify-content-between col-12 col-sm-10 mx-auto">
     <div></div>
 
     <div class="d-flex">
-    <%= form.button :submit,"Save", class: "btn-sm btn-primary" %>
-    <%= link_to "Cancel", feedbacker.translate_path(@translate), class: "ms-1 btn btn-sm btn-outline-secondary" %>
-    <%= link_to icon_text("Delete phrase","trash"), [feedbacker,@translate], method: :delete, class: "ms-5 btn btn-sm btn-danger text-light" unless @translate.id.nil? %>
+    <%= form.button :submit,"Save", class: "btn btn-tiny btn-primary py-1" %>
+    <%= link_to "Cancel", feedbacker.translate_path(@translate), class: "ms-1 btn btn-tiny py-1 btn-outline-secondary" %>
+    <%= link_to icon_text("Delete phrase","trash"), [feedbacker,@translate], method: :delete, class: "ms-5 btn btn-tiny py-1 btn-danger text-light" unless @translate.id.nil? %>
     </div>
     <div></div>
     
