@@ -2,7 +2,8 @@
 .admin_active {background-color: orange !important;}
 </style>
 
-<% links = {"Visits": :admin_visits,"Referrers": :admin_visit_referrers, "Locations": :admin_visit_locations} %>
+<% links = {"Visits": :admin_visits,"Referrers": :admin_visit_referrers, "Locations (old)": :admin_visit_locations, "Locations (new)": :admin_public_locations} %>
+
 <% link_css = "me-1 btn btn-sm bg-light text-dark rounded-0 rounded-top" %>
 <div class="d-flex align-items-center">
 <% links.each do |k,v| %>
