@@ -51,21 +51,21 @@
 	<div class="col-12">
 		<div class="d-flex align-items-center py-1 fs-8">
 			Filter:
-			<%= link_to icon(icon:"trash",lbl: @country_code),browse_parameters.merge({country_code:nil,state_code:nil,city_code:nil}), class: "btn btn-sm bg-light ms-1 me-1 border" if @country_code %>
+			<%= link_to icon(icon:"trash",lbl: @country_code),feedbacker.url_for(browse_parameters.merge({country_code:nil,state_code:nil,city_code:nil})), class: "btn btn-sm bg-light ms-1 me-1 border" if @country_code %>
 
-			<%= link_to icon(icon:"trash",lbl: @state_code),browse_parameters.merge({state_code:nil}), class: "btn btn-sm bg-light ms-1 me-1 border" unless @state_code.blank? %>
+			<%= link_to icon(icon:"trash",lbl: @state_code),feedbacker.url_for(browse_parameters.merge({state_code:nil})), class: "btn btn-sm bg-light ms-1 me-1 border" unless @state_code.blank? %>
 
 		<% unless @country_code %>
 		<% @views_by_country.each do |row| %>
-			<%= link_to Site.country_name_from_code(row["country"]),browse_parameters.merge({country_code:row["country"]}), class: "ms-2 nodec #{"fw-bold text-dark" if @country_code == row["country"] }" %>
-			<%= link_to icon(icon:"trash"),browse_parameters.merge({country_code:nil}) if false && @country_code == row["country"] %>
+			<%= link_to Site.country_name_from_code(row["country"]),feedbacker.url_for(browse_parameters.merge({country_code:row["country"]})), class: "ms-2 nodec #{"fw-bold text-dark" if @country_code == row["country"] }" %>
+			<%= link_to icon(icon:"trash"),feedbacker.url_for(browse_parameters.merge({country_code:nil})) if false && @country_code == row["country"] %>
 		<% end %>
 		<% end %>
 
 		<% if @country_code %>
 		<% @views_by_state.each do |row| %>
-			<%= link_to row["state"],browse_parameters.merge({state_code:row["state"]}), class: "ms-2 nodec #{"fw-bold text-dark" if @state_code == row["state"] }" unless row["state"].blank? %>
-			<%= link_to icon(icon:"trash"),browse_parameters.merge({state_code:nil}) if false && @state_code == row["state"] %>
+			<%= link_to row["state"],feedbacker.url_for(browse_parameters.merge({state_code:row["state"]})), class: "ms-2 nodec #{"fw-bold text-dark" if @state_code == row["state"] }" unless row["state"].blank? %>
+			<%= link_to icon(icon:"trash"),feedbacker.url_for(browse_parameters.merge({state_code:nil})) if false && @state_code == row["state"] %>
 		<% end %>
 		<% end %>
 
@@ -98,15 +98,15 @@
 
 	<%= default_h "Logged impressions", css: "bg-gradient my-1" %>
 	<% if params[:show_views] %>
-	<%= paginate @impressions %>
+	<%= feedbacker_paginate @impressions,page:params[:page] %>
 	<% @impressions.each do |impression| %>
 	<%= tag.div render(impression), class: "mb-2" %>
 	<% end %>
-	<%= paginate @impressions %>
+	<%= feedbacker_paginate @impressions, page: params[:page] %>
 	<%= @impressions.as_json if params[:debug] %>
 	<% else %>
 	<div class="p-3">
-		<%= link_to "Show views", browse_parameters.merge({show_views:1}), class:"btn border bg-dark text-light" %>
+		<%= link_to "Show views", feedbacker.url_for(browse_parameters.merge({show_views:1})), class:"btn border bg-dark text-light" %>
 
 	</div>
 	<% end %>
