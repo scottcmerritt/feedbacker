@@ -5,7 +5,8 @@
 <%= default_h "Locations of public traffic", css: "bg-gradient" %>
 <div class="px-2 fs-8"><span class="fw-bold"><%= num_format @percent_not_geocoded,2 %>% NOT geocoded</span>
 
-<span class="ms-2">(<%= num_comma @count_not_geocoded %> out of <%= num_comma @count_all %>)</span>
+<span class="mx-2">(<%= num_comma @count_not_geocoded %> out of <%= num_comma @count_all %>)</span>
+<%= link_to "Geocode recent", main_app.admin_bot_analysis_path({not_logged_in:1,cache:1,limit:200,offset:0}) %>
 </div>
 
 <form method="get" target="" class="mt-1">
