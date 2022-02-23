@@ -3,9 +3,9 @@
 <%= render partial: "#{engine_prefix}admin/parts/visits_menu" %>
 
 <%= default_h "Locations of public traffic", css: "bg-gradient" %>
-<div class="px-2 fs-8"><span class="fw-bold"><%= @percent_not_geocoded %>% NOT geocoded</span>
+<div class="px-2 fs-8"><span class="fw-bold"><%= num_format @percent_not_geocoded,2 %>% NOT geocoded</span>
 
-<span class="ms-2">(<%= @count_not_geocoded %> out of <%= @count_all %>)</span>
+<span class="ms-2">(<%= num_comma @count_not_geocoded %> out of <%= num_comma @count_all %>)</span>
 </div>
 
 <form method="get" target="" class="mt-1">
