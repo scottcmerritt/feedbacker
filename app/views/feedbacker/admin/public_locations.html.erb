@@ -1,0 +1,113 @@
+<%= render partial: "admin/manage/header" %>
+<%= render partial: "admin/manage/menu" %>
+<%= default_h "Locations of public traffic", css: "bg-gradient" %>
+
+<form method="get" target="" class="mt-1">
+<div class="d-inline-block">
+
+<div class="d-inline-block me-2">
+	Anon: <input type="checkbox" name="is_anon" <%= "checked='true'" if @is_anon %>>
+</div>
+<div class="d-inline-block me-2">
+	User:
+	<input type="checkbox" name="is_user" <%= "checked='true'" if @is_user %>>
+</div>
+
+<div class="d-inline-block">
+	Within (days)
+<input type="text" name="within_days" value="<%= @within_days %>"  style="width:100px;">
+</div>
+
+<div class="d-inline-block ms-3">
+	# of countries
+<input type="text" name="num_countries" value="<%= @num_countries %>" style="width:65px;">
+</div>
+
+<% if @country_code %>
+<div class="d-inline-block ms-3">
+	# of states
+<input type="text" name="num_states" value="<%= @num_states %>" style="width:65px;">
+</div>
+<% end %>
+
+<% if @state_code %>
+<div class="d-inline-block ms-3">
+	# of cities
+<input type="text" name="num_cities" value="<%= @num_cities %>" style="width:65px;">
+</div>
+<% end %>
+
+<%= tag.input type:"hidden", value: @country_code,name:"country_code" if @country_code %>
+<%= tag.input type:"hidden", value: @state_code,name:"state_code" if @state_code %>
+<%= tag.input type:"hidden", value: @city_code,name:"city_code" if @city_code %>
+
+
+<input type="submit" value="Update">
+
+</div>
+</form>
+
+<div class="row bg-white border">
+	<div class="col-12">
+		<div class="d-flex align-items-center py-1 fs-8">
+			Filter:
+			<%= link_to icon(icon:"trash",lbl: @country_code),browse_parameters.merge({country_code:nil,state_code:nil,city_code:nil}), class: "btn btn-sm bg-light ms-1 me-1 border" if @country_code %>
+
+			<%= link_to icon(icon:"trash",lbl: @state_code),browse_parameters.merge({state_code:nil}), class: "btn btn-sm bg-light ms-1 me-1 border" unless @state_code.blank? %>
+
+		<% unless @country_code %>
+		<% @views_by_country.each do |row| %>
+			<%= link_to Site.country_name_from_code(row["country"]),browse_parameters.merge({country_code:row["country"]}), class: "ms-2 nodec #{"fw-bold text-dark" if @country_code == row["country"] }" %>
+			<%= link_to icon(icon:"trash"),browse_parameters.merge({country_code:nil}) if false && @country_code == row["country"] %>
+		<% end %>
+		<% end %>
+
+		<% if @country_code %>
+		<% @views_by_state.each do |row| %>
+			<%= link_to row["state"],browse_parameters.merge({state_code:row["state"]}), class: "ms-2 nodec #{"fw-bold text-dark" if @state_code == row["state"] }" unless row["state"].blank? %>
+			<%= link_to icon(icon:"trash"),browse_parameters.merge({state_code:nil}) if false && @state_code == row["state"] %>
+		<% end %>
+		<% end %>
+
+		</div>
+	</div>
+
+	<div class="col-6">	
+		<% unless @country_code %>
+		<%= tag.div pie_chart(@country_views_filtered,title:"Views/country"), class: "bg-light border p-1 my-1" %>
+		<%= @country_views_filtered.as_json if params[:debug] %>
+		<% else %>
+
+		<%= tag.div pie_chart(@state_views_filtered,title:"Views/state"), class: "bg-light border p-1 my-1" %>
+		<%= @state_views_filtered.as_json if params[:debug] %>
+		<% end %>
+
+	</div>
+		<div class="col-6">
+			
+			<% if @state_code %>
+			<%= tag.div pie_chart(@city_views_filtered,title:"Views/city"), class: "bg-light border p-1 my-1" %>
+				<%= @city_views_filtered.as_json if params[:debug] %>
+
+			<% end %>
+
+
+		</div>
+	</div>
+
+
+	<%= default_h "Logged impressions", css: "bg-gradient my-1" %>
+	<% if params[:show_views] %>
+	<%= paginate @impressions %>
+	<% @impressions.each do |impression| %>
+	<%= tag.div render(impression), class: "mb-2" %>
+	<% end %>
+	<%= paginate @impressions %>
+	<%= @impressions.as_json if params[:debug] %>
+	<% else %>
+	<div class="p-3">
+		<%= link_to "Show views", browse_parameters.merge({show_views:1}), class:"btn border bg-dark text-light" %>
+
+	</div>
+	<% end %>
+

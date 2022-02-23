@@ -53,6 +53,7 @@ Feedbacker::Engine.routes.draw do
 	match '/admin/visitsor/actions' => 'admin#visitor_actions', :as=> :admin_visitor_actions, :via=>[:get,:post]
 	match '/admin/visits/referrers' => 'admin#visit_referrers', :as=> :admin_visit_referrers, :via=>:get
 	match '/admin/visits/locations' => 'admin#visit_locations', :as=> :admin_visit_locations, :via=>:get
+	match '/admin/public/locations' => 'admin#public_locations', :as=> :admin_public_locations, :via=>:get
 
 	match '/admin/visits' => 'admin#visits', :as=> :admin_visits, :via=>:get
 

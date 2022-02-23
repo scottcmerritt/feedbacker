@@ -342,6 +342,75 @@ def cleanup
       @visitors = @visitors.page(params[:page]).per(@limit)
     end
 
+    def public_locations
+
+      @country_code = params[:country_code]
+      @state_code = params[:state_code]
+
+      @is_anon = params[:is_anon]
+      @is_user = params[:is_user]
+
+      @within_days = params[:within_days] || 30
+      @num_countries = params[:num_countries] || 10
+      @num_states = params[:num_states] || 50
+      @num_cities = params[:num_cities] || 100
+
+
+      @countries = GeocodeCache.select("country,COUNT(impressions.id) as total_views")
+      .joins("LEFT JOIN impressions ON impressions.ip_address = geocode_caches.ip_address")
+      .where("impressions.created_at > ?",@within_days.to_i.days.ago)
+
+      @countries = @countries.where("impressions.user_id is NULL") if @is_anon && !@is_user
+      @countries = @countries.where("impressions.user_id > 0") if @is_user && !@is_anon
+      @countries = @countries.where("(impressions.user_id is NULL OR impressions.user_id > 0)") if @is_user && @is_anon
+      @countries = @countries.group("country")
+
+      @states = GeocodeCache.select("country,state,COUNT(impressions.id) as total_views")
+      .joins("LEFT JOIN impressions ON impressions.ip_address = geocode_caches.ip_address")
+      .where("country = ? AND impressions.created_at > ?",@country_code, @within_days.to_i.days.ago)
+      
+      @states = @states.where("impressions.user_id is NULL") if @is_anon && !@is_user
+      @states = @states.where("impressions.user_id > 0") if @is_user && !@is_anon
+      @states = @states.where("(impressions.user_id is NULL OR impressions.user_id > 0)") if @is_user && @is_anon
+      @states = @states.group("country,state")
+
+      @cities = GeocodeCache.select("country,state,city,COUNT(impressions.id) as total_views")
+      .joins("LEFT JOIN impressions ON impressions.ip_address = geocode_caches.ip_address")
+      .where("country = ? AND state = ? AND impressions.created_at > ?",@country_code,@state_code,@within_days.to_i.days.ago)
+      
+      @cities = @cities.where("impressions.user_id is NULL") if @is_anon && !@is_user
+      @cities = @cities.where("impressions.user_id > 0") if @is_user && !@is_anon
+      @cities = @cities.where("(impressions.user_id is NULL OR impressions.user_id > 0)") if @is_user && @is_anon
+      @cities = @cities.group("country,state,city")
+
+      @views_by_country = @countries.sort_by{|row| -row.total_views}
+      @country_views_filtered = @views_by_country.collect{|row| [Site.country_name_from_code(row["country"]),row["total_views"]]}
+      @country_views_filtered = @country_views_filtered[0...@num_countries.to_i] if @num_countries
+
+      @views_by_state = @states.sort_by{|row| -row.total_views}
+      @state_views_filtered = @views_by_state.collect{|row| [row["state"],row["total_views"]]}
+      @state_views_filtered = @state_views_filtered[0...@num_states.to_i] if @num_states
+
+      @views_by_city = @cities.sort_by{|row| -row.total_views}
+      @city_views_filtered = @views_by_city.collect{|row| [(row["state"]+"/"+row["city"]),row["total_views"]]}
+      @city_views_filtered = @city_views_filtered[0...@num_cities.to_i] if @num_cities
+
+
+      @impressions = Impression.select("impressions.*").joins("LEFT JOIN geocode_caches ON impressions.ip_address = geocode_caches.ip_address")
+
+      if @country_code
+        @impressions = @impressions.where("country = ? AND state = ? AND impressions.created_at > ?",@country_code,@state_code,@within_days.to_i.days.ago) if @state_code
+        @impressions = @impressions.where("country = ? AND impressions.created_at > ?",@country_code, @within_days.to_i.days.ago) if !@state_code
+      end
+
+      @impressions = @impressions.where("impressions.user_id is NULL") if @is_anon && !@is_user
+      @impressions = @impressions.where("impressions.user_id > 0") if @is_user && !@is_anon
+      @impressions = @impressions.where("(impressions.user_id is NULL OR impressions.user_id > 0)") if @is_user && @is_anon
+
+      @impressions = @impressions.page(params[:page])
+
+    end
+
     # admin/visits/locations
     # get unique ip addresses
     def visit_locations
@@ -651,7 +720,7 @@ def cleanup
 
       def html_sandbox
         @tight_layout = true
-        
+
         #require 'diffy'
         @diffed = Diffy::Diff.new("prev title OLD", "current title",:include_diff_info=>false).to_s(:html)
         @translate = Feedbacker::Translate.find_by(id:params[:translate_id])
