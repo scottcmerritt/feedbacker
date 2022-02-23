@@ -354,12 +354,12 @@ def cleanup
 
 
       @count_not_geocoded = Impression.select("impressions.*").joins("LEFT JOIN geocode_caches ON impressions.ip_address = geocode_caches.ip_address")
-      .where("(NOT geocode_caches.ip_address is NULL AND impressions.created_at > ?) AND (country is null OR country = ?)",@within_days.to_i.days.ago,"").count
+      .where("(NOT geocode_caches.ip_address is NULL) AND impressions.created_at > ? AND (country is null OR country = ?)",@within_days.to_i.days.ago,"").count
 
       @count_all = Impression.select("impressions.*").joins("LEFT JOIN geocode_caches ON impressions.ip_address = geocode_caches.ip_address")
-      .where("(NOT geocode_caches.ip_address is NULL AND impressions.created_at > ?)",@within_days.to_i.days.ago).count
+      .where("(NOT geocode_caches.ip_address is NULL) AND impressions.created_at > ?",@within_days.to_i.days.ago).count
 
-      @percent_not_geocoded = @count_not_geocoded.to_f / @count_all
+      @percent_not_geocoded = 100*(@count_not_geocoded.to_f / @count_all)
 
       @num_countries = params[:num_countries] || 10
       @num_states = params[:num_states] || 50
