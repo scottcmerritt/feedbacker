@@ -151,25 +151,22 @@
 
 		</div>
 		<div class="col-sm-6">
-		
-		<%= feedbacker_paginate @views,page: params[:page] %>
-		<div><%= @views_count %> rows</div>
+			<%= feedbacker_paginate @views,page: params[:page] %>
+			<%= tag.div "#{@views_count} rows" if false %>
 
-		<% prev_viewer = nil %>
-
-		<% @views.each_with_index do |view,index| %>
-			
-			<% viewer = User.find_by(id:view.user_id) %>
-			<% begin %>
-			<%= render partial: "admin/analytics/view_row", locals: {view:view,viewer:viewer,prev_viewer:prev_viewer} %>
+			<% prev_viewer = nil %>
+			<% @views.each_with_index do |view,index| %>
 				
-			<% rescue Exception => ex %>
-				<%= tag.div ex, class: "alert alert-danger m-1" %>
+				<% viewer = User.find_by(id:view.user_id) %>
+				<% begin %>
+				<%= render partial: "admin/analytics/view_row", locals: {view:view,viewer:viewer,prev_viewer:prev_viewer} %>
+					
+				<% rescue Exception => ex %>
+					<%= tag.div ex, class: "alert alert-danger m-1" %>
+				<% end %>
+				<% prev_viewer = viewer %>
 			<% end %>
-			<% prev_viewer = viewer %>
-
-		<% end %>
-		<%= tag.div paginate(@views,window:1), class: "m-1" rescue "Error: Paginator" %>
+			<%= tag.div paginate(@views,window:1), class: "m-1" rescue "Error: Paginator" %>
 		</div>
 
 	</div>

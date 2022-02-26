@@ -8,7 +8,8 @@ module Feedbacker
 		def index
 			clear_misskeys!
 	#		@translations = Translate.order('translate_key_id ASC').page(params[:page])
-			@translations = Translate.select("translates.*").joins("LEFT JOIN translate_keys ON translate_keys.id = translates.translate_key_id").order('translates.created_at DESC')
+			@translations = Translate.select("translates.*").joins("LEFT JOIN translate_keys ON translate_keys.id = translates.translate_key_id")
+			.order('translates.updated_at DESC')
 			
 			
 			@translations = @translations.where("translate_keys.tdomain = ?",@tdomain) if @tdomain
