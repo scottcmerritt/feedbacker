@@ -353,7 +353,8 @@ def cleanup
       @within_days = params[:within_days] || 30
 
 
-      @count_not_geocoded = Impression.select("impressions.*").joins("LEFT JOIN geocode_caches ON impressions.ip_address = geocode_caches.ip_address")
+      @count_not_geocoded = Impression.select("impressions.*")
+      .joins("LEFT JOIN geocode_caches ON impressions.ip_address = geocode_caches.ip_address")
       .where("(NOT geocode_caches.ip_address is NULL) AND impressions.created_at > ? AND (country is null OR country = ?)",@within_days.to_i.days.ago,"").count
 
       @count_all = Impression.select("impressions.*").joins("LEFT JOIN geocode_caches ON impressions.ip_address = geocode_caches.ip_address")
@@ -416,6 +417,10 @@ def cleanup
       @impressions = @impressions.where("impressions.user_id is NULL") if @is_anon && !@is_user
       @impressions = @impressions.where("impressions.user_id > 0") if @is_user && !@is_anon
       @impressions = @impressions.where("(impressions.user_id is NULL OR impressions.user_id > 0)") if @is_user && @is_anon
+
+
+      range_param = 60.days.ago
+      @chart_data = @impressions.where("created_at >= ?",range_param).group_by_day(:created_at,range: range_param.midnight..Time.now)
 
       @impressions = @impressions.page(params[:page])
 
