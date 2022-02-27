@@ -420,7 +420,7 @@ def cleanup
 
 
       range_param = 60.days.ago
-      @chart_data = @impressions.where("created_at >= ?",range_param).group_by_day(:created_at,range: range_param.midnight..Time.now)
+      @chart_data = @impressions.where("impressions.created_at >= ?",range_param).group_by_day("impressions.created_at", range: range_param.midnight..Time.now)
 
       @impressions = @impressions.page(params[:page])
 
