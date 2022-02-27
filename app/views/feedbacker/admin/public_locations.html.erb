@@ -55,7 +55,8 @@
 </form>
 
 <% range_param = 60.days.ago %>
-<%= tag.div column_chart(@chart_data.count("DISTINCT(impressionable_id)"),title:"Unique IPs",height:100), class: "bg-light border p-1 my-1" %>
+<%= tag.div column_chart(@chart_data.count("DISTINCT(impressionable_id)"),title:"Unique Users",height:100), class: "bg-light border p-1 my-1" %>
+<%= tag.div column_chart(@chart_data.count("DISTINCT(impressions.ip_address)"),title:"Unique IPs",height:100), class: "bg-light border p-1 my-1" %>
 <%= tag.div column_chart(@chart_data.count,title:"Views",height:100), class: "bg-light border p-1 mb-1" %>
 
 
