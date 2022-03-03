@@ -66,8 +66,8 @@ module Feedbacker
           @downloads = @downloads.where("created_at > ?",30.days.ago)
         end
 
-        @downloads_public_top   = Impression.select("impressionable_id,impressionable_type,COUNT(impressionable_id) as downloads,COUNT(DISTINCT(ip_address)) as downloaders").where(action_name:"download_file",user_id:nil,impressionable_type:"Book").group(:impressionable_type,:impressionable_id).order("COUNT(impressionable_id) DESC")
-        @downloads_top      = Impression.select("impressionable_id,impressionable_type,COUNT(impressionable_id) as downloads,COUNT(DISTINCT(user_id)) as downloaders").where("action_name = ? AND user_id > 0 AND impressionable_type = ?","download_file","Book").group(:impressionable_type,:impressionable_id).order("COUNT(impressionable_id) DESC")
+        @downloads_public_top = Impression.select("impressionable_id,impressionable_type,COUNT(impressionable_id) as downloads,COUNT(DISTINCT(ip_address)) as downloaders").where(action_name:"download_file",user_id:nil,impressionable_type:"Book").group(:impressionable_type,:impressionable_id).order("COUNT(impressionable_id) DESC")
+        @downloads_top = Impression.select("impressionable_id,impressionable_type,COUNT(impressionable_id) as downloads,COUNT(DISTINCT(user_id)) as downloaders").where("action_name = ? AND user_id > 0 AND impressionable_type = ?","download_file","Book").group(:impressionable_type,:impressionable_id).order("COUNT(impressionable_id) DESC")
 
         @user_id = params[:user_id]
 

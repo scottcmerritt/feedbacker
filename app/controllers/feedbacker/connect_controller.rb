@@ -1,10 +1,35 @@
 module Feedbacker
 class ConnectController < ::ApplicationController
 	# used for "friendships" between users, AND also for indicating PUBLIC interest for items
+  before_action :authenticate_user!, only: [:engage]
 
 	def self.controller_path
-      "feedbacker/community/connect" # sets the path from app/views/... to something else
-  	end
+    "feedbacker/community/connect" # sets the path from app/views/... to something else
+  end
+
+  # '/engage/:resource/:id/:scope'
+  # engage_comment_path
+  def engage
+    @otypes = ["comment","post"]
+    @otype = params[:otype]
+    @otype = @otypes.include?(@otype) ? @otype : nil
+
+    @frame = params[:frame]
+
+    scope_keys = Feedbacker.engage_keys #{"flag"=>"flagged","like"=>"liked","love"=>"loved","agree"=>"agreed"}
+    @scope = params[:scope] if scope_keys.include?(params[:scope])
+
+    unless @scope.nil?
+      @resource = @otype == "post" ? Post.find_by(id: params[:id]) : Comment.find_by(id: params[:id])
+      if params[:undo]
+        current_user.unfavorite(@resource, scope: scope_keys[@scope].to_sym) if scope_keys[@scope]
+      else
+        current_user.favorite(@resource, scope: scope_keys[@scope].to_sym) if scope_keys[@scope]
+        @resource.announce_engage! sender:current_user, engage_key: @scope
+      end
+    end
+  end
+
 
   	def list
 

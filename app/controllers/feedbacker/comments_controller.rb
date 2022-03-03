@@ -18,24 +18,6 @@ class CommentsController < ::ApplicationController
     end
   end
 
-  # '/engage/comment/:id/:scope'
-  # engage_comment_path
-  def engage
-    @frame = params[:frame]
-
-    scope_keys = Feedbacker.engage_keys #{"flag"=>"flagged","like"=>"liked","love"=>"loved","agree"=>"agreed"}
-    @scope = params[:scope] if scope_keys.include?(params[:scope])
-
-    unless @scope.nil?
-      @comment = Comment.find_by(id: params[:id])
-      if params[:undo]
-        current_user.unfavorite(@comment, scope: scope_keys[@scope].to_sym) if scope_keys[@scope]
-      else
-        current_user.favorite(@comment, scope: scope_keys[@scope].to_sym) if scope_keys[@scope]
-        @comment.announce_engage! sender:current_user, engage_key: @scope
-      end
-    end
-  end
 
   def destroy
     @comment = Comment.find_by(id:params[:id])

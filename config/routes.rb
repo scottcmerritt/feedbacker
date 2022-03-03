@@ -6,7 +6,8 @@ Feedbacker::Engine.routes.draw do
 	resources :rooms, :room_messages # :orgs, 
 
 
-	match '/engage/comment/:id/:scope' => 'comments#engage', :as => :engage_comment, :via=> [:get,:post]
+	match '/engage/:otype/:id/:scope' => 'connect#engage', :as => :engage_resource, :via=> [:get,:post], otype: "comment"
+	
 	match "/add/connection/:otype/:id" => "connect#add", :as => :add_connection, :via=>:get
   	match "/cancel/connection/:otype/:id" => "connect#cancel", :as => :cancel_connection, :via=>:get
   	match "/connections" => "connect#list", :as => :connections, :via=>:get
