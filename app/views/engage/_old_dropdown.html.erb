@@ -1,7 +1,10 @@
-<% frame_id = local_assigns[:frame] %>
+<% engagement_frame_id = local_assigns[:frame] %>
 
 <% form_id = "commentForm#{SecureRandom.hex(10)}" if local_assigns[:form_id].nil? %>
 
+<% frame_id = engagement_frame_id %>
+
+<% path_to_click = "engage_resource_path" #resource.is_a?(Comment) ? "engage_comment_path" : "engage_comment_path" %>
 <div class="dropdown">
   <button class="bg-transparent border-0" type="button" id="cmtDropdown<%= resource.id %>" data-bs-toggle="dropdown" aria-expanded="false">
     <%= icon(icon:"bars") %>
@@ -9,7 +12,7 @@
   <ul class="dropdown-menu" aria-labelledby="cmtDropdown<%= resource.id %>">
     <% Feedbacker.engage_keys.each do |scope_key,scope_action| %>
     <li>
-        <%= link_to feedbacker.engage_resource_path(id:resource.id,scope:scope_key,frame:frame_id,otype:resource.class.name.downcase,format:"js"), remote: true, class: "dropdown-item" do %><%= icon(icon:Feedbacker.engage_icons[scope_key][:icon],icon_css:Feedbacker.engage_icons[scope_key][:css]) %> <%= scope_key.capitalize %>
+        <%= link_to feedbacker.send(path_to_click,{id:resource.id,scope:scope_key,frame:frame_id,otype:resource.class.name.downcase}), remote: true, class: "dropdown-item" do %><%= icon(icon:Feedbacker.engage_icons[scope_key][:icon],icon_css:Feedbacker.engage_icons[scope_key][:css]) %> <%= scope_key.capitalize %>
       <% end %>
     </li>
     <% end %>
@@ -32,7 +35,14 @@
     <% end %>
     <% if is_admin? %>
     <li><a class="dropdown-item" href="#">Add photo</a></li>
-    <li><%= link_to icon(icon:'trash',lbl: dbt("#{resource.class.name.downcase}.remove",d:'Remove')), [main_app,resource], method: :delete, remote: true, class: "dropdown-item" %></li>                
+    <li>
+      <% begin %>
+      <%= link_to icon(icon:'trash',lbl: dbt("#{resource.class.name.downcase}.remove",d:'Remove')), [feedbacker,resource], method: :delete, remote: true, class: "dropdown-item" %>
+      <% rescue %>
+      <%= link_to icon(icon:'trash',lbl: dbt("#{resource.class.name.downcase}.remove",d:'Remove')), [main_app,resource], method: :delete, remote: true, class: "dropdown-item" %>
+      <% end %>
+        
+      </li>                
     <% end %>
   </ul>
 </div>

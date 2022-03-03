@@ -19,6 +19,7 @@ class CommentsController < ::ApplicationController
   end
 
 
+
   def destroy
     @comment = Comment.find_by(id:params[:id])
     @removed_id = @comment.id.to_s
