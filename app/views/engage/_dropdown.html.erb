@@ -2,7 +2,7 @@
 <% Feedbacker.engage_keys.each do |scope_key,scope_action| %>
 
 <% if current_user.favorited?(resource,scope:scope_action) %>
-<%= link_to feedbacker.engage_resource_path(id:resource.id,scope:scope_key,frame:engagement_frame_id,undo:1,resource:resource.class.name.downcase), remote: true, class: "nodec" do %>
+<%= link_to feedbacker.engage_resource_path(id:resource.id,scope:scope_key,frame:engagement_frame_id,undo:1,otype:resource.class.name.downcase), remote: true, class: "nodec" do %>
 <%= icon(icon:Feedbacker.engage_icons[scope_key][:icon],icon_css:"#{Feedbacker.engage_icons[scope_key][:css]} me-1")  %>
 <% end %>
 <% end %>
@@ -21,7 +21,7 @@
   <ul class="dropdown-menu" aria-labelledby="cmtDropdown<%= resource.id %>">
     <% Feedbacker.engage_keys.each do |scope_key,scope_action| %>
     <li>
-        <%= link_to feedbacker.send(path_to_click,{id:resource.id,scope:scope_key,frame:frame_id,resource:resource.class.name.downcase}), remote: true, class: "dropdown-item" do %><%= icon(icon:Feedbacker.engage_icons[scope_key][:icon],icon_css:Feedbacker.engage_icons[scope_key][:css]) %> <%= scope_key.capitalize %>
+        <%= link_to feedbacker.send(path_to_click,{id:resource.id,scope:scope_key,frame:frame_id,otype:resource.class.name.downcase}), remote: true, class: "dropdown-item" do %><%= icon(icon:Feedbacker.engage_icons[scope_key][:icon],icon_css:Feedbacker.engage_icons[scope_key][:css]) %> <%= scope_key.capitalize %>
       <% end %>
     </li>
     <% end %>
