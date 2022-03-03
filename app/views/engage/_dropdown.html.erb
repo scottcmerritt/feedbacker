@@ -1,13 +1,4 @@
 <% engagement_frame_id = local_assigns[:frame] %>
-<% Feedbacker.engage_keys.each do |scope_key,scope_action| %>
-
-<% if current_user.favorited?(resource,scope:scope_action) %>
-<%= link_to feedbacker.engage_resource_path(id:resource.id,scope:scope_key,frame:engagement_frame_id,undo:1,otype:resource.class.name.downcase), remote: true, class: "nodec" do %>
-<%= icon(icon:Feedbacker.engage_icons[scope_key][:icon],icon_css:"#{Feedbacker.engage_icons[scope_key][:css]} me-1")  %>
-<% end %>
-<% end %>
-
-<% end %>
 
 <% form_id = "commentForm#{SecureRandom.hex(10)}" if local_assigns[:form_id].nil? %>
 

@@ -14,6 +14,7 @@ class ConnectController < ::ApplicationController
     @otype = params[:otype]
     @otype = @otypes.include?(@otype) ? @otype : nil
 
+
     @frame = params[:frame]
 
     scope_keys = Feedbacker.engage_keys #{"flag"=>"flagged","like"=>"liked","love"=>"loved","agree"=>"agreed"}
