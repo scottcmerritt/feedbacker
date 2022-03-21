@@ -735,6 +735,7 @@ def cleanup
 
       def html_sandbox
         @tight_layout = true
+        @hide_footer = true
 
         #require 'diffy'
         @diffed = Diffy::Diff.new("prev title OLD", "current title",:include_diff_info=>false).to_s(:html)
