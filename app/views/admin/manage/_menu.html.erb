@@ -1,4 +1,4 @@
-<% excluded = [] if local_assigns[:excluded].nil? %>
+<% excluded = local_assigns[:excluded].nil? ? [] : local_assigns[:excluded] %>
 <% vertical = false if local_assigns[:vertical].nil? %>
 <% icon_size = "fs-6" if local_assigns[:icon_size].nil? %>
 <% link_css = "nav-link bg-white border rounded mb-1 d-flex align-items-center #{vertical ? '' : 'me-1 p-1'}" %>
