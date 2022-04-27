@@ -21,16 +21,14 @@
 	<div class="d-flex">
 		<div class="ms-auto d-flex">
 			<%= link_to icon_text(dbt('database').capitalize,"server",false,icon_css), feedbacker.admin_db_path, class:link_css %>
-			<%= link_to icon_text(dbt('emailer').capitalize,"mail-bulk",false,icon_css), feedbacker.emailer_path, class:link_css unless excluded.include?[:cleanup] %>
+			<%= link_to icon_text(dbt('emailer').capitalize,"mail-bulk",false,icon_css), feedbacker.emailer_path, class:link_css unless excluded.include?(:cleanup) %>
 
 			<%= link_to icon_text(dbt('translations').capitalize,"language",false,icon_css), feedbacker.translate_keys_path, class:link_css %>
 			<%= link_to icon_text(dbt('sites').capitalize,"sitemap",false,icon_css), sites_path, class:link_css %>
-			<%= link_to icon_text(dbt('cleanup').capitalize,"shower",false,icon_css), feedbacker.admin_cleanup_path, class:link_css unless excluded.include?[:cleanup] %>
+			<%= link_to(icon_text(dbt('cleanup').capitalize,"shower",false,icon_css), feedbacker.admin_cleanup_path, class:link_css) unless excluded.include?(:cleanup) %>
 			<%= link_to icon_text(dbt('visitors').capitalize,"flag-usa",false,icon_css), feedbacker.admin_visits_path, class:link_css %>
-
 		</div>
 	</div>
-
 <% else %>
 	<nav class="nav <%= "flex-column" if vertical %>">
 	<% if false %>	
@@ -49,8 +47,5 @@
 	<%= link_to icon_text(dbt('sites').capitalize,"sitemap",false,icon_css), sites_path, class:link_css %>
 	<%= link_to icon_text(dbt('cleanup').capitalize,"shower",false,icon_css), feedbacker.admin_cleanup_path, class:link_css %>
 	<%= link_to icon_text(dbt('visitors').capitalize,"flag-usa",false,icon_css), feedbacker.admin_visits_path, class: class_names(link_css, {admin_active: ["visits","visit_referrers","visit_locations"].include?(action_name) }) %>
-
-
 	</nav>
-
 <% end %>
