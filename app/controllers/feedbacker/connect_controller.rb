@@ -59,7 +59,10 @@ class ConnectController < ::ApplicationController
 
         if @otype == "user"
     			@target = User.find(params[:id])
+          #@target.sample_email!
+          UserMailer.sample_email(@target)
           add_connection!
+
         elsif @otype == "item"
           @target = Item.find(params[:id])
           current_user.favorite(@target)
