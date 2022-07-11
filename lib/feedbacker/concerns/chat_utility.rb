@@ -56,10 +56,11 @@ module ChatUtility
 =end
     @room_message = RoomMessage.new
 
-    @conversation = UserConversation.mine(current_user.id).find_by(id:conv.id) # (user_conversations: {id:conv.id})
+    #@conversation = UserConversation.mine(current_user.id).find_by(id:conv.id) # (user_conversations: {id:conv.id})
 
     respond_to do |format|
-      format.html {redirect_to conv.nil? || conv.room.nil? ? rooms_path : room_path(id:conv.room.id)}
+      #format.html {redirect_to conv.nil? || conv.room.nil? ? rooms_path : room_path(id:conv.room.id)}
+      format.html {redirect_to conv.nil? || @room.nil? ? rooms_path : room_path(id:@room.id)}
       format.js do 
         @feedback = "Message sent"
         render "community/conversations/added"
