@@ -141,11 +141,12 @@ class ConnectController < ::ApplicationController
 
     def announce_request! approved=false
          unless @target.nil? || @target.blocked_friends.include?(current_user)
+           @target.announce_request!(current_user,approved) #if @target.respond_to?(:announce_request!)
            locals = {:actor=>current_user,:current_user=>@target,:users=>@target.requested_friends,:user_limit=>3,:approved=>approved}
            request_html = render_to_string(:partial=>"/users/participants/requests",:locals=>locals,:layout=>false)
 
            NotificationChannel.broadcast_to @target, {:requests=>"requested",:request=>request_html} if defined?(NotificationChannel)
-          @target.announce_request!(current_user,approved) if @target.respond_to?(:announce_request!)
+          
          end
     end
 
