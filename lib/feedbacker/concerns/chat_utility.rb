@@ -71,6 +71,10 @@ module ChatUtility
   def conversations
 
     @room_message = RoomMessage.new
+    if params[:user_id]
+      @target = User.find_by(id:params[:user_id])
+      @room_message.target_user_id = @target.id
+    end
 
     @closed = params[:status] == "closed"
 
