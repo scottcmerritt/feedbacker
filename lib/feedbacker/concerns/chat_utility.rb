@@ -39,6 +39,7 @@ module ChatUtility
     @message = params[:room_message][:message]
 
     @room, added_message = UserConversation.add_message! message: @message, sender: current_user, recipient_id: target_id, reward: true
+    @room.announce_chat! sender: current_user
 =begin
     if target_id
       conv = UserConversation.joins("LEFT JOIN rooms on user_conversations.room_id = rooms.id")
