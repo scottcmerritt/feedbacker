@@ -4,7 +4,7 @@
 <div class="row">
 	<div class="col-4">
 		<%= render partial: 'community/orgs/groups', locals: {groups: @user.my_groups, paginate: true, count: nil,title: "My groups"} if !@user.nil? && respond_to?(:newsify) %>
-		<%= render partial: "posts/widgets/index", locals: {data:@user.my_posts.order("created_at DESC").limit(10)} %>
+		<%= render partial: "posts/widgets/index", locals: {data:@user.posts.order("created_at DESC").limit(10)} %>
 	</div>
 	<div class="col-4">
 		
