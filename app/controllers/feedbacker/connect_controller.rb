@@ -145,6 +145,7 @@ class ConnectController < ::ApplicationController
            request_html = render_to_string(:partial=>"/users/participants/requests",:locals=>locals,:layout=>false)
 
            NotificationChannel.broadcast_to @target, {:requests=>"requested",:request=>request_html} if defined?(NotificationChannel)
+          @target.announce_request!(current_user,approved) if @target.respond_to?(:announce_request!)
          end
     end
 

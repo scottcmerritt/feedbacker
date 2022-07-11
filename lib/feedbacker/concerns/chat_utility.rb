@@ -2,8 +2,6 @@ module Feedbacker
 module ChatUtility
   extend ActiveSupport::Concern
 
-    
-  
   included do
     #before_action :method_here
     before_action :authenticate_user!, only: %i[autocomplete_search]
