@@ -17,8 +17,17 @@ module Feedbacker
 	  	ids.uniq.compact
 	  end
 
+	  def recipient_ids
+	  	user_ids = self.commenter_ids
+	  	user_ids = (user_ids + self.owner_ids).uniq.compact if self.respond_to?(:owner_ids)
+	  	user_ids = (user_ids + self.interested_ids).uniq.compact if self.respond_to?(:interested_ids)
+	  	user_ids
+	  end
+
+
+	  # announces engagement to the creator
 	  def announce_engage! sender:, engage_key: "like"
-	  	user_id = self.respond_to?(:createdby) ? self.createdby : (self.respond_to?(:createdby) ? self.created_by : self.user_id)
+	  	user_id = self.respond_to?(:createdby) ? self.createdby : (self.respond_to?(:created_by) ? self.created_by : self.user_id)
 	  	user = User.find_by(id: user_id)
 	  	user.announce_engage!(resource:self,sender:sender,engage_key: engage_key) unless user.nil?
 	  end
@@ -26,13 +35,16 @@ module Feedbacker
 
 	  # announces a comment ABOUT something
 	  def announce_comment! sender:nil, comment: nil
-        self.commenter_ids.each do |user_id|
+        self.recipient_ids.each do |user_id|
         	if sender.nil? || (sender.id != user_id)
 	          user = User.find_by(id:user_id)
 	          user.announce_comment!(resource:self,sender:sender,comment:nil) unless user.nil?
 	      	end
         end
 	  end
+
+
+
 
 	  module ClassMethods
 	    # accesed by Post.flags, Post.flagged_spam, etc...
