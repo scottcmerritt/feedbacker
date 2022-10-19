@@ -21,7 +21,7 @@
 	<div class="d-flex">
 		<div class="ms-auto d-flex">
 			<%= link_to icon_text(dbt('database').capitalize,"server",false,icon_css), feedbacker.admin_db_path, class:link_css %>
-			<%= link_to icon_text(dbt('emailer').capitalize,"mail-bulk",false,icon_css), feedbacker.emailer_path, class:link_css unless excluded.include?(:cleanup) %>
+			<%= link_to icon_text(dbt('emailer').capitalize,"mail-bulk",false,icon_css), main_app.emailer_path, class:link_css if main_app.respond_to?(:emailer_path) %>
 
 			<%= link_to icon_text(dbt('translations').capitalize,"language",false,icon_css), feedbacker.translate_keys_path, class:link_css %>
 			<%= link_to icon_text(dbt('sites').capitalize,"sitemap",false,icon_css), sites_path, class:link_css %>
