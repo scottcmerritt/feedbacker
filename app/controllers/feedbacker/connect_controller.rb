@@ -1,7 +1,7 @@
 module Feedbacker
 class ConnectController < ::ApplicationController
 	# used for "friendships" between users, AND also for indicating PUBLIC interest for items
-  before_action :authenticate_user!, only: [:engage]
+  before_action :authenticate_user!, only: [:engage, :list]
 
 	def self.controller_path
     "feedbacker/community/connect" # sets the path from app/views/... to something else
@@ -46,9 +46,11 @@ class ConnectController < ::ApplicationController
         end
       end
 =end
-      @pending = current_user.pending_friends.where("friendships.friendable_type = ?", "User") #.collect {|obj| obj if obj.is_a?(User)}
-      @requested = current_user.requested_friends.where("friendships.friendable_type = ?", "User") #.collect {|obj| obj if obj.is_a?(User)}
-  		@connections = current_user.friends.where("friendships.friendable_type = ?", "User") #.collect {|obj| obj if obj.is_a?(User)}
+      unless current_user.nil?
+        @pending = current_user.pending_friends.where("friendships.friendable_type = ?", "User") #.collect {|obj| obj if obj.is_a?(User)}
+        @requested = current_user.requested_friends.where("friendships.friendable_type = ?", "User") #.collect {|obj| obj if obj.is_a?(User)}
+  		  @connections = current_user.friends.where("friendships.friendable_type = ?", "User") #.collect {|obj| obj if obj.is_a?(User)}
+      end
     end
 
 
