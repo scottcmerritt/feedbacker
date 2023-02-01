@@ -32,7 +32,7 @@
     <% end %>
     <% if is_admin? %>
     <li><a class="dropdown-item" href="#">Add photo</a></li>
-    <li><%= link_to icon(icon:'trash',lbl: dbt("#{resource.class.name.downcase}.remove",d:'Remove')), [main_app,resource], method: :delete, remote: true, class: "dropdown-item" %></li>                
+    <li><%= link_to icon(icon:'trash',lbl: dbt("#{resource.class.name.downcase}.remove",d:'Remove')), [feedbacker,resource], method: :delete, remote: true, class: "dropdown-item" %></li>                
     <% end %>
   </ul>
 </div>
