@@ -9,9 +9,12 @@
 </div>
 
 <div class="col-9">
-<%= render(partial: "#{engine_prefix}translate_keys/parts/filter", locals: {render_js:true,render_html:false}) %>
+<%= render(partial: "#{engine_prefix}translate_keys/parts/filter", locals: {render_js:true,render_html:false}) if @load_delayed %>
+<%= render partial: "#{engine_prefix}translate_keys/parts/search_form" %>
+
+
 <div id="translate_keys_filter">
-<%= loading_div "Loading filters" %>
+<%= loading_div "Loading filters" if @load_delayed %>
   <%= tag.div render(partial: "#{engine_prefix}translate_keys/parts/filter", locals: {refresh:params[:refresh]}) if params[:filter] %>
 </div>
 
@@ -29,81 +32,9 @@
   <% else %>
     <%= tag.div "No phrase matches", class: "alert alert-warning my-2 p-1 px-2" %>
   <% end %>
-  
-
-    <% if @translate_keys.empty? %>
-      <%= tag.div "No translation key matches", class: "alert alert-warning my-2 p-2" %>
-    <% else %>
-  <table class="table bg-light border rounded">
-    <thead>
-      <tr>
-        
-        <th class="text-start">Languages</th>
-
-        <th>Domain</th>
-        <th>Key</th>
-        <% if false %>
-        <th>Creator</th>
-        <th>Visibility</th>
-        
-        <th>Approved</th>
-        <th>Approved at</th>
-        <th>Approved by</th>
-        <th>Removed</th>
-        <th>Removed by</th>
-        <th>Removed at</th>
-        <% end %>
-        <th colspan="3"></th>
-      </tr>
-    </thead>
-
-    <tbody>
-
-      <% @translate_keys.each do |translate_key| %>
-        <tr>
-          
-          <td class="text-start">
-            <%= translate_key.languages.count if false %>
-            <% translate_key.languages.pluck(:lang).each do |lang| %>
-            <%= tag.span lang, class: "badge bg-#{@lang_colors[lang]} ms-1 fs-8" %>
-            <% end %>
-          </td>
-          <td><%= link_to translate_key.tdomain, feedbacker.translate_keys_path({tdomain:translate_key.tdomain}) unless translate_key.nil? || translate_key.tdomain.nil? %></td>
-          <td><%= translate_key.tkey %></td>
-          <% if false %>
-          <td><%= translate_key.createdby %></td>
-          <td>
-  <%= render partial: "shared/permissions/show", locals: {target:translate_key} %>
-          </td>
-          <% end %>
-          
-          <% if false %>
-          <td><%= translate_key.approved %></td>
-          <td><%= translate_key.approved_at %></td>
-          <td><%= translate_key.approved_by %></td>
-          <td><%= translate_key.removed %></td>
-          <td><%= translate_key.removed_by %></td>
-          <td><%= translate_key.removed_at %></td>
-          <% end %>
-          <td>
-
-            <% if translate_key.translates.count == 0 %>
-            <%= link_to 'Add translation', feedbacker.translate_key_path(translate_key), class: "btn btn-sm btn-success" %>
-            <% else %>
-            <%= link_to "Show #{translate_key.translates.count} #{"translation".pluralize(translate_key.translates.count)}", feedbacker.translate_key_path(translate_key), class: "btn btn-sm btn-secondary" %>
-            <% end %>
-            
-
-          </td>
-  
-          <td><%= link_to icon(icon:"edit"), feedbacker.edit_translate_key_path(translate_key) %></td>
-          <td><%= link_to icon(icon:'trash'), feedbacker.translate_key_path(translate_key), method: :delete, data: { confirm: 'This will remove ALL translations for the current (Domain,Key) pair. Are you sure?' } %></td>
-        </tr>
-      <% end %>
-
-    </tbody>
-  </table>
-  <% end %>
+  <div id="translate_keys">
+  <%= render partial: "feedbacker/translate_keys/parts/index" %>
+  </div>
 </div>
 </div>
 
@@ -111,4 +42,4 @@
 
 <%= link_to 'New Translate Key', feedbacker.new_translate_key_path %>
 
-<%= render partial: "shared/delayed_load", locals: {filters_path:feedbacker.translates_delayed_filters_path(format:'js',tdomain:@tdomain,refresh:params[:refresh]), path:feedbacker.translates_delayed_path(format:'js',tdomain:@tdomain,refresh:params[:refresh])} %>
+<%= render partial: "shared/delayed_load", locals: {path_to_filters: feedbacker.translates_delayed_filters_path(format:'js',tdomain:@tdomain,refresh:params[:refresh]), path:feedbacker.translates_delayed_path(format:'js',tdomain:@tdomain,refresh:params[:refresh])} if @load_delayed %>

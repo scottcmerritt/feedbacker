@@ -5,14 +5,22 @@ module Feedbacker
     before_action :authenticate_admin!
     before_action :set_translate_key, only: %i[ show edit update destroy ]
     before_action :set_shared, only: %i[ index search email delayed delayed_filters needed ]
+    before_action :set_pagination, only: %i[ index search ]
     before_action :set_translate_keys, only: %i[ index ]
     protect_from_forgery except: [:delayed, :delayed_filters]
 
 
     # GET /translate_keys or /translate_keys.json
     def index
+      @load_delayed = false
+      
+
       cache_all! if params[:refresh_cache]
       Translate.reset_miss_log! if params[:reset_log]
+
+
+      paginate_translate_keys!
+
     end
 
     # translates_pages_path, /admin/page/translations
@@ -27,21 +35,26 @@ module Feedbacker
 
     # moved needed translations to a new page to speed up page load
     def needed
+      # look at translates#todo (it might do what we need)
 
     end
+
+    #NOTE: this is timing out on herkou for large sites
     def delayed_filters
-      cache_used = false #params[:refresh] ? false : true
+      do_refresh = params[:refresh] && params[:refresh] == "1" ? true : false
 
       respond_to do |format|
         format.js do
           filter_html = render_to_string(partial: "feedbacker/translate_keys/parts/filter", locals: {render_js:false,render_html:true,refresh:params[:refresh]})
-          render json: {html:filter_html,cache_used:cache_used}
+          render json: {html:filter_html,cache_used:do_refresh}
         end
       end
     end
 
+    #NOTE: this is timing out on herkou for large sites
+    #NOTE: cache duration is only 10 minutes
     def delayed
-      do_refresh = true # params[:refresh]
+      do_refresh = params[:refresh] && params[:refresh] == "1" ? true : false
       respond_to do |format|
         format.html {  }
         format.js do 
@@ -56,14 +69,14 @@ module Feedbacker
             side_menu = render_to_string(:partial=>"feedbacker/translate_keys/parts/needed",:locals=>{tdomain:@tdomain},:layout=>false)
           end  
 
-          sub_menu_key = "TRANSLATE_KEY::tdomain_filters_html:#{@tdomain}"
-          sub_menu = Feedbacker::Cache.get_obj sub_menu_key
-          sub_menu = render_to_string(:partial=>"feedbacker/translate_keys/parts/tdomain_filters",:locals=>{tdomain:@tdomain},:layout=>false) if sub_menu.blank? || params[:refresh]
+          #sub_menu_key = "TRANSLATE_KEY::tdomain_filters_html:#{@tdomain}"
+          #sub_menu = Feedbacker::Cache.get_obj sub_menu_key
+          #sub_menu = render_to_string(:partial=>"feedbacker/translate_keys/parts/tdomain_filters",:locals=>{tdomain:@tdomain},:layout=>false) if sub_menu.blank? || params[:refresh]
 
           Feedbacker::Cache.set_obj side_menu_key,side_menu,nil,cache_duration
-          Feedbacker::Cache.set_obj sub_menu_key,sub_menu,nil,cache_duration
+          #Feedbacker::Cache.set_obj sub_menu_key,sub_menu,nil,cache_duration
 
-          render json: {html: html, cache_used:cache_used, parts: {side_menu:side_menu,sub_menu:sub_menu}}
+          render json: {html: side_menu, cache_used:cache_used} #, parts: {side_menu:side_menu,sub_menu:sub_menu}}
 
         end
         #format.json { head :no_content }
@@ -131,7 +144,6 @@ module Feedbacker
     def search
       @q = params[:q] || params[:tdomain]
       if @q.blank?
-
         redirect_to controller: "translate_keys", action: "index"
       else
         @query1 = "#{@q.downcase}%"
@@ -139,7 +151,7 @@ module Feedbacker
         @translates = Translate.where("LOWER(phrase) LIKE ? OR LOWER(phrase) LIKE ?",@query1,@query2).page(params[:page])
         @translate_keys = TranslateKey.where("LOWER(tdomain) LIKE ? OR LOWER(tkey) LIKE ? OR LOWER(tdomain) LIKE ? OR LOWER(tkey) LIKE ?",@query1,@query1,@query2,@query2).page(params[:page])
         
-
+        paginate_translate_keys!
         if params[:q]
           needed = params[:q] ? Feedbacker::Translate.get_cache_misses(grouped:true,tdomain_filter:params[:q],tkey_filter:params[:q]) : Feedbacker::Translate.get_cache_misses(grouped:true)
         else
@@ -168,7 +180,7 @@ module Feedbacker
         @translate_keys = TranslateKey.order("tdomain,tkey")
         @translate_keys = @translate_keys.where(tdomain:@tdomain) if @tdomain   
 
-        @translate_keys = @translate_keys.page(params[:page]).per(30)
+        @translate_keys = @translate_keys.page(params[:page]).per(@page_size)
       end
 
        def set_shared
@@ -176,7 +188,19 @@ module Feedbacker
         @tdomain = params[:tdomain]
         @translators = User.select("users.*,count(translates.id) as translates_count").joins("JOIN translates ON translates.user_id = users.id").group("users.id").order("translates_count DESC")
       end
-      
+
+      def set_pagination
+        @page = params[:page] ? params[:page].to_i : 1
+        @page_size = 20
+       
+      end
+      def paginate_translate_keys!
+        @max_page = (@translate_keys.total_count/@page_size)+1
+        if @page >= @max_page
+          @page = @max_page
+          @translate_keys = @translate_keys.page(@page).per(@page_size)
+        end
+      end
 
 
       # Only allow a list of trusted parameters through.

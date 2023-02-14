@@ -1,0 +1,8 @@
+<% title = "Translations" if local_assigns[:title].nil? %>
+<% show_add = true if local_assigns[:show_add].nil? %>
+
+<h4 class="d-flex justify-content-between align-items-center"><div><%= title %> <%= link_to "Add", feedbacker.new_translate_key_path, class: "btn btn-sm btn-primary text-light" if show_add %></div>
+	<form method="get" action="<%= feedbacker.translates_search_path %>">
+	    <input type="text" name="q" value="<%= @q %>" class="form-control-sm" id="search-translations"/>
+	</form>
+</h4>

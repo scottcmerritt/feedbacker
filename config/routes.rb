@@ -34,6 +34,8 @@ Feedbacker::Engine.routes.draw do
 
 	match '/translated/pages' =>"translate_keys#translated_pages", :as => :translated_pages, :via=>[:get,:post]
 
+	match '/admin/needed/translates' =>"translate_keys#needed", :as => :translates_needed, :via=>[:get,:post]
+
 	match '/admin/delayed/translates' =>"translate_keys#delayed", :as => :translates_delayed, :via=>[:get,:post]
 	match '/admin/delayed/filters/translates' =>"translate_keys#delayed_filters", :as => :translates_delayed_filters, :via=>[:get,:post]
 

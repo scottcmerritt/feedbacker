@@ -1,0 +1,84 @@
+<% if @translate_keys.empty? %>
+    <%= tag.div "No translation key matches", class: "alert alert-warning my-2 p-2" %>
+<% else %>
+  <div class="d-flex align-items-center">
+  <div>
+Page <%= @page %> of <%= (@translate_keys.total_count/@page_size)+1 %>
+  </div>
+  <%= link_to "Prev",feedbacker.translate_keys_path(page:@page-1), remote: true, class:"mx-1 btn btn-sm border fw-bold" if @page > 1 %>
+
+  <%= link_to "Next",feedbacker.translate_keys_path(page:@page+1), remote: true, class:"mx-1 btn btn-sm border fw-bold" if @page < (@translate_keys.total_count/@page_size)+1 %>
+
+<div class="ms-auto fw-bold fs-7"><%= @translate_keys.total_count %> rows</div>
+  </div>
+
+  <table class="table bg-light border rounded">
+    <thead>
+      <tr>
+        
+        <th class="text-start">Languages</th>
+
+        <th>Domain</th>
+        <th>Key</th>
+        <% if false %>
+        <th>Creator</th>
+        <th>Visibility</th>
+        
+        <th>Approved</th>
+        <th>Approved at</th>
+        <th>Approved by</th>
+        <th>Removed</th>
+        <th>Removed by</th>
+        <th>Removed at</th>
+        <% end %>
+        <th colspan="3"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <% @translate_keys.each do |translate_key| %>
+        <tr>
+          
+          <td class="text-start">
+            <%= translate_key.languages.count if false %>
+            <% translate_key.languages.pluck(:lang).each do |lang| %>
+            <%= tag.span lang, class: "badge bg-#{@lang_colors[lang]} ms-1 fs-8" %>
+            <% end %>
+          </td>
+          <td><%= link_to translate_key.tdomain, feedbacker.translate_keys_path({tdomain:translate_key.tdomain}) unless translate_key.nil? || translate_key.tdomain.nil? %></td>
+          <td><%= translate_key.tkey %></td>
+          <% if false %>
+          <td><%= translate_key.createdby %></td>
+          <td>
+  <%= render partial: "shared/permissions/show", locals: {target:translate_key} %>
+          </td>
+          <% end %>
+          
+          <% if false %>
+          <td><%= translate_key.approved %></td>
+          <td><%= translate_key.approved_at %></td>
+          <td><%= translate_key.approved_by %></td>
+          <td><%= translate_key.removed %></td>
+          <td><%= translate_key.removed_by %></td>
+          <td><%= translate_key.removed_at %></td>
+          <% end %>
+          <td>
+
+            <% if translate_key.translates.count == 0 %>
+            <%= link_to 'Add translation', feedbacker.translate_key_path(translate_key), class: "btn btn-sm btn-success" %>
+            <% else %>
+            <%= link_to "Show #{translate_key.translates.count} #{"translation".pluralize(translate_key.translates.count)}", feedbacker.translate_key_path(translate_key), class: "btn btn-sm btn-secondary" %>
+            <% end %>
+            
+
+          </td>
+  
+          <td><%= link_to icon(icon:"edit"), feedbacker.edit_translate_key_path(translate_key) %></td>
+          <td><%= link_to icon(icon:'trash'), feedbacker.translate_key_path(translate_key), method: :delete, data: { confirm: 'This will remove ALL translations for the current (Domain,Key) pair. Are you sure?' } %></td>
+        </tr>
+      <% end %>
+
+    </tbody>
+  </table>
+<% end %>

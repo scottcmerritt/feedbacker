@@ -37,6 +37,7 @@
 	</div>
 </div>
 
-<%= render partial: "shared/delayed_load", locals: {path:feedbacker.translates_delayed_path(format:'js',tdomain:@tdomain)} %>
+<%= render partial: "shared/delayed_load", locals: {path_to_filters: feedbacker.translates_delayed_filters_path(format:'js',tdomain:@tdomain), path:feedbacker.translates_delayed_path(format:'js',tdomain:@tdomain)} if @load_delayed %>
+
 
 <%= tag.div "Page loaded in #{num_comma(Time.now - @timer_action,3)} seconds", class: "fs-8 text-muted fs-8 my-1" %>

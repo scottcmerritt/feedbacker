@@ -1,5 +1,5 @@
 <% path_to_delayed = local_assigns[:path] %>
-<% path_to_delayed_filters = local_assigns[:filters_path] %>
+<% path_to_delayed_filters = local_assigns[:path_to_filters] %>
 
 <script type="text/javascript">
 
@@ -21,13 +21,14 @@ function doDelayedPageLoad(refreshCache) {
           dataType: 'json',
           beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
           success: (response) => {
+            console.log(`Success fetching ${fullLoadUrl}`)
             return resolve({response:response})
           },
           error: (response) => {
             //alert(`Error fetching ${url}`)
-            console.log(`Error fetching ${url}`)
+            console.log(`Error fetching ${fullLoadUrl}`)
             console.log(response)
-            return reject({msg:'ERROR ajaxPromise 1',error:response})
+            return reject({msg:'ERROR ajaxPromise ddpl',error:response})
           }
       });
   })
@@ -38,10 +39,10 @@ function doDelayedPageLoad(refreshCache) {
 function doDelayedFilterLoad(refreshCache) {
   //alert(refreshCache == true || refreshCache == 'true' ? 'tt' : 'ff')
   return new Promise((resolve, reject) => {
-    let fullLoadUrl = '<%= path_to_delayed_filters %>'.includes("?") ? `<%= path_to_delayed_filters %>&refresh=${refreshCache}` : `<%= path_to_delayed_filters %>?refresh=${refreshCache}` ;
+    let fullLoadUrl2 = '<%= path_to_delayed_filters %>'.includes("?") ? `<%= path_to_delayed_filters %>&refresh=${refreshCache}` : `<%= path_to_delayed_filters %>?refresh=${refreshCache}` ;
     //alert(fullLoadUrl)
 
-  $.ajax({ url: fullLoadUrl,
+  $.ajax({ url: fullLoadUrl2,
           type: 'GET',
           dataType: 'json',
           beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
@@ -50,9 +51,9 @@ function doDelayedFilterLoad(refreshCache) {
           },
           error: (response) => {
             //alert(`Error fetching ${url}`)
-            console.log(`Error fetching ${url}`)
+            console.log(`Error fetching ${fullLoadUrl2}`)
             console.log(response)
-            return reject({msg:'ERROR ajaxPromise 1',error:response})
+            return reject({msg:'ERROR ajaxPromise ddfl',error:response})
           }
       });
   })
@@ -72,6 +73,7 @@ function addDivWrap(html,cacheUsed,css)
    // your page initialization code here
    // the DOM will be available here
 
+<% if @load_delayed %>
 let loadingHtml = '<div class="m-3"><div class="spinner-grow" role="status"><span class="visually-hidden">Loading...</span></div></div>'
 
 let sections = {'sideMenu':'side_menu'} //{'subMenu':'sub_menu','sideMenu':'side_menu'}
@@ -91,7 +93,8 @@ let res = doDelayedPageLoad(false)
     $("#sideMenu").html(addDivWrap(result.response.parts.side_menu,cacheUsed,'animate__animated animate__fadeInLeft'))
   }
   else {
-    $("#delayed").html(result.response.html)
+    $("#sideMenu").html(result.response.html)
+//    $("#delayed").html(result.response.html)
   }
   setupRealTimeTranslate()
   })
@@ -111,6 +114,9 @@ let res = doDelayedPageLoad(false)
   }
   setupRealTimeTranslate()
   })
+  <% else %>
+setupRealTimeTranslate()
+  <% end %>
 
 
 })();
