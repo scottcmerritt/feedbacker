@@ -16,7 +16,7 @@
 		<%= render partial: "#{engine_prefix}translate_keys/parts/needed", locals: {title: "Translations needed"} if params[:needed] %>
 	</div>
 	<div class="col-sm-7">
-		<%= render partial: "#{engine_prefix}translate_keys/parts/filter", locals: {refresh:params[:refresh]} %>
+		<%= render partial: "#{engine_prefix}translate_keys/parts/filter", locals: {refresh:params[:refresh]} if @load_delayed %>
 		<h4 class="pageH d-flex p-1 px-2 text-light bg-dark mb-0">Recent translations <%= link_to icon(icon:"plus",lbl:"Add"), feedbacker.translates_about_path, class: "btn btn-sm btn-primary text-light ms-auto" %></h4>
 		<div class="p-1 bg-white border">
 
