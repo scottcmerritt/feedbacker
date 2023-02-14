@@ -4,9 +4,9 @@ module Feedbacker
     before_action :set_start_time
     before_action :authenticate_admin!
     before_action :set_translate_key, only: %i[ show edit update destroy ]
-    before_action :set_shared, only: %i[ index search email delayed needed ]
+    before_action :set_shared, only: %i[ index search email delayed delayed_filters needed ]
     before_action :set_translate_keys, only: %i[ index ]
-    protect_from_forgery except: :delayed
+    protect_from_forgery except: [:delayed, :delayed_filters]
 
 
     # GET /translate_keys or /translate_keys.json
@@ -28,6 +28,16 @@ module Feedbacker
     # moved needed translations to a new page to speed up page load
     def needed
 
+    end
+    def delayed_filters
+      cache_used = false #params[:refresh] ? false : true
+
+      respond_to do |format|
+        format.js do
+          filter_html = render_to_string(partial: "feedbacker/translate_keys/parts/filter", locals: {render_js:false,render_html:true,refresh:params[:refresh]})
+          render json: {html:filter_html,cache_used:cache_used}
+        end
+      end
     end
 
     def delayed
@@ -152,9 +162,13 @@ module Feedbacker
         @translate_key = TranslateKey.find(params[:id])
       end
 
+
+      # get first page of translate keys
       def set_translate_keys
-        @translate_keys = TranslateKey.order("tdomain,tkey").page(params[:page]).per(30)
+        @translate_keys = TranslateKey.order("tdomain,tkey")
         @translate_keys = @translate_keys.where(tdomain:@tdomain) if @tdomain   
+
+        @translate_keys = @translate_keys.page(params[:page]).per(30)
       end
 
        def set_shared

@@ -2,7 +2,6 @@
 <%= render partial: "admin/manage/menu" if false %>
 <%= render partial: "feedbacker/translate_keys/parts/menu", locals: {selected:controller_name == "menus" ? 5 : (params[:action] == "email" ? 3 : 1)} %>
 
-
 <div class="row mt-2">
   <div class="col-3" id="sideMenu">
     <%= render partial: "#{engine_prefix}translate_keys/parts/needed", locals: {title: dbt('admin::translations.needed',d:"Translations needed!")} if params[:needed] %>
@@ -10,9 +9,11 @@
 </div>
 
 <div class="col-9">
-
-  <%= tag.div render(partial: "#{engine_prefix}translate_keys/parts/filter", locals: {refresh:params[:refresh]}) %>
-
+<%= render(partial: "#{engine_prefix}translate_keys/parts/filter", locals: {render_js:true,render_html:false}) %>
+<div id="translate_keys_filter">
+<%= loading_div "Loading filters" %>
+  <%= tag.div render(partial: "#{engine_prefix}translate_keys/parts/filter", locals: {refresh:params[:refresh]}) if params[:filter] %>
+</div>
 
   <% if @translates && @translates.count > 0 %>
   <h6 class="fs-7 bg-light border p-1 px-2">Matches based on translated phrase</h6>
@@ -110,4 +111,4 @@
 
 <%= link_to 'New Translate Key', feedbacker.new_translate_key_path %>
 
-<%= render partial: "shared/delayed_load", locals: {path:feedbacker.translates_delayed_path(format:'js',tdomain:@tdomain,refresh:params[:refresh])} %>
+<%= render partial: "shared/delayed_load", locals: {filters_path:feedbacker.translates_delayed_filters_path(format:'js',tdomain:@tdomain,refresh:params[:refresh]), path:feedbacker.translates_delayed_path(format:'js',tdomain:@tdomain,refresh:params[:refresh])} %>

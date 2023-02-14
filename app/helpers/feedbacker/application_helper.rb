@@ -10,6 +10,12 @@ module Feedbacker
       end
     end
 
+    def loading_div text
+      lbl = tag.span text, class: "fw-bold m-1"
+      loader = tag.div(tag.span("Loading...",class:"visually-hidden"),class:"spinner-grow spinnder-grow-sm me-1",role:"status")
+      tag.div safe_join([lbl,loader]), class:"d-flex justify-content-center"
+    end
+    
     def default_html_loader
       raw '<div class="m-3"><div class="spinner-grow" role="status"><span class="visually-hidden">Loading...</span></div></div>'
     end

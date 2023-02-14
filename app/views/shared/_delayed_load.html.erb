@@ -1,9 +1,14 @@
 <% path_to_delayed = local_assigns[:path] %>
+<% path_to_delayed_filters = local_assigns[:filters_path] %>
+
 <script type="text/javascript">
 
 function doDelayedPageLoadRefresh() {
   alert('inside refresh')
   doDelayedPageLoad(true)
+
+  doDelayedFilterLoad(true)
+
 }
 function doDelayedPageLoad(refreshCache) {
   //alert(refreshCache == true || refreshCache == 'true' ? 'tt' : 'ff')
@@ -29,6 +34,32 @@ function doDelayedPageLoad(refreshCache) {
 
     return reject({msg:`RARE SERVER ERROR fetching {$url}`,error:'ERROR INFO'})
 }
+
+function doDelayedFilterLoad(refreshCache) {
+  //alert(refreshCache == true || refreshCache == 'true' ? 'tt' : 'ff')
+  return new Promise((resolve, reject) => {
+    let fullLoadUrl = '<%= path_to_delayed_filters %>'.includes("?") ? `<%= path_to_delayed_filters %>&refresh=${refreshCache}` : `<%= path_to_delayed_filters %>?refresh=${refreshCache}` ;
+    //alert(fullLoadUrl)
+
+  $.ajax({ url: fullLoadUrl,
+          type: 'GET',
+          dataType: 'json',
+          beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+          success: (response) => {
+            return resolve({response:response})
+          },
+          error: (response) => {
+            //alert(`Error fetching ${url}`)
+            console.log(`Error fetching ${url}`)
+            console.log(response)
+            return reject({msg:'ERROR ajaxPromise 1',error:response})
+          }
+      });
+  })
+
+    return reject({msg:`RARE SERVER ERROR fetching {$url}`,error:'ERROR INFO'})
+}
+
 
 function addDivWrap(html,cacheUsed,css)
 {
@@ -64,6 +95,23 @@ let res = doDelayedPageLoad(false)
   }
   setupRealTimeTranslate()
   })
+
+  let res2 = doDelayedFilterLoad(false)
+.then((result) => {
+  console.log(result)
+  let cacheUsed = result.response.cache_used
+  
+  if(result.response.parts)
+  {
+    //$("#subMenu").html(result.response.parts.sub_menu)
+    //$("#sideMenu").html(addDivWrap(result.response.parts.side_menu,cacheUsed,'animate__animated animate__fadeInLeft'))
+  }
+  else {
+    $("#translate_keys_filter").html(result.response.html)
+  }
+  setupRealTimeTranslate()
+  })
+
 
 })();
 

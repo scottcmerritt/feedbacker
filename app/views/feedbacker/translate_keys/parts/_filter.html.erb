@@ -1,6 +1,9 @@
-<%= render partial: "feedbacker/translate_keys/parts/filter_search_js" %>
+<% render_js = true if local_assigns[:render_js].nil? %>
+<% render_html = true if local_assigns[:render_html].nil? %>
 
+<%= render partial: "feedbacker/translate_keys/parts/filter_search_js" if render_js %>
 
+<% if render_html %>
 <% refresh = false if local_assigns[:refresh].nil? %>
 <% title = "Translations" if local_assigns[:title].nil? %>
 <% show_add = true if local_assigns[:show_add].nil? %>
@@ -31,3 +34,4 @@
   </div>
 
   <% end %>
+<% end %>
