@@ -5,12 +5,13 @@
 
 <div class="row">
   <div class="col-3">
-    <%= render partial: "#{engine_prefix}translate_keys/parts/needed", locals: {title: "Translations needed"} %>
+    <%= render partial: "#{engine_prefix}translate_keys/parts/needed", locals: {title: "Translations needed"} if @load_delayed %>
 
 
   </div>
   <div class="col-9">
-    <%= render partial: "#{engine_prefix}translate_keys/parts/filter", locals: @filter_locals %>
+    <%= render partial: "#{engine_prefix}translate_keys/parts/filter", locals: @filter_locals if @load_delayed %>
+    <%= render partial: "#{engine_prefix}translate_keys/parts/search_form" %>
     <%= render partial: "#{engine_prefix}translate_keys/parts/show", target: @translate_key %>
    
 
