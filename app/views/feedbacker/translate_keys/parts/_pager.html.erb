@@ -1,0 +1,10 @@
+<div class="d-flex align-items-center my-1">
+  <div>
+Page <%= @page %> of <%= (@translate_keys.total_count/@page_size)+1 %>
+  </div>
+  <%= link_to "Prev",feedbacker.translate_keys_path(page:@page-1,q:@q), remote: true, class:"mx-1 btn btn-sm border fw-bold" if @page > 1 %>
+
+  <%= link_to "Next",feedbacker.translate_keys_path(page:@page+1,q:@q), remote: true, class:"mx-1 btn btn-sm border fw-bold" if @page < (@translate_keys.total_count/@page_size)+1 %>
+
+<div class="ms-auto fw-bold fs-7"><%= @translate_keys.total_count %> rows</div>
+</div>

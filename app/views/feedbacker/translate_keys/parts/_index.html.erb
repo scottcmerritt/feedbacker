@@ -1,16 +1,8 @@
 <% if @translate_keys.empty? %>
     <%= tag.div "No translation key matches", class: "alert alert-warning my-2 p-2" %>
 <% else %>
-  <div class="d-flex align-items-center">
-  <div>
-Page <%= @page %> of <%= (@translate_keys.total_count/@page_size)+1 %>
-  </div>
-  <%= link_to "Prev",feedbacker.translate_keys_path(page:@page-1), remote: true, class:"mx-1 btn btn-sm border fw-bold" if @page > 1 %>
+<%= tag.div render(partial: "#{engine_prefix}translate_keys/parts/pager") %>
 
-  <%= link_to "Next",feedbacker.translate_keys_path(page:@page+1), remote: true, class:"mx-1 btn btn-sm border fw-bold" if @page < (@translate_keys.total_count/@page_size)+1 %>
-
-<div class="ms-auto fw-bold fs-7"><%= @translate_keys.total_count %> rows</div>
-  </div>
 
   <table class="table bg-light border rounded">
     <thead>
@@ -81,4 +73,5 @@ Page <%= @page %> of <%= (@translate_keys.total_count/@page_size)+1 %>
 
     </tbody>
   </table>
+  <%= tag.div render(partial: "#{engine_prefix}translate_keys/parts/pager") %>
 <% end %>
