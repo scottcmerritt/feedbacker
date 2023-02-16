@@ -19,7 +19,9 @@
 </div>
 
   <% if @translates && @translates.count > 0 %>
-  <h6 class="fs-7 bg-light border p-1 px-2">Matches based on translated phrase</h6>
+  <h6 class="fs-7 bg-light border p-1 px-2"><%= link_to_collapser "Matches","#translate_matches" %> based on translated phrase</h6>
+  <div id="translate_matches" class="collapse show">
+
   <div class="px-1 border rounded rounded-top-0 bg-white mb-1">
     <div class="d-flex flex-wrap">
     <% @translates.each do |translate| %>
@@ -28,6 +30,7 @@
       </div>
     <% end %>
     </div>
+  </div>
   </div>
   <% else %>
     <%= tag.div "No phrase matches", class: "alert alert-warning my-2 p-1 px-2" %>

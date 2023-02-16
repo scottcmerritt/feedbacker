@@ -13,12 +13,19 @@ module Feedbacker
     # GET /translate_keys or /translate_keys.json
     def index
       @load_delayed = false
+      @q = params[:q] || params[:tdomain]
+      
       
 
       cache_all! if params[:refresh_cache]
       Translate.reset_miss_log! if params[:reset_log]
 
+      if @q.blank?
 
+      else
+        do_translate_keys_search!
+
+      end
       paginate_translate_keys!
 
     end
@@ -146,11 +153,8 @@ module Feedbacker
       if @q.blank?
         redirect_to controller: "translate_keys", action: "index"
       else
-        @query1 = "#{@q.downcase}%"
-        @query2 = "%#{@q.downcase}%"
-        @translates = Translate.where("LOWER(phrase) LIKE ? OR LOWER(phrase) LIKE ?",@query1,@query2).page(params[:page])
-        @translate_keys = TranslateKey.where("LOWER(tdomain) LIKE ? OR LOWER(tkey) LIKE ? OR LOWER(tdomain) LIKE ? OR LOWER(tkey) LIKE ?",@query1,@query1,@query2,@query2).page(params[:page])
-        
+        do_translate_keys_search!
+
         paginate_translate_keys!
         if params[:q]
           needed = params[:q] ? Feedbacker::Translate.get_cache_misses(grouped:true,tdomain_filter:params[:q],tkey_filter:params[:q]) : Feedbacker::Translate.get_cache_misses(grouped:true)
@@ -165,6 +169,13 @@ module Feedbacker
 
 
     private
+    def do_translate_keys_search!
+      @query1 = "#{@q.downcase}%"
+      @query2 = "%#{@q.downcase}%"
+      @translates = Translate.where("LOWER(phrase) LIKE ? OR LOWER(phrase) LIKE ?",@query1,@query2).page(params[:page])
+      @translate_keys = TranslateKey.where("LOWER(tdomain) LIKE ? OR LOWER(tkey) LIKE ? OR LOWER(tdomain) LIKE ? OR LOWER(tkey) LIKE ?",@query1,@query1,@query2,@query2).page(params[:page])
+      
+    end
       def set_start_time
         @timer_action = Time.now
       end
