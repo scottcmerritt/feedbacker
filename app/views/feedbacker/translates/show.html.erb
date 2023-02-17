@@ -1,12 +1,29 @@
 <%= render partial: "admin/manage/header" %>
 <%= render partial: "admin/manage/menu" if false %>
 <%= render partial: "#{admin_engine_prefix}translate_keys/parts/menu" %>
-<%= render partial: "#{admin_engine_prefix}translate_keys/parts/filter" %>
+<%= render partial: "#{admin_engine_prefix}translate_keys/parts/filter" if false %>
 
 <% translate_key = (@translate.id.nil? ? Feedbacker::TranslateKey.find_by(id:@translate.translate_key_id) : @translate.translate_key) unless @translate.translate_key.nil? %>
 
 <%= render partial: "#{admin_engine_prefix}translate_keys/parts/key", locals: {translate_key: translate_key} unless translate_key.nil?  %>
 
 <%= render partial: "#{admin_engine_prefix}translates/parts/translate",locals:{translate:@translate} %>
+
+<% if @translate.versions.length > 0 %>
+<div class="border my-1 rounded">
+<div class="bg-dark text-white p-2 fw-bold">VERSIONS</div>
+    <% @translate.versions.each do |version| %>
+    <div class="bg-white border p-1">
+    <% translate = version.reify %>
+    <%= translate.lang %> <b><%= translate.phrase %></b>
+    <% changer = User.find_by(id:version.whodunnit) %>
+    <div class="d-flex align-items-center text-muted fs-7">
+    <%= tag.div raw("by #{link_to changer.display_name_public, changer, class:"mx-1"}"), class:"d-flex align-items-center" unless changer.nil? %>
+    <div class="ms-auto fs-7 text-muted"><%= time_ago_in_words version.created_at %> ago</div>
+    </div>
+    </div>
+    <% end %>
+</div>
+<% end %>
 
 <%= render partial: "#{admin_engine_prefix}translates/parts/related",locals:{translate:@translate} %>

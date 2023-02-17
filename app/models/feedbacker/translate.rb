@@ -4,6 +4,11 @@ module Feedbacker
 		self.table_name = "translates"
 		include TranslationUtil
 
+		has_paper_trail on: [:update,:destroy], versions: {
+			scope: -> { order("created_at desc") }
+		  }
+	
+
 		belongs_to :user, optional: true
 		belongs_to :translate_key
 		after_save :cache!
