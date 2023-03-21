@@ -4,6 +4,7 @@
 
 <div class="row mt-2">
   <div class="col-3" id="sideMenu">
+  <%= link_to "Show needed keys", feedbacker.translates_needed_path({needed:1,q:params[:q],frame:"sideMenu"}), remote:true unless params[:needed] %>
     <%= render partial: "#{engine_prefix}translate_keys/parts/needed", locals: {title: dbt('admin::translations.needed',d:"Translations needed!")} if params[:needed] %>
 
 </div>

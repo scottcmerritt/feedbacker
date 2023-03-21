@@ -43,6 +43,7 @@ module Feedbacker
     # moved needed translations to a new page to speed up page load
     def needed
       # look at translates#todo (it might do what we need)
+      @q = params[:q] || params[:tdomain]
 
     end
 

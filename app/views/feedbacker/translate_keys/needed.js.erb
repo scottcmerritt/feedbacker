@@ -1,0 +1,1 @@
+$("#<%= @frame || "sideMenu" %>").html("<%= j render(partial: "#{engine_prefix}translate_keys/parts/needed", locals: {title: dbt('admin::translations.needed',d:"Translations needed!")}) %>")

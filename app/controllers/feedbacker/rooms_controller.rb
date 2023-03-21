@@ -7,7 +7,6 @@ class RoomsController < ::ApplicationController
 	end
 
 	def show
-	
 		if !@room.can_view? current_user  
 		    logger.debug "cannot view"
 		    if feedbacker.respond_to?(:room_join_path)
