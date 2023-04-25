@@ -2,6 +2,10 @@ module Feedbacker
   module ApplicationHelper
     include Rails.application.routes.url_helpers
 
+    def page_frame_css
+      "border border-dark bg-light p-1"
+    end
+
     def feedbacker? feature:nil
       if feature.nil?
         return true

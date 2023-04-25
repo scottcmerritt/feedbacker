@@ -1,30 +1,45 @@
+<div class="<%= main_app.page_frame_css rescue page_frame_css %>">
 <%= render partial: "community/shared/menu" %>
 <% custom_locals = {connections:@connections,connections_requested:@requested,connections_pending:@pending} %>
 
 <% unless @items.nil? %>
-<h6 class="bg-primary-light border border-contrast text-contrast fw-bold font-weight-bold p-1 px-2 mt-1 d-flex align-items-center">Interests <span class="text-muted fs-8 fw-normal mx-1">(Filter by public or private interests)</span>
+	<h6 class="bg-primary-light border border-contrast text-contrast fw-bold font-weight-bold p-1 px-2 mt-1 d-flex align-items-center">Interests <span class="text-muted fs-8 fw-normal mx-1">(Filter by public or private interests)</span>
 
-	<div class="ms-auto ml-auto d-flex align-items-center">
-	<a href="#" class="border bg-white p-1 mx-1 nodec d-flex align-items-center">Public <%= tag.span @items.length, class: "badge bg-dark text-light mx-1" %></a>
+		<div class="ms-auto ml-auto d-flex align-items-center">
+		<a href="#" class="border bg-white p-1 mx-1 nodec d-flex align-items-center">Public <%= tag.span @items.length, class: "badge bg-dark text-light mx-1" %></a>
 
-	<a href="#" class="border bg-white p-1 mx-1 nodec d-flex align-items-center">Private <%= tag.span @items.length, class: "badge bg-dark text-light mx-1" %></a>
+		<a href="#" class="border bg-white p-1 mx-1 nodec d-flex align-items-center">Private <%= tag.span @items.length, class: "badge bg-dark text-light mx-1" %></a>
 
+		</div>
+
+	</h6>
+	<div class="d-flex flex-wrap">
+		<% @items.each do |item| %>
+			<%= tag.div link_to(item.name, newsify.item_path(item)), class:"mx-1 bg-white border rounded p-1" %>
+		<% end %>
 	</div>
+	<div class="d-flex">
+		<% @items_requested.each do |item| %>
+			<%= tag.div item.name, class: "mx-1 bg-white border rounded p-1" %>
+		<% end %>
+	</div>
+<% end %>
 
-</h6>
-<div class="d-flex flex-wrap">
-<% @items.each do |item| %>
-<div class="mx-1 bg-white border rounded p-1">
-<%= link_to item.name, newsify.item_path(item) %>
+<% if @connections.nil? %>
+<div class="bg-info-light bg-info-border border p-2 fs-5">
+<%= tag.div dbt("connections.none_yet",d:"You do not have any connections yet."), class:"alert alert-notice fw-bold col-sm-6 mx-auto text-center" %>
+<div class="p-2">
+<% if defined?(main_app.users_path) %>
+<%= link_to dbt("connections.browse_our_community",d:"Browse our community"), main_app.users_path, class:"nodec text-info fw-bold" %> <%= dbt("connections.to_connect_with_people",d:"to connect with other people") %>
+<div class="my-2">
+<%= dbt("connections.once_connected",d:"Once connected you can send messages, view more profile details and make friendships") %>
+</div>
+<div class="my-2 text-center">
+<%= link_to icon(icon:"users",lbl:dbt("connections.start_connecting",d:"Start connecting")), main_app.users_path, class:"btn bg-success fs-3 m-2 text-white fw-bold" %>
 </div>
 <% end %>
 </div>
-<div class="d-flex">
-<% @items_requested.each do |item| %>
-<div class="mx-1 bg-white border rounded p-1">
-<%= item.name %>
-</div>
-<% end %>
+
 </div>
 <% end %>
 
@@ -43,7 +58,10 @@
 
 <div class="bg-white border m-1 py-1 px-2">
 <h4 class="<%= default_h_css %>">Connections</h4>
-<% custom_locals[:users] = @connections %>
+<%= tag.div "No connections yet", class:"alert alert-warning" if @connections.nil? %>
 
-<%= render partial: "/users/participants/list", locals: custom_locals %>
+<% custom_locals[:users] = @connections %>
+<%= render partial: "/users/participants/list", locals: custom_locals unless @connections.nil? %>
+
+</div>
 </div>
