@@ -1,18 +1,21 @@
 <div class="<%= main_app.page_frame_css rescue page_frame_css %>">
 <%= render partial: "community/shared/menu" %>
 <div>
-<div class="d-flex align-items-center justify-content-center fs-7 p-1">
-<%= tag.div icon(icon:"question-circle",lbl:"What the icons mean...",icon_css:"text-muted fs-8"), class:"p-1 mx-1 fw-bold" %>
-<%= tag.div icon(icon:"plus",icon_css:"text-success fs-6", lbl:"= Add connection"), class:"p-1 mx-1" %>
-
-<%= tag.div icon(icon:"plug",icon_css:"text-success fs-6", lbl:"= Connected"), class:"p-1 mx-1" %>
-<%= tag.div icon(icon:"plug",icon_css:"text-secondary fs-6", lbl:"= You requested...it's pending"), class:"p-1 mx-1" %>
-<%= tag.div icon(icon:"ban",icon_css:"text-danger fs-6", lbl:"= Click to cancel connection"), class:"p-1 mx-1" %>
-
+<div><%= tag.div icon(icon:"question-circle",lbl:"What the icons mean...",icon_css:"text-muted fs-8"), class:"px-1 mx-1 fw-bold fs-8" %></div>
+<div class="d-flex align-items-center justify-content-center fs-7 p-1 fw-bold">
+<%= tag.div icon(icon:"plug",icon_css:"text-success fs-6 me-1", lbl:"= Connected"), class:"p-1 ms-1 d-flex align-items-center" %>
+<%= tag.div icon(icon:"plug",icon_css:"text-secondary fs-6 me-1", lbl:"= Pending"), class:"p-1 ms-1 d-flex align-items-center" %>
+<%= tag.div icon(icon:"ban",icon_css:"text-danger fs-6 me-1", lbl:"= Cancel"), class:"p-1 ms-1 d-flex align-items-center" %>
 </div>
 <% if defined?(main_app.users_path) %>
-<div class="fs-8 text-muted p-1 text-center">
-<%= link_to dbt("connections.browse_our_community",d:"Browse our community"), main_app.users_path, class:"nodec text-info fw-bold" %> <%= dbt("connections.to_connect_with_people",d:"to connect with other people") %>
+<div class="fs-7 text-muted p-1 text-center">
+<%= link_to dbt("connections.browse_our_community",d:"Browse our community"), main_app.users_path, class:"nodec text-info fw-bold" %> <%= dbt("connections.to_connect_with_people",d:"to connect with people") %>
+
+<% if @connections.nil? || @connections.empty? %>
+<div class="p-2 d-flex align-items-center justify-content-center">
+<%= tag.div dbt("connections.click",d:"click").capitalize %><%= tag.div icon(icon:"plus",icon_css:"text-success fs-6 me-1", lbl:" next to a profile to send a connection request"), class:"p-1 mx-1 d-flex align-items-center" %>
+</div>
+<% end %>
 </div>
 <% end %>
 </div>
@@ -42,7 +45,7 @@
 <% end %>
 
 <% if @connections.nil? || @connections.empty? %>
-<div class="bg-info-light bg-info-border border p-2 fs-5">
+<div class="bg-info-lighter bg-info-border border p-2 fs-5">
 <%= tag.div dbt("connections.none_yet",d:"You do not have any connections yet."), class:"alert alert-notice fw-bold col-sm-6 mx-auto text-center" %>
 <div class="p-2">
 <% if defined?(main_app.users_path) %>
