@@ -7,20 +7,36 @@
 <div>
 <% samples = Feedbacker::Translate.get_logged_samples "#{translate_key.tdomain}.#{translate_key.tkey}" %>
 
-<div class="ms-2">
-<%= tag.div raw("Sample page: " + link_to("#{request.protocol}#{request.host_with_port}#{samples[:page]}",samples[:page], class: "fw-bold fs-8 nodec text-dark")), class: "fs-8" unless samples[:page].nil? || !show_page %>
+<div class="ms12">
+<% unless samples[:page].nil? || !show_page %>
+<div class="fs-8">Sample page</div>
+<%= tag.div raw(link_to("#{request.protocol}#{request.host_with_port}#{samples[:page]}",samples[:page], class: "fw-bold fs-8 nodec text-dark")), class: "fs-8", style:"overflow-x:auto;width:100%;white-space:nowrap;"  %>
+<% end %>
 
     <% unless samples[:default].nil? %>
         <div id="<%= frame_id %>" class="border p-1">
           <%= tag.div samples[:default],  class: "fw-bold fs-8" %>
           <%= link_to "Approve", feedbacker.translates_approve_default_path({lang:lang,tdomain:translate_key.tdomain,tkey:translate_key.tkey, parent_frame:parent_frame}), remote:true,class: "fs-8 nodec" %>
         </div>
+        
         <% translation_frame = "translated_#{SecureRandom.hex(10)}" %>
-        <%= link_to "Translate", feedbacker.translates_suggest_path({lang: params[:lang],text:samples[:default],frame:translation_frame}), remote: true, class:"fs-7 p-1 nodec" %>
+      <div class="d-flex align-items-center fs-6">
+      <%= tag.div "Translate to", class:"fs-7 text-muted me-1" %> 
+      <%# sometimes translate_key is actually a translates row %>
+      <% get_all_langs.each do |lang_to| %>
+      <%= link_to lang_to, feedbacker.translates_suggest_path({lang: lang_to,text:samples[:default],frame:translation_frame}), remote: true, class:"fs-7 p-1 nodec me-1 text-info fw-bold" %>
+      <% end %>
+      </div>
+        
         <div id="<%= translation_frame %>" class="px-1 fw-bold text-contrast fs-6"></div>
     <% end %>
+<% unless samples[:result].nil? %>
+<div class="d-flex fs-8 text-muted">
+  <div class="me-1 text-muted">Result</div>
+  <div class="fw-bold"><%= samples[:result] %></div>
+</div>
+<% end %>
 
-<%= tag.div "Result: " + samples[:result], class: "fw-bold fs-8" unless samples[:result].nil? %>
 </div>
 
 <%= render partial: "feedbacker/translate_keys/parts/hits_and_misses", locals: {translate_key:translate_key} %>

@@ -1,6 +1,9 @@
 module Feedbacker
 	class TranslatesController < ApplicationController
 		before_action :set_start_time
+		
+		before_action :award_points
+
 		before_action :authenticate_admin! #:authenticate_user!
 		before_action :set_translate
 		before_action :set_needed_translations
@@ -159,6 +162,10 @@ module Feedbacker
 		end
 
 		private
+		
+		def award_points
+			current_user.add_points(1, category: 'translator') if current_user.respond_to?(:add_points)
+		end
 		
 		def set_start_time
 	        @timer_action = Time.now
