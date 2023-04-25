@@ -24,9 +24,11 @@
     <% end %>
     </ul>
   <div class="tab-content" id="langs-tabContent" style="height:100vh;overflow-y:auto;">
+    <% if false %>
     <div>
     <input type="search" placeholder="Type to filter..." class="fs-7 p-1 m-1 rounded-pill px-2 border-dark">
     </div>
+    <% end %>
     <% needed.each do |lang,rows| %>
     <% is_active = needed.keys[0] == lang %>
 
