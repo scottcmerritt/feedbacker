@@ -28,7 +28,7 @@ document.querySelector('#a').onclick = (e) => {
 */
 
 function highlightResults(strToSearch,parentId) {
-  if(strToSearch == '')
+  if(strToSearch == '' || strToSearch.length < 3)
   {
     removeHighlight()
     return true
