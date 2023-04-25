@@ -34,6 +34,21 @@ module Feedbacker
 			end
 		end
 
+		def suggest
+			@frame_id = params[:frame]
+
+			begin
+				if defined?(McTranslate)
+					translator = McTranslate.new
+					@result = translator.results(text: params[:text],lang:params[:lang])["translation"]
+				else
+					@result = "Not enabled"
+				end
+			rescue Exception=>ex
+				@result = "Error: #{ex}"
+			end
+		end
+
 
 		# translates_clear_misskey_path
 		def clear_misskey

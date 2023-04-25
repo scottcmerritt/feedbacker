@@ -22,9 +22,9 @@
 <% end %>
 
 <% if translate.use_cms? %>
-<%= form.input :phrase, as: :text, :input_html=>{rows:5} %>
+<%= form.input :phrase, as: :text, :input_html=>{rows:5, class:"bg-info-light text-info fw-bold"} %>
 <div class="col-3">
-<%= form.input :lang, collection: get_all_langs, label: "Language", input_html: {class:'form-select'} %>
+<%= form.input :lang, collection: get_all_langs, label: "Language", input_html: {class:'form-select'}, wrapper_html:{class:"ms-1"} %>
 </div>
 <% else %>
 
@@ -34,13 +34,13 @@
     <% end %>
       <div class="<%= size == "tiny" ? "col-9" : "col-8 col-sm-7" %>">
       <% unless translate.use_cms? %>
-      <%= form.input :phrase %>
+      <%= form.input :phrase, :input_html=>{class:"bg-info-light text-info fw-bold"}  %>
       <% else %>
-      <%= form.input :phrase, as: :text, :input_html=>{rows:5} %>
+      <%= form.input :phrase, as: :text, :input_html=>{rows:5, class:"bg-info-light text-info fw-bold"} %>
       <% end %>
     </div>
     <div class="<%= size == "tiny" ? "col-3" : "col-4 col-sm-2" %>">
-      <%= form.input :lang, collection: get_all_langs, label: "Language", input_html: {class:'form-select'} %>
+      <%= form.input :lang, collection: get_all_langs, label: "Language", input_html: {class:'form-select'}, wrapper_html:{class:"ms-1"} %>
     </div>
     <% unless size == "tiny" %>
     <div class="col-0 col-sm-1"></div>

@@ -4,10 +4,8 @@
 
 
 <div class="row">
-  <div class="col-3">
-    <%= render partial: "#{engine_prefix}translate_keys/parts/needed", locals: {title: "Translations needed"} if @load_delayed %>
-
-
+  <div class="col-3" id="sideMenu">
+    <%= render partial: "#{engine_prefix}translate_keys/parts/needed_toggle" %>
   </div>
   <div class="col-9">
     <%= render partial: "#{engine_prefix}translate_keys/parts/filter", locals: @filter_locals if @load_delayed %>

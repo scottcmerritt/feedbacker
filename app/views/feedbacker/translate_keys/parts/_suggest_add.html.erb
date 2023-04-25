@@ -1,22 +1,26 @@
 <% size = "lg" if local_assigns[:size].nil? %>
-<% wrap_css = "bg-white border rounded my-1 fs-6" if local_assigns[:wrap_css].nil? %>
+<% wrap_css = "bg-white border rounded my-1 mx-2 fs-6" if local_assigns[:wrap_css].nil? %>
 <div class="text-dark <%= wrap_css %>">
     <%= tag.div "Add translation for this key", class: "fw-bold p-1 px-2 fs-8" if false %>
 
-    <div class="d-flex align-items-center fs-6">
+    <div class="d-flex align-items-center fs-6 bg-primary-light">
             <% suggested = get_all_langs.difference(translate_key.langs_used) %>
             <% unless suggested.empty? %>
-            <div class="border rounded px-1 d-flex align-items-center mx-2 my-1 pb-1">
-                <div class="fw-bold mx-1 fs-7">Needed</div>
-            <% suggested.each do |lang| %>
-
-                <%= tag.div link_to(lang, feedbacker.new_translate_path(lang:lang,key_id:translate_key.id), class: "badge bg-success text-light mx-1 mt-0") %>
-            <% end %>
+            <div class="px-1 d-flex flex-column mx-2 my-1 pb-1">
+                <div class="fw-bold mx-1 fs-6 text-info-dark">Needed</div>
+                <div class="d-flex align-items-center">
+                <% suggested.each do |lang| %>
+                    <%= tag.div link_to(lang, feedbacker.new_translate_path(lang:lang,key_id:translate_key.id), class: "badge bg-success text-light mx-1 mt-0") %>
+                <% end %>
+                </div>
             </div>
             <% end %>
         
 
-        <div class="ms-auto d-flex align-items-center">
+        <div class="ms-auto d-flex flex-column">
+            <div class="fw-bold mx-1 fs-6 text-info-dark">Translated</div>
+            <div class="d-flex align-items-center">
+
             <% if suggested.empty? %>
             <% congrats_lbl = "#{get_all_langs.length == 2 ? 'Both' : 'All'} #{"languages" if size!="tiny"} #{["sm","tiny"].include?(size) ? "" : "already added"}" %>
             <%= tag.div icon(icon:"check-circle",lbl:congrats_lbl,icon_css:"text-success me-1"), class: "d-flex align-items-center alert alert-success p-1 m-1" %>
@@ -25,6 +29,7 @@
             <% get_all_langs.intersection(translate_key.langs_used).each do |lang| %>
             <%= tag.div link_to(lang, feedbacker.new_translate_path(lang:lang,key_id:translate_key.id), class: "badge bg-secondary text-light mx-1 mt-0") %>
             <% end %>
+            </div>
         </div>
     </div>
 

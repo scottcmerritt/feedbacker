@@ -30,6 +30,8 @@ Feedbacker::Engine.routes.draw do
 	match '/tag/delete(/:id)' => 'tags#destroy', :as => :destroy_tag, :via=> :delete
 	
 	match '/admin/about/translations' =>"translates#about", :as => :translates_about, :via=>[:get,:post]
+	match '/admin/suggest/translation' =>"translates#suggest", :as => :translates_suggest, :via=>[:get,:post]
+
 	match '/admin/search/translations' =>"translate_keys#search", :as => :translates_search, :via=>[:get,:post]
 
 	match '/translated/pages' =>"translate_keys#translated_pages", :as => :translated_pages, :via=>[:get,:post]

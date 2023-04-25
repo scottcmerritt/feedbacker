@@ -1,8 +1,7 @@
 <%= render partial: "admin/manage/header" %>
 <%= render partial: "admin/manage/menu" if false %>
 
-
-<%= render partial: "translate_keys/parts/menu", locals: {selected:-1} %>
+<%= render partial: "#{engine_prefix}translate_keys/parts/menu", locals: {selected:-1} %>
 
 <h4 class="pageH border my-1 mt-3 p-1 px-2">The "translations" tool explained:</h4>
 <div class="bg-white border my-2 p-2">
@@ -26,8 +25,5 @@ The page templates have codes that associate KEYWORDS with text that is displaye
 	</div>
 </p>
 
-<p>
-<%= link_to "Try it out", translates_path, class: "btn btn-success m-1" %>
-
-</p>
+<p><%= link_to "Try it out", feedbacker.translates_path, class: "btn btn-success m-1" %></p>
 </div>

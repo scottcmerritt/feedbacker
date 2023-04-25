@@ -1,8 +1,11 @@
+<style>
+.text-dark-light {color: #c4b9a7;}
+.bg-dark-lighter {background-color:#ded6c9;}
+
+</style>
 <% show_defaults = {edit:true,delete:true} %>
 <% show = local_assigns[:show].nil? ? show_defaults : show_defaults.merge(show) %>
 
 <% translate = @translate if local_assigns[:translate].nil? %>
-<div class="fw-bold bg-light p-1 px-2 mt-4 text-dark border border-dark rounded-top border-bottom-muted">Related translations</div>
-<div class="p-2 border border-dark rounded-bottom border-top-0">
-<%= render partial: "#{admin_engine_prefix}translates/parts/list", locals: {translations:translate.related.page(params[:page])} %>
-</div>
+<% translations = translate.related.page(params[:page]) %>
+<%= render partial: "#{admin_engine_prefix}translates/parts/list", locals: {translations:translations,show: {wrap:true},title:"Related translations"} if translations.total_count > 0 %>

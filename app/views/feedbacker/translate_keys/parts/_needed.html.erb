@@ -6,7 +6,7 @@
 <% needed = Feedbacker::Translate.get_cache_misses(grouped:true,tdomain_filter:tdomain || params[:q],tkey_filter:params[:tdomain] || params[:q]) if needed.nil? %>
 
 <%= tag.div "Filtered by #{tdomain}", class: "fs-7 px-1 text-center" unless tdomain.nil? %>
-<h5 class="bg-primary text-light rounded-top p-1 px-2 mb-0 d-flex align-items-center"><%= local_assigns[:title].nil? ? dbt('admin::translations.needed',d:"Translations needed!") : title %>
+<h5 class="bg-primary text-primary-lightest p-2 mb-0 d-flex align-items-center"><%= local_assigns[:title].nil? ? dbt('admin::translations.needed',d:"Translations needed!") : title %>
 </h5>
 
 <% if needed.empty? %>
@@ -25,18 +25,19 @@
     <% is_active = needed.keys[0] == lang %>
 
     <div id="langs-<%= lang %>" data-lang="<%= lang %>" class="search-data bg-white border mb-1 p-0 tab-pane fade <%= "show active" if is_active %>" role="tabpanel" aria-labelledby="langs-<%= lang %>-tab">
-      <h6 class="px-2">Language: <%= lang %></h6>
-      <% rows.each do |full_row| %>
-
+      <div class="px-2 fs-8 text-muted d-flex align-items-center justify-content-end">
+      <%= tag.div "Language" %> <%= tag.div lang, class:"mx-1 fs-6 fw-bold text-contrast" %>
+      </div>
+        <% rows.each do |full_row| %>
         <% row = full_row.kind_of?(Feedbacker::Translation) ? full_row : (full_row.has_key?(:obj) ? full_row[:obj] : full_row) %>
         <% frame_id = "missKey_#{SecureRandom.hex(10)}" %>
-        <div class="border-bottom search-row mb-1 p-1 px-2 border mx-1 bg-light" id="<%= frame_id %>">
+        <div class="search-row mb-1 p-1 px-2 border-2 border-bottom mx-0 bg-light" style="position:relative;" id="<%= frame_id %>">
           <% if !row.tdomain.nil? && row.tdomain.include?("menu::content") %>
             <%= link_to feedbacker.new_translate_path(lang:lang,tdomain:row.tdomain,tkey:row.tkey), class: "d-flex flex-column nodec" do %>
-            <div class="text-danger fw-bold me-1">No need to edit</div> <%= tag.div "#{row.tdomain}.#{row.tkey}" %>
+              <div class="text-danger fw-bold me-1">No need to edit</div> <%= tag.div "#{row.tdomain}.#{row.tkey}" %>
             <% end %>
           <% else %>
-            <%= link_to icon(icon:'trash'), feedbacker.translates_clear_misskey_path({remove_misskey:full_row[:key],remove_frame:frame_id}), remote:true, class:"me-2 nodec clearKeyBtn" if full_row.has_key?(:key) %>
+            <%= link_to icon(icon:'trash',icon_css:"text-muted"), feedbacker.translates_clear_misskey_path({remove_misskey:full_row[:key],remove_frame:frame_id}), remote:true, class:"fs-7 m-2 nodec clearKeyBtn", style:"position:absolute;bottom:0;right:0;" if full_row.has_key?(:key) %>
             <%= link_to "#{row.tdomain}.#{row.tkey}", feedbacker.new_translate_path(lang:lang,tdomain:row.tdomain,tkey:row.tkey), class: "nodec" %>
             <% begin %>
             <%= render partial: "#{engine_prefix}translate_keys/parts/samples_and_stats", locals: {translate_key:row,parent_frame:frame_id,lang:lang} %>
@@ -45,9 +46,9 @@
             <% end %>
             <%= tag.div full_row[:key], class: "fs-7" if params[:debug] %>      
           <% end %>
-        </div>
+        </div> <!-- end search-row -->
 
-      <% end %>
+    <% end %>
     </div>
 
     <% end %>

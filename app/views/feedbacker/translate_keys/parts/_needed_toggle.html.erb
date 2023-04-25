@@ -1,0 +1,2 @@
+<%= tag.div link_to("Show needed keys", feedbacker.translates_needed_path({needed:1,q:params[:q],frame:"sideMenu"}), remote:true, class:"nodec p-1 m-1 btn btn-sm text-dark border border-dark fw-bold"), class:"text-center" unless params[:needed] %>
+<%= render partial: "#{engine_prefix}translate_keys/parts/needed", locals: {title: dbt('admin::translations.needed',d:"Translations needed!")} if params[:needed] %>

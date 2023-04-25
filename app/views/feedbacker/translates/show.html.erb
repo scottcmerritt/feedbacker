@@ -2,6 +2,8 @@
 <%= render partial: "admin/manage/menu" if false %>
 <%= render partial: "#{admin_engine_prefix}translate_keys/parts/menu" %>
 <%= render partial: "#{admin_engine_prefix}translate_keys/parts/filter" if false %>
+<%= render partial: "#{engine_prefix}translate_keys/parts/search_form" %>
+<div class="bg-info-light p-1 mb-2 border-info">
 
 <% translate_key = (@translate.id.nil? ? Feedbacker::TranslateKey.find_by(id:@translate.translate_key_id) : @translate.translate_key) unless @translate.translate_key.nil? %>
 
@@ -25,5 +27,7 @@
     <% end %>
 </div>
 <% end %>
+
+</div>
 
 <%= render partial: "#{admin_engine_prefix}translates/parts/related",locals:{translate:@translate} %>

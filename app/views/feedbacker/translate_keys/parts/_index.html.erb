@@ -1,7 +1,7 @@
 <% if @translate_keys.empty? %>
     <%= tag.div "No translation key matches", class: "alert alert-warning my-2 p-2" %>
 <% else %>
-<%= tag.div render(partial: "#{engine_prefix}translate_keys/parts/pager") %>
+<%= tag.div render(partial: "#{engine_prefix}translate_keys/parts/pager"), class:"fs-7 mx-1" %>
 
 
   <table class="table bg-light border rounded">

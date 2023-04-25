@@ -1,7 +1,27 @@
-<% show_defaults = {edit:true,delete:true} %>
+
+<% show_defaults = {edit:true,delete:true,wrap:false} %>
 <% show = local_assigns[:show].nil? ? show_defaults : show_defaults.merge(show) %>
 <% translations = @translations if local_assigns[:translations].nil? %>
-<%= feedbacker_paginate translations,page: params[:page] %>
+
+
+<% html_parts = [] %>
 <% translations.each do |row| %>
-	<%= render partial: "#{engine_prefix}translates/parts/list_row", locals: {row: row,show:show} %>
+	<% html_parts.push render(partial: "#{engine_prefix}translates/parts/list_row", locals: {row: row,show:show}) %>
+<% end %>
+
+<% if show[:wrap] %>
+<% title = nil if local_assigns[:title].nil? %>
+
+
+<%= tag.div class: "d-flex align-items-center fw-bold bg-dark p-1 px-2 mt-4 text-dark-light border border-dark rounded-top border-bottom-muted" do %>
+<%= tag.div title unless title.blank? %>
+<%= tag.div feedbacker_paginate(translations,page: params[:page],wrap_css:""), class:"ms-auto rounded bg-white px-1" %>
+<% end %>
+
+<div class="p-2 border bg-dark-lighter border-dark rounded-bottom border-top-0">
+<%= raw html_parts.join %>
+</div>
+<% else %>
+<%= feedbacker_paginate translations,page: params[:page] %>
+<%= raw html_parts.join %>
 <% end %>

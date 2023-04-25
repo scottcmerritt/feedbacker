@@ -1,28 +1,20 @@
 <% target = translate_key if local_assigns[:target].nil? %>
 <% show_updated = false if local_assigns[:show_updated].nil? %>
-<h6 class="pageH d-flex align-items-center p-1 px-2 text-dark fs-7">
-<%= link_to icon(icon:"arrow-left"), feedbacker.translate_keys_path, class: "me-2" unless !params[:id] %>
-  Site translation
-  <%= tag.div "Added/updated", class: "bg-success text-light mx-1 fw-bold p-1 rounded animate__animated animate__bounce" if show_updated %>
 
-
-<%= tag.div safe_join(["As seen on: ",link_to("#{request.protocol}#{request.host_with_port}#{translate_key.sample_page}",translate_key.sample_page,class:"fw-bold")]), class: "ms-auto me-1 fs-7" unless translate_key.sample_page.nil? %>
-
-</h6>
 
 <div class="">
-  <div class="row">
+  <div class="row g-0">
     <div class="col-7">
-        <div class="d-inline-flex bg-white">
-          <div class="text-center fs-6 border ms-1">
-            <div class="bg-dark text-light m-0 px-2">Domain</div>
-            <div class="px-2"><%= translate_key.tdomain %></div>
+        <div class="d-inline-flex ms-2">
+          <div class="text-center fs-6 border bg-white">
+            <div class="bg-dark text-light m-0 px-2 fs-7">Domain</div>
+            <div class="px-2 fw-bold fs-5"><%= translate_key.tdomain %></div>
 
           </div>
 
-          <div class="text-center fs-6 border me-1">
-            <div class="bg-primary text-light m-0">Key</div>
-            <div class="px-2"><%= translate_key.tkey %></div>
+          <div class="text-center fs-6 border me-1 bg-white">
+            <div class="bg-primary text-light m-0 px-2 fs-7">Key</div>
+            <div class="px-2 fw-bold fs-5"><%= translate_key.tkey %></div>
           </div>
           
           <span class="fs-6 mx-1">
@@ -30,21 +22,31 @@
           </span>
         </div>
         
-      <%= render partial: "#{admin_engine_prefix}translate_keys/parts/suggest_add", locals: {translate_key: translate_key} unless translate_key.nil? %>
+
 
     </div>
     <div class="col-5">
       <%= render partial: "#{admin_engine_prefix}translate_keys/parts/samples_and_stats", locals: {translate_key:translate_key,show_page:false} %>
-      <div class="alert alert-warning fs-8 p-2 py-1">
+      <div class="alert alert-warning rounded-0 fs-8 p-2 py-1 m-0">
       <b>DEVELOPER NOTE:</b> Find in the source code as <span class="fw-bold">dbt('<%= translate_key.tdomain %>.<%= translate_key.tkey %>')</span>
       </div>
-      
-
-
+    
     </div>
-  </div>
-
-
-  
+  </div>  
 </div>
+<%= render partial: "#{admin_engine_prefix}translate_keys/parts/suggest_add", locals: {translate_key: translate_key} unless translate_key.nil? %>
+
+<div class="d-flex align-items-center p-1 px-2 text-dark fs-7">
+<% if false %>
+<%= link_to icon(icon:"arrow-left"), feedbacker.translate_keys_path, class: "me-2" unless !params[:id] %>
+  Site translation
+  <% end %>
+
+  <%= tag.div "Added/updated", class: "bg-success text-light mx-1 fw-bold p-1 rounded animate__animated animate__bounce" if show_updated %>
+
+
+<%= tag.div safe_join(["As seen on: ",link_to("#{request.protocol}#{request.host_with_port}#{translate_key.sample_page}",translate_key.sample_page,class:"fw-bold")]), class: "ms-auto me-1 fs-7" unless translate_key.sample_page.nil? %>
+
+</div>
+
 

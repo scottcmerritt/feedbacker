@@ -13,12 +13,15 @@
 	
 <div class="row mt-3">
 	<div class="col-sm-3" id="sideMenu">
-		<%= render partial: "#{engine_prefix}translate_keys/parts/needed", locals: {title: "Translations needed"} if params[:needed] %>
+		<%= render partial: "#{engine_prefix}translate_keys/parts/needed_toggle" %>
 	</div>
 	<div class="col-sm-7">
 		<%= render partial: "#{engine_prefix}translate_keys/parts/filter", locals: {refresh:params[:refresh]} if @load_delayed %>
 		<%= render partial: "#{engine_prefix}translate_keys/parts/search_form" %>
-		<h4 class="pageH d-flex p-1 px-2 text-light bg-dark mb-0">Recent translations <%= link_to icon(icon:"plus",lbl:"Add"), feedbacker.translates_about_path, class: "btn btn-sm btn-primary text-light ms-auto" %></h4>
+		<h4 class="pageH d-flex p-1 px-2 text-light bg-dark mb-0">Recent translations 
+		<%= link_to icon(icon:"question-circle",icon_css:"me-1",lbl:"FAQs"), feedbacker.translates_about_path, class: "ms-auto nodec bg-secondary text-light p-1 fs-7 mx-2 my-1 d-flex align-items-center" %>
+		
+		</h4>
 		<div class="p-1 bg-white border">
 
 			<%= render partial: "#{engine_prefix}translates/parts/list" %>
@@ -29,12 +32,19 @@
 	</div>
 	<div class="col-sm-2">
 		<h6 class="d-flex align-items-center bg-light text-dark p-1 px-2 border rounded-top fs-8 mt-0 mb-1">Top translators</h6>
+		<div class="px-1"><%= tag.span "Pts", class:"bg-info text-info-lightest p-1 fs-7" %></div>
+		<% user_ids = {} %>
 		<% @translators.each do |user| %>
-		<div class="bg-white border-bottom p-1 mb-1 d-flex align-items-center">
-			<%= tag.span user.translates_count, class: "badge bg-info me-1 border fs-7" %> <%= link_to user.display_name_public, [main_app,user], class: "fs-8" %>
-		</div>
-
+			<% user_ids[user.id] = true %>
+			<%= render partial: "#{engine_prefix}translates/parts/translator_points", locals:{user:user} %>
 		<% end %>
+		<% User.with_any_role(:translator,:admin,:analyst,:moderator).each do |user| %>
+			<% unless user_ids.key?(user.id) %>
+				<%= render partial: "#{engine_prefix}translates/parts/translator_points", locals:{user:user} %>
+				<% user_ids[user.id] = true %>
+			<% end %>
+		<% end %>
+
 	</div>
 </div>
 

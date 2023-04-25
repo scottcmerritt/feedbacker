@@ -1,0 +1,8 @@
+<div class="bg-white border-bottom p-1 mb-1">
+    <div class="d-flex align-items-center">
+        <%= tag.span "#{num_comma(user.points(category:"translator"))}", class:"bg-info text-info-lightest me-1 fs-7 p-1 px-2" %>
+        <%= render partial: "users/profile_mini",locals: {user:user,size:"nano",wrap_css:"bg-white rounded my-1 me-1 p-1"} %>
+    </div>
+    <% translations_created = user.respond_to?(:translates_count) ? user.translates_count : Feedbacker::Translate.where(user_id:user.id).count %>
+    <div class="fs-8 d-flex align-items-center justify-content-end text-muted"><%= tag.span num_comma(translations_created), class: "text-contrast fw-bold fs-7 me-1" %> translations created</div>
+</div>

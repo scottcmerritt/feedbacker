@@ -8,13 +8,16 @@
 <% samples = Feedbacker::Translate.get_logged_samples "#{translate_key.tdomain}.#{translate_key.tkey}" %>
 
 <div class="ms-2">
-<%= tag.div raw("Sample page: " + link_to("#{request.protocol}#{request.host_with_port}#{samples[:page]}",samples[:page], class: "fw-bold fs-8")), class: "fs-8" unless samples[:page].nil? || !show_page %>
+<%= tag.div raw("Sample page: " + link_to("#{request.protocol}#{request.host_with_port}#{samples[:page]}",samples[:page], class: "fw-bold fs-8 nodec text-dark")), class: "fs-8" unless samples[:page].nil? || !show_page %>
 
     <% unless samples[:default].nil? %>
         <div id="<%= frame_id %>" class="border p-1">
-          <%= tag.div samples[:default],  class: "fw-bold fs-8"  %>
-          <%= link_to "Approve", feedbacker.translates_approve_default_path({lang:lang,tdomain:translate_key.tdomain,tkey:translate_key.tkey, parent_frame:parent_frame}), remote:true,class: "fs-8" %>
+          <%= tag.div samples[:default],  class: "fw-bold fs-8" %>
+          <%= link_to "Approve", feedbacker.translates_approve_default_path({lang:lang,tdomain:translate_key.tdomain,tkey:translate_key.tkey, parent_frame:parent_frame}), remote:true,class: "fs-8 nodec" %>
         </div>
+        <% translation_frame = "translated_#{SecureRandom.hex(10)}" %>
+        <%= link_to "Translate", feedbacker.translates_suggest_path({lang: params[:lang],text:samples[:default],frame:translation_frame}), remote: true, class:"fs-7 p-1 nodec" %>
+        <div id="<%= translation_frame %>" class="px-1 fw-bold text-contrast fs-6"></div>
     <% end %>
 
 <%= tag.div "Result: " + samples[:result], class: "fw-bold fs-8" unless samples[:result].nil? %>

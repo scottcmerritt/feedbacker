@@ -33,10 +33,9 @@
         <% end %>
 
         <div class="d-flex align-items-center text-muted fs-6 m-1">
+
         <span class="me-auto">
            Who can edit? <%= render partial: "shared/permissions/show", locals: {target:translate_key} %>
-          <span class="ms-auto">
-           <%= render partial: "shared/permissions/show", locals: {target:translate_key} %></span>
             <div class="text-end">Added by <%= tag.span translate_key.createdby.nil? ? "Anonymous" : link_to(translate_key.creator.email,translate_key.creator) %>
             </div>
         </div>

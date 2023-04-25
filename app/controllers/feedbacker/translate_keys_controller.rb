@@ -2,6 +2,9 @@ module Feedbacker
   class TranslateKeysController < ApplicationController
     # /translations
     before_action :set_start_time
+    
+    before_action :award_points
+
     before_action :authenticate_admin!
     before_action :set_translate_key, only: %i[ show edit update destroy ]
     before_action :set_shared, only: %i[ index search email delayed delayed_filters needed ]
@@ -170,6 +173,11 @@ module Feedbacker
 
 
     private
+
+    def award_points
+      current_user.add_points(1, category: 'translator') # if current_user.respond_to?(:add_points)
+    end
+
     def do_translate_keys_search!
       @query1 = "#{@q.downcase}%"
       @query2 = "%#{@q.downcase}%"

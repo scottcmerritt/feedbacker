@@ -1,7 +1,7 @@
 <% data = local_assigns[:data] %>
 <% paths = local_assigns[:paths] %>
 <% page = @page if local_assigns[:page].nil? %>
-<% link_css = "btn btn-sm font-weight-bold fw-bold border rounded my-1 bg-light" %>
+<% link_css = "btn btn-sm font-weight-bold fw-bold rounded my-1" %>
 <% wrap_css = "bg-white border-bottom border-top" if local_assigns[:wrap_css].nil? %>
 
 <div class="d-flex align-items-center justify-content-between my-1 <%= wrap_css %>">
@@ -11,9 +11,9 @@
 	<%= [1,"1",nil].include?(@page) ? tag.span("") : link_to("Prev page", paths[:prev], class: link_css) %>
 	</div>
 	<div>
-	<%= tag.span "#{num_comma(data.total_count,0)} rows", class: "fw-bold font-weight-bold" %>
+	<%= tag.span "#{num_comma(data.total_count,0)} #{"row".pluralize(data.total_count)}", class: "fw-bold font-weight-bold" %>
 
-	<%= tag.span "Page #{page || 1} of #{data.total_pages}", class: "mx-1" %>
+	<%= tag.span "Page #{page || 1} of #{data.total_pages}", class: "mx-1" if data.total_pages > 1 %>
 
 	</div>
 	<% begin %>
