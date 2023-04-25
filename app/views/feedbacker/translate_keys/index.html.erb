@@ -1,8 +1,125 @@
+<%= render partial: "feedbacker/translate_keys/parts/filter_search2_js", locals: {use_and_match:true} %>
+
+<style>
+.hl {
+  background-color: red;
+  position: absolute;
+  z-index: -1;
+  z-index: 1;
+    opacity: 0.3;
+}
+</style>
+<script>
+// A $( document ).ready() block.
+$( document ).ready(function() {
+    // NOTE: can't call multiple times since it clears the previous highlights
+    //highlightResults('<%= params[:q] %>','#translate_matches')
+    //highlightResults('<%= params[:q] %>','#translate_keys')
+    setTimeout(() => {
+      highlightResults('<%= params[:q] %>','#translateKeysIndex')
+    }, 100);
+    
+});
+/*
+document.querySelector('#a').onclick = (e) => {
+  let strToSearch = document.querySelector('#search').value
+  highlightResults(strToSearch,'#translate_matches')
+}
+*/
+
+function highlightResults(strToSearch,parentId) {
+  if(strToSearch == '')
+  {
+    removeHighlight()
+    return true
+  }
+
+  let topParent = document.querySelector(parentId);
+  let s, range;
+  
+
+  let re = RegExp(strToSearch, 'g')
+
+  removeHighlight()
+  s = window.getSelection();
+  s.removeAllRanges()
+  // to handle multiple result you need to go through all matches
+  while (match = re.exec(topParent.textContent)) {
+
+    let it = iterateNode(topParent);
+    let currentIndex = 0;
+    // the result is the text node, so you can iterate and compare the index you are searching to all text nodes length
+    let result = it.next();
+
+    while (!result.done) {
+      if (match.index >= currentIndex && match.index < currentIndex + result.value.length) {
+        // when we have the correct node and index we add a range
+        range = new Range();
+        range.setStart(result.value, match.index - currentIndex)
+
+      }
+      if (match.index + strToSearch.length >= currentIndex && match.index + strToSearch.length < currentIndex + result.value.length) {
+        // when we find the end node, we can set the range end
+        range.setEnd(result.value, match.index + strToSearch.length - currentIndex)
+        s.addRange(range)
+
+        // this is where we add the divs based on the client rects of the range
+        addHighlightDiv(range.getClientRects())
+
+
+      }
+      currentIndex += result.value.length;
+      result = it.next();
+    }
+  }
+  s.removeAllRanges()
+
+}
+
+
+function* iterateNode(topNode) {
+  // this iterate through all descendants of the topnode
+  let childNodes = topNode.childNodes;
+  for (let i = 0; i < childNodes.length; i++) {
+    let node = childNodes[i]
+    if (node.nodeType === 3) {
+      yield node;
+    } else {
+      yield* iterateNode(node);
+    }
+  }
+
+}
+
+function addHighlightDiv(rects) {
+  for (let i = 0; i < rects.length; i++) {
+
+    let rect = rects[i];
+    let highlightRect = document.createElement('DIV')
+    document.body.appendChild(highlightRect)
+    highlightRect.classList.add('hl')
+    highlightRect.style.top = rect.y + window.scrollY + 'px'
+    highlightRect.style.left = rect.x + 'px'
+    highlightRect.style.height = rect.height + 'px'
+    highlightRect.style.width = rect.width + 'px'
+
+  }
+
+}
+
+function removeHighlight() {
+  let highlights = document.querySelectorAll('.hl');
+  for (let i = 0; i < highlights.length; i++) {
+    highlights[i].remove();
+  }
+}
+</script>
+
 <%= render partial: "admin/manage/header" %>
 <%= render partial: "admin/manage/menu" if false %>
 <%= render partial: "feedbacker/translate_keys/parts/menu", locals: {selected:controller_name == "menus" ? 5 : (params[:action] == "email" ? 3 : 1)} %>
 
-<div class="row mt-2">
+<div class="row mt-2" id="translateKeysIndex">
   <div class="col-3" id="sideMenu">
     <%= render partial: "#{engine_prefix}translate_keys/parts/needed_toggle" %>
 </div>
@@ -18,14 +135,24 @@
 </div>
 
   <% if @translates && @translates.count > 0 %>
+  
   <h6 class="fs-7 bg-light border p-1 px-2"><%= link_to_collapser "Matches","#translate_matches" %> based on translated phrase</h6>
   <div id="translate_matches" class="collapse show">
 
   <div class="px-1 border rounded rounded-top-0 bg-white mb-1">
     <div class="d-flex flex-wrap">
     <% @translates.each do |translate| %>
-      <div class="p-1 m-1 border bg-light text-dark fs-7">
-      <%= translate.translate_key.nil? ? link_to(translate.phrase, feedbacker.edit_translate_path(translate)) : link_to(translate.phrase,[feedbacker,translate.translate_key]) %>
+      <div class="p-1 m-1 border bg-light text-dark fs-7 mb-2">
+      <div class="d-flex">
+      <%= tag.div safe_join(["As seen on: ",link_to("#{request.protocol}#{request.host_with_port}#{translate.translate_key.sample_page}",translate.translate_key.sample_page,class:"fw-bold nodec")]), class: "me-1 fs-7" unless translate.translate_key.sample_page.nil? %>
+
+      <%= link_to translate.translate_key.full_key, [feedbacker,translate.translate_key], class:"fs-7 nodec text-contrast fw-bold px-1 ms-auto" %>
+      </div>
+      <%= link_to (translate.translate_key.nil? ? feedbacker.edit_translate_path(translate) : [feedbacker,translate.translate_key]), class:"nodec text-muted" do  %>
+    <div style="<%= translate.phrase.length < 300 ? "height:30px;" :  translate.phrase.length > 600 ? "height:120px;" : "height:70px;" %>overflow-y:auto;">
+    <%= translate.phrase %>
+    </div>
+      <% end %>
       </div>
     <% end %>
     </div>

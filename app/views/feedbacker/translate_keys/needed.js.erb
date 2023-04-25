@@ -1,1 +1,5 @@
 $("#<%= @frame || "sideMenu" %>").html("<%= j render(partial: "#{engine_prefix}translate_keys/parts/needed", locals: {title: dbt('admin::translations.needed',d:"Translations needed!")}) %>")
+if( typeof highlightResults === 'function' )
+    highlightResults('<%= params[:q] %>','#translateKeysIndex')
+if( typeof setupRealTimeTranslate === 'function')
+    setupRealTimeTranslate()

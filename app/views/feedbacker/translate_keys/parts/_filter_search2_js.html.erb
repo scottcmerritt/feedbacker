@@ -1,5 +1,21 @@
 <% use_and_match = "false" if local_assigns[:use_and_match].nil? %>
 <script type="text/javascript"> 
+function updateHighlights(query) {
+  if(typeof updateHighlights === 'function')
+    highlightResults(query,'#translateKeysIndex')
+    moveCursorToEnd('#search-translations')
+    
+}
+
+function moveCursorToEnd(elementId) {
+    $(elementId).focus()
+    setTimeout(function(){
+        const input = document.querySelector(elementId);
+        input.selectionStart = input.selectionEnd = input.value.length;
+        input.focus();
+    }, 0)
+}
+
   //does the text of an element match the var: txt?
   
 var useAndMatch = <%= use_and_match.to_s %> //if false, then it is an OR match
@@ -190,7 +206,7 @@ $("#searchExplained").html(`Filtering for: ${textQuery}, WITH languages (${attrL
 
    updateCounts()
 
-   
+   updateHighlights($searchBox.val())
   
 
 }

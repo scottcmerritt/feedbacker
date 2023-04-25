@@ -1,1 +1,3 @@
 $("#translate_keys").html("<%= j render partial: "feedbacker/translate_keys/parts/index" %>")
+if( typeof highlightResults === 'function' )
+    highlightResults('<%= params[:q] %>','#translateKeysIndex')
