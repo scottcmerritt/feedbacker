@@ -15,9 +15,10 @@ const processChange = debounce(() => saveInput());
 
 
 function updateHighlights(query) {
-  if(typeof updateHighlights === 'function')
+  if(typeof highlightResults === 'function') {
     highlightResults(query,'#translateKeysIndex')
     moveCursorToEnd('#search-translations')
+  }
     
 }
 
@@ -115,14 +116,15 @@ function getLangQuery() {
 }
 
 const delayedFilterRun = debounce(()=>{
-  runTranslateFilter($searchBox,$searchBox.value)
+  //runTranslateFilter($searchBox.eq(0),$searchBox.value,false)
+  updateHighlights($searchBox.val())
 })
 $searchBox.on('input',function() {
-  
-  //runTranslateFilter(this,textQuery)
+  var textQuery = this.value
+  runTranslateFilter(this,textQuery)
   delayedFilterRun()
-/*  debounce(()=>{
-    var textQuery = this.value
+/*
+  debounce(()=>{
     runTranslateFilter(this,textQuery)
   },300)
 */
@@ -148,7 +150,7 @@ var showTranslatedKeys = function() {
   return $filterTranslated.is(':checked') //attr('checked') == 'true' ? true : false
 }
 
-var runTranslateFilter = function(scope,textQuery) {
+var runTranslateFilter = function(scope,textQuery,reloadHighlight=false) {
   //var scope = this;
   
   var attrLookup = showTranslatedKeys() ? 'completed' : 'needed'
@@ -229,7 +231,8 @@ $("#searchExplained").html(`Filtering for: ${textQuery}, WITH languages (${attrL
 
    updateCounts()
 
-   updateHighlights($searchBox.val())
+  //if(reloadHighlight)
+  //  updateHighlights($searchBox.val())
   
 
 }

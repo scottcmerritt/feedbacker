@@ -143,11 +143,13 @@ function removeHighlight() {
     <div class="d-flex flex-wrap">
     <% @translates.each do |translate| %>
       <div class="p-1 m-1 border bg-light text-dark fs-7 mb-2">
+      <% unless translate.translate_key.nil? %>
       <div class="d-flex">
-      <%= tag.div safe_join(["As seen on: ",link_to("#{request.protocol}#{request.host_with_port}#{translate.translate_key.sample_page}",translate.translate_key.sample_page,class:"fw-bold nodec")]), class: "me-1 fs-7" unless translate.translate_key.sample_page.nil? %>
+      <%= tag.div safe_join(["As seen on: ",link_to("#{request.protocol}#{request.host_with_port}#{translate.translate_key.sample_page}",translate.translate_key.sample_page,class:"fw-bold nodec")]), class: "me-1 fs-7" unless translate.translate_key.nil? || translate.translate_key.sample_page.nil? %>
 
       <%= link_to translate.translate_key.full_key, [feedbacker,translate.translate_key], class:"fs-7 nodec text-contrast fw-bold px-1 ms-auto" %>
       </div>
+      <% end %>
       <%= link_to (translate.translate_key.nil? ? feedbacker.edit_translate_path(translate) : [feedbacker,translate.translate_key]), class:"nodec text-muted" do  %>
     <div style="<%= translate.phrase.length < 300 ? "height:30px;" :  translate.phrase.length > 600 ? "height:120px;" : "height:70px;" %>overflow-y:auto;">
     <%= translate.phrase %>
