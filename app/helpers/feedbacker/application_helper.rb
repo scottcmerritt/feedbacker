@@ -3,7 +3,7 @@ module Feedbacker
     include Rails.application.routes.url_helpers
 
     def page_frame_css
-      "border border-dark bg-light p-1"
+      "border border-bg-light bg-light p-1"
     end
 
     def feedbacker? feature:nil
