@@ -9,6 +9,7 @@ class ConnectController < ::ApplicationController
 
   # '/engage/:resource/:id/:scope'
   # engage_comment_path
+  # '/engage/:otype/:id/:scope'
   def engage
     @otypes = ["comment","post"]
     @otype = params[:otype]

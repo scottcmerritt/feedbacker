@@ -31,8 +31,7 @@ module ChatUtility
     html = render_to_string(:partial=>"community/shared/search/users",:locals=>locals,:layout=>false)
   
     render json: {html: html} #{}"<div>#{@q}</div>"}
-
-  end  
+  end
 
   def conversations_add
     target_id = params[:target_id] || params[:room_message][:target_user_id]
