@@ -134,7 +134,7 @@ module Feedbacker
 		def self.set_bool hashkey, val,logger=nil, cache_expiration=60000
 			#hashkey = "#{Settings::DEFAULT_CACHE_PREFIX}#{hashkey}"
 			obj_as_string = val == true ? '1' : '0' #Marshal.dump(objects)
-			$redis.set(hashkey,obj_as_string,{:ex=>cache_expiration})
+			$redis.set(hashkey,obj_as_string,ex:cache_expiration)
 		end
 
 		def self.set_obj hashkey, objects,logger=nil, cache_expiration=60000
@@ -143,7 +143,8 @@ module Feedbacker
 			logger.debug "set cache, hashkey: #{hashkey}: #{objects.length}" unless logger.nil?
 			obj_as_string = Marshal.dump(objects)
 			
-			$redis.set(hashkey,obj_as_string,{:ex=>cache_expiration})
+			#$redis.set(hashkey,obj_as_string,{:ex=>cache_expiration})
+			$redis.set(hashkey,obj_as_string,ex: cache_expiration)
 		end
 
 		# takes the objects, marshals them into a string, adds them to redis and returns the unique identifier
@@ -154,7 +155,7 @@ module Feedbacker
 			if CacheBase.exists? hashkey
 				return nil
 			else
-				$redis.set(hashkey,obj_as_string,{:ex=>cache_expiration})
+				$redis.set(hashkey,obj_as_string,ex:cache_expiration) # {:ex=>cache_expiration})
 				return hashkey
 			end
 		end

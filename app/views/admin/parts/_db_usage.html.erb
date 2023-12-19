@@ -1,10 +1,6 @@
 <% upgrade = upgrades[0] if local_assigns[:upgrade].nil? %>
 <div class="col-sm-6 mx-auto text-center d-flex align-items-center">
 	<%= tag.span num_comma(rows[:used]), class:"fs-2 fw-bold" %> <span class="mx-1">total database rows used</span>
-
-	
-
- 
 	<%= tag.span (num_format(rows[:used]/plan[:rows].to_f * 100,0).to_s + "% of capacity"), class: "badge bg-success fs-7" if rows[:used] < plan[:rows] %>
 
 	<a href="#tables" class="ml-auto ms-auto text-dark fs-7 mx-1" data-bs-target="#tables" data-bs-toggle="collapse">More info</a>

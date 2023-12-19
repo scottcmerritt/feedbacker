@@ -22,7 +22,7 @@ module Feedbacker
 
 			@translators = User.select("users.*,count(translates.id) as translates_count").joins("JOIN translates ON translates.user_id = users.id").group("users.id").order("translates_count DESC")			
 		end
-
+		
 		def approve_default
 			@remove_frame = params[:parent_frame]
 

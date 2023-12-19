@@ -17,6 +17,7 @@ module TranslationUtil
     object_to_cache.hashed
   end
 
+  # get or create translate_key_id, and translate_key relation
   def build_translate_key! tdomain:, tkey:, createdby: nil
     params = {tdomain:tdomain,tkey:tkey}
     tk = Feedbacker::TranslateKey.exists?(params) ? Feedbacker::TranslateKey.find_by(params) : Feedbacker::TranslateKey.create(params.merge({createdby:createdby}))
@@ -241,19 +242,20 @@ module TranslationUtil
       self.dbt("info::tag.#{text}",d:d,default:default,admin:admin,locale: locale).capitalize
     end
 
-    def lookup text, locale:, use_cache: true, page:nil, logger:nil, controller:nil,action:nil
+
+    def self.lookup text, locale:, use_cache: true, page:nil, logger:nil, controller:nil,action:nil
       tdomain = text.split(".",2).first if text.split(".",2).length > 1
       tkey = text.split(".",2).last
       logger.debug "lookup: #{text}" unless logger.nil?
       if use_cache
-
+    
         res = self.from_cache tdomain,tkey,locale
         logger.debug "lookup w cache: #{res}" unless logger.nil?
         if res.nil?
-          self.cache_miss! phrase: text, page: page, controller:controller,action:action
-          Feedbacker::Cache.add_list_object self.cache_miss_log_key, self.object_to_cache(tdomain:tdomain,tkey:tkey,lang:locale)
+        self.cache_miss! phrase: text, page: page #, controller:controller,action:action
+        Feedbacker::Cache.add_list_object self.cache_miss_log_key, self.object_to_cache(tdomain:tdomain,tkey:tkey,lang:locale)
         else
-          self.cache_hit! phrase: text, page: page, controller:controller,action:action
+        self.cache_hit! phrase: text, page: page, controller:controller,action:action
         end
         res
       else
@@ -261,6 +263,7 @@ module TranslationUtil
         row.nil? || !row.has_attribute?(:phrase) ? nil : row.phrase
       end
     end
+      
 
     def top_translation tdomain:, tkey:, locale:
       tdomain.blank? ? Feedbacker::Translate.joins(:translate_key).where("(translate_keys.tdomain is null or translate_keys.tdomain = '') AND translate_keys.tkey = ?", tkey).order("translates.updated_at DESC").where(lang:locale).first : Feedbacker::Translate.joins(:translate_key).where(translate_keys: {tdomain:tdomain,tkey:tkey},lang:locale).order("translates.updated_at DESC").first

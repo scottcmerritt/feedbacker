@@ -12,15 +12,9 @@
 	</div>
 	<div class="col-10">
 		<%= render partial: "users/user_roles", locals: {user:@user} %>
-		
-
-<%= paginate @users rescue "Error with pager" %>
-
-
+	<%= paginate @users rescue "Error with pager" %>
 <table class="table">
 <tr><td class="col-2">Roles</td>
-	
-
 	<td class="col-1">Logins</td>
 	<td class="col-9">User</td>
 	<td></td>
@@ -65,4 +59,3 @@
 
 </div>
 </div>
-
