@@ -37,7 +37,28 @@ module Feedbacker
 			!top_translation.nil? && (self.id == top_translation.id)
 		end
 
+		def self.lookup text, locale:, use_cache: true, page:nil, logger:nil, controller:nil,action:nil
+			tdomain = text.split(".",2).first if text.split(".",2).length > 1
+			tkey = text.split(".",2).last
+			logger.debug "lookup: #{text}" unless logger.nil?
+			if use_cache
+	  
+			  res = self.from_cache tdomain,tkey,locale
+			  logger.debug "lookup w cache: #{res}" unless logger.nil?
+			  if res.nil?
+				self.cache_miss! phrase: text, page: page #, controller:controller,action:action
+				Feedbacker::Cache.add_list_object self.cache_miss_log_key, self.object_to_cache(tdomain:tdomain,tkey:tkey,lang:locale)
+			  else
+				self.cache_hit! phrase: text, page: page, controller:controller,action:action
+			  end
+			  res
+			else
+			  row = self.top_translation tdomain: tdomain, tkey: tkey, locale: locale
+			  row.nil? || !row.has_attribute?(:phrase) ? nil : row.phrase
+			end
+		  end
 =begin
+
 		def self.lookup text, locale:, use_cache: true
 			tdomain = text.split(".",2).first if text.split(".",2).length > 1
 			tkey = text.split(".",2).last
