@@ -175,7 +175,7 @@ module Feedbacker
     private
 
     def award_points
-      current_user.add_points(1, category: 'translator') # if current_user.respond_to?(:add_points)
+      current_user.add_points(1, category: 'translator') if current_user.respond_to?(:add_points)
     end
 
     def do_translate_keys_search!

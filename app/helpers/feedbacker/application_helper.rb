@@ -2,8 +2,8 @@ module Feedbacker
   module ApplicationHelper
     include Rails.application.routes.url_helpers
 
-    def page_frame_css
-      "border border-bg-light bg-light p-1"
+    def page_frame_css padding: "p-1"
+      "border border-bg-light bg-light #{padding}"
     end
 
     def feedbacker? feature:nil
