@@ -20,6 +20,7 @@ module Feedbacker
 #      loader = tag.div(tag.span("Loading...",class:"visually-hidden"),class:"spinner-grow spinnder-grow-sm me-1",role:"status")
 #      tag.div safe_join([lbl,loader]), class:"d-flex justify-content-center"
 #    end
+    # returns bootstrap html code for progress and spinner
     def loading_div(text, wrap_css: "text-center p-1", type: "spinner", progress_amt: "75", id:nil)
       types = ["spinner","progress"]
       type = types.include?(type) ? type : types[0]
