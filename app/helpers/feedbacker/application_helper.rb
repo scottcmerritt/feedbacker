@@ -15,10 +15,21 @@ module Feedbacker
       end
     end
 
-    def loading_div text
-      lbl = tag.span text, class: "fw-bold m-1"
-      loader = tag.div(tag.span("Loading...",class:"visually-hidden"),class:"spinner-grow spinnder-grow-sm me-1",role:"status")
-      tag.div safe_join([lbl,loader]), class:"d-flex justify-content-center"
+#    def loading_div text
+#      lbl = tag.span text, class: "fw-bold m-1"
+#      loader = tag.div(tag.span("Loading...",class:"visually-hidden"),class:"spinner-grow spinnder-grow-sm me-1",role:"status")
+#      tag.div safe_join([lbl,loader]), class:"d-flex justify-content-center"
+#    end
+    def loading_div(text, wrap_css: "text-center p-1", type: "spinner", progress_amt: "75", id:nil)
+      types = ["spinner","progress"]
+      type = types.include?(type) ? ltype : types[0]
+      if type == "spinner"
+        lbl = tag.span text, class: "fw-bold m-1"
+        loader = tag.div(tag.span("Loading...",class:"visually-hidden"),class:"spinner-grow spinner-grow-sm me-1 p-1",role:"status")
+        tag.div safe_join([lbl,loader]), class:"d-flex justify-content-center #{wrap_css}"
+      elsif type == "progress"
+        progress_loader_div progress_amt: progress_amt, id: id
+      end
     end
     
     def default_html_loader
