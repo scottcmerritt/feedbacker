@@ -22,7 +22,7 @@ module Feedbacker
 #    end
     def loading_div(text, wrap_css: "text-center p-1", type: "spinner", progress_amt: "75", id:nil)
       types = ["spinner","progress"]
-      type = types.include?(type) ? ltype : types[0]
+      type = types.include?(type) ? type : types[0]
       if type == "spinner"
         lbl = tag.span text, class: "fw-bold m-1"
         loader = tag.div(tag.span("Loading...",class:"visually-hidden"),class:"spinner-grow spinner-grow-sm me-1 p-1",role:"status")
