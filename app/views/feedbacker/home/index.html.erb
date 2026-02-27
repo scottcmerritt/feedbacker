@@ -1,2 +1,137 @@
-<h1>Main nested Home view</h1>
-[[<%= feedbacker_draw %>]]
+<% if false %><%= feedbacker_draw %><% end %>
+
+<div class="feedbacker-home py-4">
+  <header class="mb-4">
+    <h1 class="h2 mb-1">Feedbacker Admin</h1>
+    <p class="text-muted mb-0">Manage translations, comments, users, and site tools from one place.</p>
+  </header>
+
+  <div class="row g-3">
+    <%= render partial: "feedbacker/home/feature_card", locals: {
+      title: "Admin dashboard",
+      description: "Overview and entry point for all admin tools.",
+      path: feedbacker.admin_path,
+      button_label: "Open dashboard",
+      icon_class: "fa-tachometer-alt text-primary",
+      button_variant: "primary"
+    } %>
+
+    <%= render partial: "feedbacker/home/feature_card", locals: {
+      title: "Translations",
+      description: "Manage translation keys and localized content.",
+      path: feedbacker.translates_path,
+      button_label: "Manage translations",
+      icon_class: "fa-language text-success",
+      button_variant: "outline-success"
+    } %>
+
+    <%= render partial: "feedbacker/home/feature_card", locals: {
+      title: "Comments",
+      description: "View and moderate user comments across the site.",
+      path: feedbacker.comments_path,
+      button_label: "View comments",
+      icon_class: "fa-comments text-info",
+      button_variant: "outline-info"
+    } %>
+
+    <%= render partial: "feedbacker/home/feature_card", locals: {
+      title: "Users & roles",
+      description: "Manage user accounts and role assignments.",
+      path: feedbacker.admin_users_path,
+      button_label: "Manage users",
+      icon_class: "fa-users text-secondary",
+      button_variant: "outline-secondary"
+    } %>
+
+    <%= render partial: "feedbacker/home/feature_card", locals: {
+      title: "Messages",
+      description: "Review and send messages to users.",
+      path: feedbacker.admin_messages_path,
+      button_label: "Messages",
+      icon_class: "fa-envelope text-warning",
+      button_variant: "outline-warning"
+    } %>
+
+    <%= render partial: "feedbacker/home/feature_card", locals: {
+      title: "Conversations",
+      description: "Direct conversations and chat rooms.",
+      path: feedbacker.user_conversations_path,
+      button_label: "Conversations",
+      icon_class: "fa-comment-dots",
+      button_variant: "primary"
+    } %>
+
+    <%= render partial: "feedbacker/home/feature_card", locals: {
+      title: "Analytics & visits",
+      description: "Traffic, referrers, and visitor analytics.",
+      path: feedbacker.admin_analytics_path,
+      button_label: "View analytics",
+      icon_class: "fa-chart-line text-primary",
+      button_variant: "outline-primary"
+    } %>
+
+    <%= render partial: "feedbacker/home/feature_card", locals: {
+      title: "Visit history",
+      description: "Browse visit logs and visitor actions.",
+      path: feedbacker.admin_visits_path,
+      button_label: "Visits",
+      icon_class: "fa-shoe-prints text-muted",
+      button_variant: "outline-dark"
+    } %>
+
+    <%= render partial: "feedbacker/home/feature_card", locals: {
+      title: "Tags",
+      description: "Manage tags used across the site.",
+      path: feedbacker.admin_tags_path,
+      button_label: "Manage tags",
+      icon_class: "fa-tags text-success",
+      button_variant: "outline-success"
+    } %>
+
+    <%= render partial: "feedbacker/home/feature_card", locals: {
+      title: "Menus",
+      description: "Configure navigation and menu items.",
+      path: feedbacker.menus_path,
+      button_label: "Manage menus",
+      icon_class: "fa-bars text-info",
+      button_variant: "outline-info"
+    } %>
+
+    <%= render partial: "feedbacker/home/feature_card", locals: {
+      title: "Emails",
+      description: "Manage email templates and settings.",
+      path: feedbacker.emails_path,
+      button_label: "Emails",
+      icon_class: "fa-at text-secondary",
+      button_variant: "outline-secondary"
+    } %>
+
+    <%= render partial: "feedbacker/home/feature_card", locals: {
+      title: "Page ideas",
+      description: "Suggestions and ideas tied to pages.",
+      path: feedbacker.admin_page_ideas_path,
+      button_label: "Page ideas",
+      icon_class: "fa-lightbulb text-warning",
+      button_variant: "outline-warning"
+    } %>
+
+    <%= render partial: "feedbacker/home/feature_card", locals: {
+      title: "Database & cache",
+      description: "Inspect data and clear or manage cache.",
+      path: feedbacker.admin_db_path,
+      button_label: "Database",
+      icon_class: "fa-database text-dark",
+      button_variant: "outline-dark",
+      extra_buttons: [["Cache", feedbacker.admin_cache_path]]
+    } %>
+
+    <%= render partial: "feedbacker/home/feature_card", locals: {
+      title: "Demo",
+      description: "Try Feedbacker features in a demo mode.",
+      path: feedbacker.demo_path,
+      button_label: "Open demo",
+      icon_class: "fa-play-circle text-muted",
+      button_variant: "outline-secondary"
+    } %>
+  </div>
+</div>

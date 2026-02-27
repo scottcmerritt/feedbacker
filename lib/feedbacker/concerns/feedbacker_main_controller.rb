@@ -120,11 +120,13 @@ module Feedbacker
 
   def authenticate_admin!
     authenticate_user!
+    return if performed?
 
     if is_first_user? && !is_admin? && no_admins?
-      redirect_to first_admin_path
-    else
-      redirect_to root_path, notice: "Permission denied" unless is_admin?
+      redirect_to first_admin_path and return
+    end
+    unless is_admin?
+      redirect_to root_path, notice: "Permission denied" and return
     end
   end
 
