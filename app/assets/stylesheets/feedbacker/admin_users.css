@@ -1,0 +1,111 @@
+/* Admin users page: /manage/admin/users */
+.feedbacker-admin-users {
+  --fau-sidebar-bg: #f8f9fa;
+  --fau-border: #dee2e6;
+  --fau-active-bg: #212529;
+  --fau-row-hover: #f8f9fa;
+}
+
+.feedbacker-admin-users__top {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.feedbacker-admin-users__sidebar {
+  padding-right: 0.75rem;
+  border-right: 1px solid var(--fau-border);
+}
+
+.feedbacker-admin-users__sidebar-title {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #495057;
+}
+
+.feedbacker-admin-users__filters {
+  margin-bottom: 0.5rem;
+}
+
+.feedbacker-admin-users__filter-btn {
+  font-size: 0.8125rem;
+  text-align: left;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.feedbacker-admin-users__filter-btn:hover {
+  background-color: var(--fau-row-hover) !important;
+}
+
+.feedbacker-admin-users__filter-btn.active {
+  border-color: var(--fau-active-bg);
+}
+
+.feedbacker-admin-users__main {
+  padding-left: 1rem;
+}
+
+.feedbacker-admin-users__search .input-group {
+  min-width: 0;
+}
+
+.feedbacker-admin-users__search .form-control:focus {
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+}
+
+/* List table */
+.feedbacker-admin-users .table {
+  font-size: 0.875rem;
+  margin-bottom: 0;
+}
+
+.feedbacker-admin-users .table > thead > tr > td {
+  border-bottom: 2px solid var(--fau-border);
+  padding: 0.5rem 0.75rem;
+  color: #495057;
+  font-weight: 600;
+}
+
+.feedbacker-admin-users .table > tbody > tr {
+  transition: background-color 0.12s ease;
+}
+
+.feedbacker-admin-users .table > tbody > tr:hover {
+  background-color: var(--fau-row-hover);
+}
+
+.feedbacker-admin-users .table > tbody > tr > td {
+  padding: 0.6rem 0.75rem;
+  vertical-align: middle;
+}
+
+.feedbacker-admin-users .table .btn-group .dropdown-toggle {
+  font-size: 0.75rem;
+}
+
+.feedbacker-admin-users .table .fs-7 {
+  font-size: 0.8125rem;
+}
+
+.feedbacker-admin-users .table .fs-8 {
+  font-size: 0.75rem;
+}
+
+/* Pagination above list */
+.feedbacker-admin-users .fs-7.text-end {
+  font-size: 0.8125rem;
+  padding-bottom: 0.5rem;
+}
+
+/* Mobile cards */
+.feedbacker-admin-users .bg-white.border.mb-1 {
+  border-radius: 0.375rem;
+  padding: 0.5rem;
+}
+
+.feedbacker-admin-users .bg-white.border.mb-1 .d-flex.p-1 {
+  align-items: center;
+}

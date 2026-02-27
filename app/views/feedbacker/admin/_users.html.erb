@@ -1,65 +1,93 @@
 <%= render partial: "admin/manage/header" %>
 <%= render partial: "admin/manage/menu" %>
-<%= link_to "#{User.not_spam.count} legit accounts", feedbacker.admin_users_path, class: "btn btn-sm btn-success me-1" %>
-<%= link_to "#{User.spam.count} spammers", feedbacker.admin_users_path(spammers:1), class: "btn btn-sm btn-danger" %>
-<span class="text-muted">
-<%= tag.span User.where(removed:true).count, class: "fw-bold" %> in the trash</span>
+<div class="feedbacker-admin-users">
+  <div class="feedbacker-admin-users__top mb-3">
+    <%= link_to "#{@admin_user_count_not_spam} legit accounts", feedbacker.admin_users_path, class: "btn btn-sm btn-success me-1" %>
+    <%= link_to "#{@admin_user_count_spam} spammers", feedbacker.admin_users_path(spammers:1), class: "btn btn-sm btn-danger" %>
+    <span class="text-muted ms-2">
+      <%= tag.span @admin_user_count_removed, class: "fw-bold" %> in the trash
+    </span>
+  </div>
 
-<div class="row g-0">
-	<div class="col-sm-2">
-		<% if browser.mobile? %>
-		<div class="d-flex align-items-center justify-content-between">
-			
-			<div class="btn-group me-1">
-  			<button type="button" class="btn btn-tiny btn-secondary rounded-0 p-1 px-2" style="border-top-left-radius: 5px !important;"><%= @role.nil? ? "All" : @role.pluralize.capitalize %></button>
-  			<button type="button" class="btn btn-tiny btn-secondary rounded-0 p-1 px-2 dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" style="border-top-right-radius: 5px !important;">
-		    <span class="visually-hidden">Toggle Dropdown</span>
-		  </button>
-			  <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="adminUsersDropdown">
-			  	<li><%= link_to badge_with_count("All users",User.count), feedbacker.admin_users_path, class: "dropdown-item my-1 btn btn-light fs-7 #{@role.nil? ? 'active active-u rounded-0' : ''}" %></li>
+  <div class="row g-0">
+    <div class="col-sm-2 feedbacker-admin-users__sidebar">
+      <% if browser.mobile? %>
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="btn-group me-1">
+            <button type="button" class="btn btn-tiny btn-secondary rounded-0 p-1 px-2" style="border-top-left-radius: 5px !important;"><%= @role.nil? ? "All" : @role.pluralize.capitalize %></button>
+            <button type="button" class="btn btn-tiny btn-secondary rounded-0 p-1 px-2 dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false" style="border-top-right-radius: 5px !important;">
+              <span class="visually-hidden">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="adminUsersDropdown">
+              <li><%= link_to badge_with_count("All users", @admin_user_count_all), feedbacker.admin_users_path, class: "dropdown-item my-1 btn btn-light fs-7 #{@role.nil? ? 'active active-u rounded-0' : ''}" %></li>
+              <li><%= link_to badge_with_count("Confirmed users", @admin_user_count_confirmed), feedbacker.admin_users_path(confirmed:1), class: "dropdown-item my-1 btn btn-light fs-7 #{@role.nil? && params[:confirmed] ? 'active active-u rounded-0' : ''}" %></li>
+              <li><hr class="dropdown-divider"></li>
+              <% @site_roles.each do |role_name| %>
+                <li>
+                  <%= link_to badge_with_count(role_name.pluralize.capitalize, @admin_user_count_by_role[role_name].to_i), feedbacker.admin_users_path(role:role_name), class: "dropdown-item my-1 btn btn-light fs-7 #{@role == role_name ? "active active-u rounded-0" : ""}" %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      <% else %>
+        <h6 class="feedbacker-admin-users__sidebar-title">Roles</h6>
+        <div class="feedbacker-admin-users__filters">
+          <%= link_to "All", feedbacker.admin_users_path(all:1,role:@role), class: "mx-1 p-1 fs-7 text-decoration-none #{!params[:active] ? "bg-dark text-light rounded" : "text-muted"}" %>
+          <%= link_to "Active", feedbacker.admin_users_path(active:1,role:@role), class: "p-1 fs-7 text-decoration-none #{params[:active] ? "bg-dark text-light rounded" : "text-muted"}" %>
+        </div>
+        <%= link_to badge_with_count("All users", @admin_user_count_not_spam), feedbacker.admin_users_path, class: "nav-link border my-1 btn btn-light feedbacker-admin-users__filter-btn #{@role == nil ? "active bg-dark text-white" : ""}" %>
+        <%= link_to badge_with_count("Confirmed", @admin_user_count_confirmed_not_spam_not_demo), feedbacker.admin_users_path(confirmed:1), class: "nav-link border my-1 btn btn-light feedbacker-admin-users__filter-btn #{@role.nil? && params[:confirmed] ? 'active bg-dark text-white' : ''}" %>
+        <%= link_to badge_with_count("Not confirmed", @admin_user_count_not_confirmed_not_demo), feedbacker.admin_users_path(not_confirmed:1), class: "nav-link border my-1 btn btn-light feedbacker-admin-users__filter-btn #{@role.nil? && params[:not_confirmed] ? 'active bg-dark text-white' : ''}" %>
+        <%= link_to badge_with_count("Demo accounts", @admin_user_count_is_demo), feedbacker.admin_users_path(is_demo:1), class: "nav-link border my-1 btn btn-light feedbacker-admin-users__filter-btn #{@role.nil? && params[:is_demo] ? 'active bg-dark text-white' : ''}" %>
+        <% @site_roles.each do |role_name| %>
+          <%= link_to badge_with_count(role_name.pluralize.capitalize, @admin_user_count_by_role[role_name].to_i), feedbacker.admin_users_path(role:role_name), class: "nav-link border my-1 btn btn-light feedbacker-admin-users__filter-btn #{@role == role_name ? "active bg-dark text-white" : ""}" %>
+        <% end %>
+      <% end %>
+    </div>
 
-			  	<li><%= link_to badge_with_count("Confirmed users",User.confirmed.count), feedbacker.admin_users_path(confirmed:1), class: "dropdown-item my-1 btn btn-light fs-7 #{@role.nil? && params[:confirmed] ? 'active active-u rounded-0' : ''}" %></li>
+    <div class="col-sm-10 feedbacker-admin-users__main">
+      <div class="feedbacker-admin-users__search mb-3">
+        <%= form_with url: feedbacker.admin_users_path, method: :get, local: true, class: "d-flex align-items-center gap-2 flex-wrap" do |f| %>
+          <%= hidden_field_tag :role, @role if @role.present? %>
+          <%= hidden_field_tag :confirmed, params[:confirmed] if params[:confirmed].present? %>
+          <%= hidden_field_tag :not_confirmed, params[:not_confirmed] if params[:not_confirmed].present? %>
+          <%= hidden_field_tag :is_demo, params[:is_demo] if params[:is_demo].present? %>
+          <%= hidden_field_tag :no_demo, params[:no_demo] if params[:no_demo].present? %>
+          <%= hidden_field_tag :active, params[:active] if params[:active].present? %>
+          <%= hidden_field_tag :spammers, params[:spammers] if params[:spammers].present? %>
+          <div class="input-group flex-grow-1" style="max-width: 320px;">
+            <%= text_field_tag :q, @q, class: "form-control form-control-sm", placeholder: "Search by email or name…", "aria-label": "Search users", data: { feedbacker_admin_users_search: true } %>
+            <button type="submit" class="btn btn-sm btn-primary" aria-label="Search">
+              <%= icon(icon: "search") %>
+            </button>
+            <% if @q.present? %>
+              <%= link_to feedbacker.admin_users_path(request.query_parameters.except("q")), class: "btn btn-sm btn-outline-secondary", "aria-label": "Clear search" do %>
+                <%= icon(icon: "times") %>
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
 
-			  	<li><hr class="dropdown-divider"></li>
-			<% @site_roles.each do |role_name| %>
-			  <li>
-			    <%= link_to badge_with_count(role_name.pluralize.capitalize, User.with_role(role_name.to_sym).count), feedbacker.admin_users_path(role:role_name), class: "dropdown-item my-1 btn btn-light fs-7 #{@role == role_name ? "active active-u rounded-0" : ""}" %>
-			  </li>
-			  <% end %>
-			  </ul>
-			</div>
-
-		</div>
-
-		<% else %>
-			<h7>Roles <%= link_to "All",feedbacker.admin_users_path(all:1,role:@role), class:"mx-1 p-1 fs-7 #{!params[:active] ? "bg-dark text-light" : ""}" %> <%= link_to "Active", feedbacker.admin_users_path(active:1,role:@role), class: "p-1 fs-7 #{params[:active] ? "bg-dark text-light" : ""}" %> </h7>
-			<%= link_to badge_with_count("All users",User.not_spam.count), feedbacker.admin_users_path, class: "nav-link border my-1 btn btn-light #{@role == nil ? "active bg-dark text-white" : ""}" %>
-			<%= link_to badge_with_count("Confirmed",User.not_spam.confirmed.not_demo.count), feedbacker.admin_users_path(confirmed:1), class: "nav-link border my-1 btn btn-light #{@role.nil? && params[:confirmed] ? 'active bg-dark text-white' : ''}" %>
-			<%= link_to badge_with_count("Not confirmed",User.not_spam.not_confirmed.not_demo.count), feedbacker.admin_users_path(not_confirmed:1), class: "nav-link border my-1 btn btn-light #{@role.nil? && params[:not_confirmed] ? 'active bg-dark text-white' : ''}" %>
-
-			<%= link_to badge_with_count("Demo accounts",User.is_demo.count), feedbacker.admin_users_path(is_demo:1), class: "nav-link border my-1 btn btn-light #{@role.nil? && params[:is_demo] ? 'active bg-dark text-white' : ''}" %>
-
-			
-
-
-			<% @site_roles.each do |role_name| %>
-			<%= link_to badge_with_count(role_name.pluralize.capitalize, User.with_role(role_name.to_sym).count), feedbacker.admin_users_path(role:role_name), class: "nav-link border my-1 btn btn-light #{@role == role_name ? "active bg-dark text-white" : ""}" %>
-			<% end %>
-
-		<% end %>
-
-	</div>
-	<div class="col-sm-10">
-		<div class="d-flex justify-content-center my-1">
-		<form class="" method="get" action="">
-		<input type="text" name="q" value="<%= @q %>"><input type="submit" >
-		</form>
-		</div>
-
-		<%= render partial: "users/user_roles", locals: {user:@user} %>
-		<%= render partial: "admin/users/list", locals: {show: {roles:true}} %>
-
-
+      <%= render partial: "users/user_roles", locals: { user: @user } %>
+      <%= render partial: "admin/users/list", locals: { show: { roles: true } } %>
+    </div>
+  </div>
 </div>
-</div>
+
+<script>
+(function() {
+  var input = document.querySelector('[data-feedbacker-admin-users-search]');
+  var form = input && input.closest('form');
+  if (!form) return;
+  var timer = null;
+  input.addEventListener('input', function() {
+    clearTimeout(timer);
+    timer = setTimeout(function() {
+      form.submit();
+    }, 400);
+  });
+})();
+</script>
 

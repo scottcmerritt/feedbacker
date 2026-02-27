@@ -3,6 +3,8 @@ require 'active_support/concern'
 module Feedbacker
   module FeedbackerAdminController
     extend ActiveSupport::Concern
+
+    ADMIN_USERS_PER_PAGE = 25
     
     included do
       # method to add to controller
@@ -649,52 +651,56 @@ def cleanup
     end
 
     def users
-        #@role = params[:role]
-        #manually_confirm_user! if params[:confirm_user]
-
-        #@user = User.find_by(id: params[:user_id]) unless params[:user_id].nil?
-        
-        #@users = @site_roles.include?(@role) ? User.with_role(@role.to_sym) : User.all
-
-        #@users = @users.order(:confirmed_at).page(params[:page]).per(20)
-      
       @role = params[:role]
       manually_confirm_user! if params[:confirm_user]
-
-      #@user = User.find_by(id: params[:user_id]) unless params[:user_id].nil?
 
       if params[:spammers]
         users = User.spam
       else
-        minutes_ago = params[:mins_ago] ? params[:mins_ago].to_i : 60*24
-        @active = User.active_users(minutes_ago:minutes_ago)
-        @active = @active.confirmed.not_demo if params[:confirmed]
-        @active = @active.not_confirmed if params[:not_confirmed]
-        users = params[:active] ? @active : User.not_spam
+        if params[:active]
+          minutes_ago = params[:mins_ago] ? params[:mins_ago].to_i : 60 * 24
+          @active = User.active_users(minutes_ago: minutes_ago)
+          @active = @active.confirmed.not_demo if params[:confirmed]
+          @active = @active.not_confirmed if params[:not_confirmed]
+          users = @active
+        else
+          users = User.not_spam
+        end
       end
       users = users.confirmed if params[:confirmed]
       users = users.not_confirmed if params[:not_confirmed]
-
       users = users.is_demo if params[:is_demo]
       users = users.not_demo if params[:no_demo]
 
-      users = users.order("last_sign_in_at DESC") #created_at"
+      order_sql = if ActiveRecord::Base.connection.adapter_name.match?(/postgres/i)
+        "last_sign_in_at DESC NULLS LAST"
+      else
+        "last_sign_in_at DESC"
+      end
+      users = users.order(order_sql)
 
       @users = @site_roles.include?(@role) ? users.with_role(@role.to_sym) : users
 
-      if params[:q]
-        @q = params[:q]
+      if params[:q].present?
+        @q = params[:q].to_s.strip
         q = "%#{@q.downcase}%"
-        @users = @users.where("LOWER(email) LIKE ? OR LOWER(public_name) LIKE ? OR LOWER(first_name) LIKE ? OR LOWER(last_name) LIKE ?",q,q,q,q)
+        if ActiveRecord::Base.connection.adapter_name.match?(/postgres/i)
+          @users = @users.where("email ILIKE ? OR public_name ILIKE ? OR first_name ILIKE ? OR last_name ILIKE ?", q, q, q, q)
+        else
+          @users = @users.where("LOWER(email) LIKE ? OR LOWER(public_name) LIKE ? OR LOWER(first_name) LIKE ? OR LOWER(last_name) LIKE ?", q, q, q, q)
+        end
       end
 
-      if @users.kind_of? Array
-        @users = Kaminari.paginate_array(@users) #.page(params[:page])
+      if @users.is_a?(Array)
+        @users = Kaminari.paginate_array(@users)
       else
-        @users = @users.order(:last_sign_in_at) #:confirmed_at)) #.per(20)
+        @users = @users.includes(:roles) if User.reflect_on_association(:roles)
       end
-      @users = @users.page(params[:page])
+      @users = @users.page(params[:page]).per(Feedbacker::FeedbackerAdminController::ADMIN_USERS_PER_PAGE)
 
+      load_admin_user_counts
+
+      render "feedbacker/admin/users", layout: true
     end
 
       def modify_role
@@ -817,6 +823,50 @@ def cleanup
       def manually_confirm_user!
         @user = User.find_by(id:params[:confirm_user])
         @user.confirm if !@user.nil? && @user.confirmed_at.nil?
+      end
+
+      def load_admin_user_counts
+        cache_key = "feedbacker/admin_users_counts"
+        cached = Rails.cache.read(cache_key)
+        if cached
+          @admin_user_count_all = cached[:all]
+          @admin_user_count_not_spam = cached[:not_spam]
+          @admin_user_count_spam = cached[:spam]
+          @admin_user_count_confirmed = cached[:confirmed]
+          @admin_user_count_not_confirmed = cached[:not_confirmed]
+          @admin_user_count_not_confirmed_not_demo = cached[:not_confirmed_not_demo]
+          @admin_user_count_confirmed_not_spam_not_demo = cached[:confirmed_not_spam_not_demo]
+          @admin_user_count_is_demo = cached[:is_demo]
+          @admin_user_count_removed = cached[:removed]
+          @admin_user_count_by_role = cached[:by_role] || {}
+        else
+          @admin_user_count_all = User.count
+          @admin_user_count_not_spam = User.not_spam.count
+          @admin_user_count_spam = User.spam.count
+          @admin_user_count_confirmed = User.confirmed.count
+          @admin_user_count_not_confirmed = User.not_confirmed.count
+          not_spam = User.not_spam
+          @admin_user_count_not_confirmed_not_demo = not_spam.not_confirmed.not_demo.count
+          @admin_user_count_confirmed_not_spam_not_demo = not_spam.confirmed.not_demo.count
+          @admin_user_count_is_demo = User.is_demo.count
+          @admin_user_count_removed = User.where(removed: true).count
+          @admin_user_count_by_role = {}
+          @site_roles.each do |role_name|
+            @admin_user_count_by_role[role_name] = User.with_role(role_name.to_sym).count
+          end
+          Rails.cache.write(cache_key, {
+            all: @admin_user_count_all,
+            not_spam: @admin_user_count_not_spam,
+            spam: @admin_user_count_spam,
+            confirmed: @admin_user_count_confirmed,
+            not_confirmed: @admin_user_count_not_confirmed,
+            not_confirmed_not_demo: @admin_user_count_not_confirmed_not_demo,
+            confirmed_not_spam_not_demo: @admin_user_count_confirmed_not_spam_not_demo,
+            is_demo: @admin_user_count_is_demo,
+            removed: @admin_user_count_removed,
+            by_role: @admin_user_count_by_role
+          }, expires_in: 30.seconds)
+        end
       end
       
       def load_updates

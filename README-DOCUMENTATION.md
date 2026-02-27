@@ -90,6 +90,19 @@ end
 | **Admin** | `/feedbacker/admin`, `/feedbacker/admin/users`, `/feedbacker/admin/visits`, `/feedbacker/admin/page/ideas`, `/feedbacker/admin/db`, `/feedbacker/admin/analytics`, etc. |
 | **Demo** | `/feedbacker/demo` |
 
+### Admin users page (`/feedbacker/admin/users` or `/manage/admin/users` when mounted at `/manage`)
+
+The admin users list supports filtering by role, confirmation status, and search by email/name. For faster search on **PostgreSQL**, consider adding trigram indexes so `ILIKE '%term%'` can use an index:
+
+```sql
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+CREATE INDEX CONCURRENTLY IF NOT EXISTS index_users_on_email_gin ON users USING gin (email gin_trgm_ops);
+CREATE INDEX CONCURRENTLY IF NOT EXISTS index_users_on_public_name_gin ON users USING gin (public_name gin_trgm_ops);
+-- Optional: first_name, last_name if you search on them
+```
+
+The gem uses `ILIKE` on PostgreSQL when available; without these indexes, search does a full table scan.
+
 ## Project structure (high level)
 
 - `app/` — Controllers, models, views (Feedbacker namespace).
